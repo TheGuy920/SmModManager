@@ -1,6 +1,8 @@
-# SmModManager
+# Scrap Mechanic Mod Manager
 
-This project is a joint venture between [me](https://github.com/dentolos19) and [TheGuy920](https://github.com/TheGuy920)!
+This project is a joint venture between [dentolos19](https://github.com/dentolos19) and [TheGuy920](https://github.com/TheGuy920)!
+
+For additional help please join the official discord for this project by [clicking here](https://discord.com/invite/FQg62dq).
 
 ### Contributing
 

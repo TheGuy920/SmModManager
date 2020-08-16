@@ -41,11 +41,6 @@ namespace SmModManager.Graphics
             Application.Current.Shutdown();
         }
 
-        private void CheckPrerequisites(object sender, RoutedEventArgs args)
-        {
-            // TODO
-        }
-
     }
 
 }

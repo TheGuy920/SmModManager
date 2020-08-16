@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using Ookii.Dialogs.Wpf;
 using SmModManager.Core;
 
@@ -11,6 +12,8 @@ namespace SmModManager.Graphics
         public PgAdvanced()
         {
             InitializeComponent();
+            foreach (var userDataPath in Directory.GetDirectories(Constants.UsersDataPath))
+                UserDataPathBox.Items.Add(userDataPath);
             GameDataPathBox.Text = App.Settings.GameDataPath;
             UserDataPathBox.Text = App.Settings.UserDataPath;
         }
@@ -32,7 +35,14 @@ namespace SmModManager.Graphics
         {
             var dialog = new VistaFolderBrowserDialog();
             if (dialog.ShowDialog() == true)
+            {
+                if (!File.Exists(Path.Combine(dialog.SelectedPath, "Release", "ScrapMechanic.exe")))
+                {
+                    MessageBox.Show("The selected path doesn't contain the game's executable!", "SmModManager");
+                    return;
+                }
                 GameDataPathBox.Text = dialog.SelectedPath;
+            }
         }
 
     }
