@@ -6,7 +6,7 @@
     <UseWPF>true</UseWPF>
     <StartupObject>SmModManager.App</StartupObject>
     <Authors>Dennise Catolos</Authors>
-    <Company>Aprodots</Company>
+    <Company>Joint Venture</Company>
     <Copyright>Copyright © 2020</Copyright>
     <Product>Scrap Mechanic Mod Manager</Product>
     <SignAssembly>true</SignAssembly>
