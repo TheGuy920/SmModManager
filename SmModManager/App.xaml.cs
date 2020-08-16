@@ -27,7 +27,7 @@ namespace SmModManager
                 MessageBox.Show("Run the game at least once before using this program!", "SmModManager");
                 Current.Shutdown();
             }
-            if (string.IsNullOrEmpty(Settings.GameDataPath) || string.IsNullOrEmpty(Settings.UserDataPath))
+            if (string.IsNullOrEmpty(Settings.GameDataPath) || string.IsNullOrEmpty(Settings.WorkshopPath) || string.IsNullOrEmpty(Settings.UserDataPath))
             {
                 var dialog = new WnPrerequisites();
                 if (dialog.ShowDialog() == false)

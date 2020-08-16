@@ -12,6 +12,7 @@ namespace SmModManager.Core
         private static readonly XmlSerializer Serializer = new XmlSerializer(typeof(Configuration));
 
         public string GameDataPath { get; set; }
+        public string WorkshopPath { get; set; }
         public string UserDataPath { get; set; }
 
         public void Save()

@@ -15,6 +15,7 @@ namespace SmModManager.Graphics
             foreach (var userDataPath in Directory.GetDirectories(Constants.UsersDataPath))
                 UserDataPathBox.Items.Add(userDataPath);
             GameDataPathBox.Text = App.Settings.GameDataPath;
+            WorkshopPathBox.Text = App.Settings.WorkshopPath;
             UserDataPathBox.Text = App.Settings.UserDataPath;
         }
 
@@ -27,6 +28,7 @@ namespace SmModManager.Graphics
         private void SaveSettings(object sender, RoutedEventArgs args)
         {
             App.Settings.GameDataPath = GameDataPathBox.Text;
+            App.Settings.WorkshopPath = WorkshopPathBox.Text;
             App.Settings.UserDataPath = UserDataPathBox.Text;
             App.Settings.Save();
         }
@@ -42,6 +44,20 @@ namespace SmModManager.Graphics
                     return;
                 }
                 GameDataPathBox.Text = dialog.SelectedPath;
+            }
+        }
+
+        private void BrowseWorkshopPath(object sender, RoutedEventArgs args)
+        {
+            var dialog = new VistaFolderBrowserDialog();
+            if (dialog.ShowDialog() == true)
+            {
+                if (!Directory.Exists(Path.Combine(dialog.SelectedPath, "2122179067")))
+                {
+                    MessageBox.Show("The selected path doesn't contain the workshop files!", "SmModManager");
+                    return;
+                }
+                WorkshopPathBox.Text = dialog.SelectedPath;
             }
         }
 

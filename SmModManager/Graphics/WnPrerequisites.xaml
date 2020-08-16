@@ -11,8 +11,13 @@
         <StackPanel Margin="0,0,5,0">
             <DockPanel Margin="10,10,10,0">
                 <Label Content="Game Data Path" Margin="0,0,10,0" Width="100"/>
-                <Button DockPanel.Dock="Right" Content="Browse" Margin="10,0,0,0" Width="75" Click="Browse"/>
+                <Button DockPanel.Dock="Right" Content="Browse" Margin="10,0,0,0" Width="75" Click="BrowseGameDataPath"/>
                 <TextBox x:Name="GameDataPathBox" VerticalContentAlignment="Center" IsReadOnly="True"/>
+            </DockPanel>
+            <DockPanel Margin="10,10,10,0">
+                <Label Content="Workshop Path" Margin="0,0,10,0" Width="100"/>
+                <Button DockPanel.Dock="Right" Content="Browse" Margin="10,0,0,0" Width="75" Click="BrowseWorkshopPath"/>
+                <TextBox x:Name="WorkshopPathBox" VerticalContentAlignment="Center" IsReadOnly="True"/>
             </DockPanel>
             <DockPanel Margin="10,10,10,0">
                 <Label Content="User Data Path" Margin="0,0,10,0" Width="100"/>
