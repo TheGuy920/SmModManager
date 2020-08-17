@@ -7,7 +7,7 @@
                 <DockPanel DockPanel.Dock="Bottom" Height="50">
                     <Button DockPanel.Dock="Right" Content="Save" Margin="0,10,10,10" Width="100" Click="SaveSettings"/>
                     <Button DockPanel.Dock="Right" Content="Reset" Margin="0,10,10,10" Width="100" Click="ResetSettings"/>
-                    <Label Content="Created by TheGuy920 and dentolos19!" Margin="10,10,10,10" VerticalContentAlignment="Center"/>
+                    <Label Content="Version 7.0-ALPHA" Margin="10,10,10,10" VerticalContentAlignment="Center"/>
                 </DockPanel>
                 <StackPanel Margin="0,0,0,0">
                     <DockPanel Margin="10,10,10,0">

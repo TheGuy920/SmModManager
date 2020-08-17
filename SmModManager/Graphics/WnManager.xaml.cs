@@ -13,27 +13,27 @@ namespace SmModManager.Graphics
 
         private void ShowManagePage(object sender, RoutedEventArgs args)
         {
-            View.Navigate(App.PageManage);
+            PageView.Navigate(App.PageManage);
         }
 
         private void ShowMultiplayerPage(object sender, RoutedEventArgs args)
         {
-            View.Navigate(App.PageMultiplayer);
+            PageView.Navigate(App.PageMultiplayer);
         }
 
         private void ShowBackupPage(object sender, RoutedEventArgs args)
         {
-            View.Navigate(App.PageBackup);
+            PageView.Navigate(App.PageBackups);
         }
 
         private void ShowArchivePage(object sender, RoutedEventArgs args)
         {
-            View.Navigate(App.PageArchive);
+            PageView.Navigate(App.PageArchives);
         }
 
         private void ShowAdvancedPage(object sender, RoutedEventArgs args)
         {
-            View.Navigate(App.PageAdvanced);
+            PageView.Navigate(App.PageAdvanced);
         }
 
         private void Exit(object sender, RoutedEventArgs args)

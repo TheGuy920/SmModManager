@@ -19,6 +19,31 @@ namespace SmModManager.Core
             Application.Current.Shutdown();
         }
 
+        public static bool IsMod(string path)
+        {
+            if (!File.Exists(Path.Combine(path, "description.json")))
+                return false;
+            return File.Exists(Path.Combine(path, "preview.png")) || File.Exists(Path.Combine(path, "preview.jpg"));
+        }
+
+        public static bool IsCompatibleMod(string path)
+        {
+            return IsMod(path) && Directory.Exists(Path.Combine(path, "Survival"));
+        }
+
+        public static void CopyDirectory(string sourcePath, string destinationPath)
+        {
+            var info = new DirectoryInfo(sourcePath);
+            var directories = info.GetDirectories();
+            if (!Directory.Exists(destinationPath))
+                Directory.CreateDirectory(destinationPath);
+            var files = info.GetFiles();
+            foreach (var file in files)
+                file.CopyTo(Path.Combine(destinationPath, file.Name), true);
+            foreach (var subDirectories in directories)
+                CopyDirectory(subDirectories.FullName, Path.Combine(destinationPath, subDirectories.Name));
+        }
+
     }
 
 }

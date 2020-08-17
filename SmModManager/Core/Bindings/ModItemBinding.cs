@@ -10,18 +10,20 @@ namespace SmModManager.Core.Bindings
     {
 
         public string Name { get; set; }
+        public string Path { get; set; }
         public BitmapFrame Preview { get; set; }
 
         public static ModItemBinding Create(string path)
         {
-            BitmapFrame preview = null;
-            if (File.Exists(Path.Combine(path, "preview.png"))) // TODO: Needs improvement
-                preview = BitmapFrame.Create(new Uri(Path.Combine(path, "preview.png")));
-            else if (File.Exists(Path.Combine(path, "preview.jpg")))
-                preview = BitmapFrame.Create(new Uri(Path.Combine(path, "preview.jpg")));
+            var preview = default(BitmapFrame);
+            if (File.Exists(System.IO.Path.Combine(path, "preview.png")))
+                preview = BitmapFrame.Create(new Uri(System.IO.Path.Combine(path, "preview.png")));
+            else if (File.Exists(System.IO.Path.Combine(path, "preview.jpg")))
+                preview = BitmapFrame.Create(new Uri(System.IO.Path.Combine(path, "preview.jpg")));
             return new ModItemBinding
             {
-                Name = ModDescriptionModel.Load(Path.Combine(path, "description.json")).Name,
+                Name = ModDescriptionModel.Load(System.IO.Path.Combine(path, "description.json")).Name,
+                Path = path,
                 Preview = preview
             };
         }

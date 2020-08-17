@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Windows;
+using System.Windows.Threading;
 using SmModManager.Core;
 using SmModManager.Graphics;
 
@@ -11,11 +12,9 @@ namespace SmModManager
 
         internal static Configuration Settings { get; private set; }
 
-        internal static WnManager WindowManager { get; private set; }
-
         internal static PgAdvanced PageAdvanced { get; private set; }
-        internal static PgArchive PageArchive { get; private set; }
-        internal static PgBackup PageBackup { get; private set; }
+        internal static PgArchives PageArchives { get; private set; }
+        internal static PgBackups PageBackups { get; private set; }
         internal static PgManage PageManage { get; private set; }
         internal static PgMultiplayer PageMultiplayer { get; private set; }
 
@@ -34,13 +33,21 @@ namespace SmModManager
                     Current.Shutdown();
                 Utilities.RestartApp();
             }
+            if (!Directory.Exists(Constants.ArchivesPath))
+                Directory.CreateDirectory(Constants.ArchivesPath);
+            if (!Directory.Exists(Constants.BackupsPath))
+                Directory.CreateDirectory(Constants.BackupsPath);
             PageAdvanced = new PgAdvanced();
-            PageArchive = new PgArchive();
-            PageBackup = new PgBackup();
+            PageArchives = new PgArchives();
+            PageBackups = new PgBackups();
             PageManage = new PgManage();
             PageMultiplayer = new PgMultiplayer();
-            WindowManager = new WnManager();
-            WindowManager.Show();
+            new WnManager().Show();
+        }
+
+        private void HandleException(object sender, DispatcherUnhandledExceptionEventArgs args)
+        {
+            // TODO: Handle exceptions
         }
 
     }

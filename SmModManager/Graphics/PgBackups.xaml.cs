@@ -1,10 +1,10 @@
 ﻿namespace SmModManager.Graphics
 {
 
-    public partial class PgArchive
+    public partial class PgBackups
     {
 
-        public PgArchive()
+        public PgBackups()
         {
             InitializeComponent();
         }
