@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using System.Xml.Serialization;
 
 namespace SmModManager.Core
 {
@@ -54,11 +55,6 @@ namespace SmModManager.Core
             reader.Close();
             manifest.Close();
             return result;
-        }
-
-        public static string GenerateTempFile()
-        {
-            return Path.Combine(Constants.CachePath, new Random().Next(int.MaxValue) + ".tmp");
         }
 
         public static string GetDirectoryName(string path)

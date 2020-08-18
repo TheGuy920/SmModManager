@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using SmModManager.Core;
@@ -20,12 +21,13 @@ namespace SmModManager.Graphics
         private void InjectMod(object sender, RoutedEventArgs args)
         {
             // TODO: Inject mod
+            throw new NotImplementedException();
         }
 
-        private void ArchiveMod(object sender, RoutedEventArgs args)
+        private void ArchiveCompatibleMod(object sender, RoutedEventArgs args)
         {
             var binding = (ModItemBinding)CompatibleModsList.SelectedItem;
-            Utilities.CopyDirectory(binding.Path, Path.Combine(Constants.ArchivesPath, new DirectoryInfo(binding.Path).Name));
+            Utilities.CopyDirectory(binding.Path, Path.Combine(Constants.ArchivesPath, Utilities.GetDirectoryName(binding.Path)));
             App.PageArchives.RefreshMods(null, null);
         }
 
@@ -49,15 +51,22 @@ namespace SmModManager.Graphics
             if (CompatibleModsList.SelectedItem == null)
             {
                 InjectButton.IsEnabled = false;
-                ArchiveButton.IsEnabled = false;
+                ArchiveCompatibleButton.IsEnabled = false;
                 DeleteCompatibleButton.IsEnabled = false;
             }
             else
             {
                 InjectButton.IsEnabled = true;
-                ArchiveButton.IsEnabled = true;
+                ArchiveCompatibleButton.IsEnabled = true;
                 DeleteCompatibleButton.IsEnabled = true;
             }
+        }
+
+        private void ArchiveAvailableMod(object sender, RoutedEventArgs args)
+        {
+            var binding = (ModItemBinding)AvailableModsList.SelectedItem;
+            Utilities.CopyDirectory(binding.Path, Path.Combine(Constants.ArchivesPath, Utilities.GetDirectoryName(binding.Path)));
+            App.PageArchives.RefreshMods(null, null);
         }
 
         private void DeleteAvailableMod(object sender, RoutedEventArgs args)
@@ -77,7 +86,16 @@ namespace SmModManager.Graphics
 
         private void UpdateAvailableModSelection(object sender, SelectionChangedEventArgs args)
         {
-            DeleteModButton.IsEnabled = AvailableModsList.SelectedItem != null;
+            if (AvailableModsList.SelectedItem == null)
+            {
+                ArchiveAvailableButton.IsEnabled = false;
+                DeleteAvailableButton.IsEnabled = false;
+            }
+            else
+            {
+                ArchiveAvailableButton.IsEnabled = true;
+                DeleteAvailableButton.IsEnabled = true;
+            }
         }
 
     }

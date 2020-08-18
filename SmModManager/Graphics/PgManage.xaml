@@ -15,7 +15,7 @@
             <DockPanel>
                 <StackPanel Width="150" Margin="0,0,0,10">
                     <Button x:Name="InjectButton" Content="Inject" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="InjectMod"/>
-                    <Button x:Name="ArchiveButton" Content="Archive" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ArchiveMod"/>
+                    <Button x:Name="ArchiveCompatibleButton" Content="Archive" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ArchiveCompatibleMod"/>
                     <Button x:Name="DeleteCompatibleButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteCompatibleMod"/>
                     <Separator Margin="10,10,10,0"/>
                     <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshCompatibleMods"/>
@@ -26,7 +26,8 @@
         <TabItem Header="Available Mods">
             <DockPanel>
                 <StackPanel Width="150" Margin="0,0,0,10">
-                    <Button x:Name="DeleteModButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteAvailableMod"/>
+                    <Button x:Name="ArchiveAvailableButton" Content="Archive" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ArchiveAvailableMod"/>
+                    <Button x:Name="DeleteAvailableButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteAvailableMod"/>
                     <Separator Margin="10,10,10,0"/>
                     <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshAvailableMods"/>
                 </StackPanel>

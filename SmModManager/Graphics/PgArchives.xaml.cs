@@ -19,7 +19,7 @@ namespace SmModManager.Graphics
         private void UnarchiveMod(object sender, RoutedEventArgs args)
         {
             var binding = (ModItemBinding)ArchivedModsList.SelectedItem;
-            Directory.Move(binding.Path, Path.Combine(App.Settings.UserDataPath, "Mods", new DirectoryInfo(binding.Path).Name));
+            Directory.Move(binding.Path, Path.Combine(App.Settings.UserDataPath, "Mods", Utilities.GetDirectoryName(binding.Path)));
             RefreshMods(null, null);
             App.PageManage.RefreshCompatibleMods(null, null);
             App.PageManage.RefreshAvailableMods(null, null);
