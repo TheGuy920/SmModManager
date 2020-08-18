@@ -17,6 +17,8 @@ namespace SmModManager.Graphics
             GameDataPathBox.Text = App.Settings.GameDataPath;
             WorkshopPathBox.Text = App.Settings.WorkshopPath;
             UserDataPathBox.Text = App.Settings.UserDataPath;
+            ChangelogText.Text = Utilities.RetrieveResourceData("SmModManager.Resources.Documents.Changelog.txt");
+            CreditsText.Text = Utilities.RetrieveResourceData("SmModManager.Resources.Documents.Credits.txt");
         }
 
         private void ResetSettings(object sender, RoutedEventArgs args)

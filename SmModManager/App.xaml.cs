@@ -37,6 +37,8 @@ namespace SmModManager
                 Directory.CreateDirectory(Constants.ArchivesPath);
             if (!Directory.Exists(Constants.BackupsPath))
                 Directory.CreateDirectory(Constants.BackupsPath);
+            if (!Directory.Exists(Constants.CachePath))
+                Directory.CreateDirectory(Constants.CachePath);
             PageAdvanced = new PgAdvanced();
             PageArchives = new PgArchives();
             PageBackups = new PgBackups();
@@ -47,7 +49,8 @@ namespace SmModManager
 
         private void HandleException(object sender, DispatcherUnhandledExceptionEventArgs args)
         {
-            // TODO: Handle exceptions
+            args.Handled = true;
+            new WnException(args.Exception).ShowDialog();
         }
 
     }

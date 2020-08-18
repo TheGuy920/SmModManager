@@ -44,6 +44,28 @@ namespace SmModManager.Core
                 CopyDirectory(subDirectories.FullName, Path.Combine(destinationPath, subDirectories.Name));
         }
 
+        public static string RetrieveResourceData(string resourceName)
+        {
+            var manifest = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+            if (manifest == null)
+                return null;
+            var reader = new StreamReader(manifest);
+            var result = reader.ReadToEnd();
+            reader.Close();
+            manifest.Close();
+            return result;
+        }
+
+        public static string GenerateTempFile()
+        {
+            return Path.Combine(Constants.CachePath, new Random().Next(int.MaxValue) + ".tmp");
+        }
+
+        public static string GetDirectoryName(string path)
+        {
+            return new DirectoryInfo(path).Name;
+        }
+
     }
 
 }

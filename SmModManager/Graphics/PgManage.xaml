@@ -23,18 +23,15 @@
                 <ListView x:Name="CompatibleModsList" Margin="0,10,10,10" SelectionChanged="UpdateCompatibleSelection" ItemTemplate="{StaticResource ModItem}"/>
             </DockPanel>
         </TabItem>
-        <TabItem Header="All Mods">
+        <TabItem Header="Available Mods">
             <DockPanel>
                 <StackPanel Width="150" Margin="0,0,0,10">
-                    <Button x:Name="DeleteModButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteMod"/>
+                    <Button x:Name="DeleteModButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteAvailableMod"/>
                     <Separator Margin="10,10,10,0"/>
-                    <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshMods"/>
+                    <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshAvailableMods"/>
                 </StackPanel>
-                <ListView x:Name="AllModsList" Margin="10,10,10,10" SelectionChanged="UpdateModSelection" ItemTemplate="{StaticResource ModItem}"/>
+                <ListView x:Name="AvailableModsList" Margin="10,10,10,10" SelectionChanged="UpdateAvailableModSelection" ItemTemplate="{StaticResource ModItem}"/>
             </DockPanel>
-        </TabItem>
-        <TabItem Header="Current Mods">
-            <ListView x:Name="CurrentModList" Margin="10,10,10,10" ItemTemplate="{StaticResource ModItem}"/>
         </TabItem>
     </TabControl>
 </Page>

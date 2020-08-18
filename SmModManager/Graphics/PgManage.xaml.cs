@@ -14,7 +14,7 @@ namespace SmModManager.Graphics
         {
             InitializeComponent();
             RefreshCompatibleMods(null, null);
-            RefreshMods(null, null);
+            RefreshAvailableMods(null, null);
         }
 
         private void InjectMod(object sender, RoutedEventArgs args)
@@ -25,7 +25,7 @@ namespace SmModManager.Graphics
         private void ArchiveMod(object sender, RoutedEventArgs args)
         {
             var binding = (ModItemBinding)CompatibleModsList.SelectedItem;
-            Directory.Move(binding.Path, Path.Combine(Constants.ArchivesPath, new DirectoryInfo(binding.Path).Name));
+            Utilities.CopyDirectory(binding.Path, Path.Combine(Constants.ArchivesPath, new DirectoryInfo(binding.Path).Name));
             App.PageArchives.RefreshMods(null, null);
         }
 
@@ -60,24 +60,24 @@ namespace SmModManager.Graphics
             }
         }
 
-        private void DeleteMod(object sender, RoutedEventArgs args)
+        private void DeleteAvailableMod(object sender, RoutedEventArgs args)
         {
-            var binding = (ModItemBinding)AllModsList.SelectedItem;
+            var binding = (ModItemBinding)AvailableModsList.SelectedItem;
             Directory.Delete(binding.Path, true);
-            RefreshMods(null, null);
+            RefreshAvailableMods(null, null);
         }
 
-        public void RefreshMods(object sender, RoutedEventArgs args)
+        public void RefreshAvailableMods(object sender, RoutedEventArgs args)
         {
-            AllModsList.Items.Clear();
+            AvailableModsList.Items.Clear();
             foreach (var path in Directory.GetDirectories(App.Settings.WorkshopPath))
                 if (Utilities.IsMod(path))
-                    AllModsList.Items.Add(ModItemBinding.Create(path));
+                    AvailableModsList.Items.Add(ModItemBinding.Create(path));
         }
 
-        private void UpdateModSelection(object sender, SelectionChangedEventArgs args)
+        private void UpdateAvailableModSelection(object sender, SelectionChangedEventArgs args)
         {
-            DeleteModButton.IsEnabled = AllModsList.SelectedItem != null;
+            DeleteModButton.IsEnabled = AvailableModsList.SelectedItem != null;
         }
 
     }

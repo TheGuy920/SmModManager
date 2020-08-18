@@ -19,6 +19,13 @@
   <ItemGroup>
     <None Remove="Graphics\WnManager.xaml.cs~RFb290084.TMP" />
     <None Remove="Resources\Assets\Icon.png" />
+    <None Remove="Resources\Documents\Changelog.txt" />
+    <None Remove="Resources\Documents\Credits.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Documents\Changelog.txt" />
+    <EmbeddedResource Include="Resources\Documents\Credits.txt" />
   </ItemGroup>
 
   <ItemGroup>

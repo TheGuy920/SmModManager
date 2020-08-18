@@ -22,13 +22,13 @@ namespace SmModManager.Graphics
             Directory.Move(binding.Path, Path.Combine(App.Settings.UserDataPath, "Mods", new DirectoryInfo(binding.Path).Name));
             RefreshMods(null, null);
             App.PageManage.RefreshCompatibleMods(null, null);
-            App.PageManage.RefreshMods(null, null);
+            App.PageManage.RefreshAvailableMods(null, null);
         }
 
         private void DeleteMod(object sender, RoutedEventArgs args)
         {
             var binding = (ModItemBinding)ArchivedModsList.SelectedItem;
-            Directory.Delete(binding.Path);
+            Directory.Delete(binding.Path, true);
             RefreshMods(null, null);
         }
 
