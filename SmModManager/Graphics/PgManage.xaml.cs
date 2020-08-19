@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using SmModManager.Core;
 using SmModManager.Core.Bindings;
 
@@ -20,8 +22,8 @@ namespace SmModManager.Graphics
 
         private void InjectMod(object sender, RoutedEventArgs args)
         {
-            // TODO: Inject mod
-            throw new NotImplementedException();
+            var binding = (ModItemBinding)CompatibleModsList.SelectedItem;
+            Utilities.CopyDirectory(Path.Combine(binding.Path, "Survival"), Path.Combine(App.Settings.GameDataPath, "Survival"));
         }
 
         private void ArchiveCompatibleMod(object sender, RoutedEventArgs args)
@@ -44,6 +46,18 @@ namespace SmModManager.Graphics
             foreach (var path in Directory.GetDirectories(App.Settings.WorkshopPath))
                 if (Utilities.IsCompatibleMod(path))
                     CompatibleModsList.Items.Add(ModItemBinding.Create(path));
+            foreach (var path in Directory.GetDirectories(Path.Combine(App.Settings.UserDataPath, "Mods")))
+                if (Utilities.IsCompatibleMod(path))
+                    CompatibleModsList.Items.Add(ModItemBinding.Create(path));
+        }
+
+        private void OpenCompatibleMod(object sender, MouseButtonEventArgs args)
+        {
+            var binding = (ModItemBinding)CompatibleModsList.SelectedItem;
+            if (!string.IsNullOrEmpty(binding.Url))
+                Utilities.OpenBrowserUrl(binding.Url);
+            else
+                Process.Start(binding.Path);
         }
 
         private void UpdateCompatibleSelection(object sender, SelectionChangedEventArgs args)
@@ -82,6 +96,18 @@ namespace SmModManager.Graphics
             foreach (var path in Directory.GetDirectories(App.Settings.WorkshopPath))
                 if (Utilities.IsMod(path))
                     AvailableModsList.Items.Add(ModItemBinding.Create(path));
+            foreach (var path in Directory.GetDirectories(Path.Combine(App.Settings.UserDataPath, "Mods")))
+                if (Utilities.IsMod(path))
+                    AvailableModsList.Items.Add(ModItemBinding.Create(path));
+        }
+
+        private void OpenAvailableMod(object sender, MouseButtonEventArgs args)
+        {
+            var binding = (ModItemBinding)AvailableModsList.SelectedItem;
+            if (!string.IsNullOrEmpty(binding.Url))
+                Utilities.OpenBrowserUrl(binding.Url);
+            else
+                Utilities.OpenExplorerUrl(binding.Path);
         }
 
         private void UpdateAvailableModSelection(object sender, SelectionChangedEventArgs args)

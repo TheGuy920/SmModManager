@@ -15,7 +15,7 @@ namespace SmModManager.Core.Models
         public uint WorkshopId { get; set; }
 
         [JsonProperty("localId")]
-        public Guid GameId { get; set; }
+        public Guid Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }

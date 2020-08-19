@@ -4,11 +4,11 @@
         Title="Scrap Mechanic Mod Manager" Width="800" Height="400" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <DockPanel>
         <StackPanel Margin="0,10,0,10" Width="150">
-            <Button Margin="10,0,0,0" Content="Manage" Height="30" Click="ShowManagePage"/>
-            <Button Margin="10,10,0,0" Content="Multiplayer" Height="30" Click="ShowMultiplayerPage"/>
-            <Button Margin="10,10,0,0" Content="Backups" Height="30" Click="ShowBackupPage"/>
-            <Button Margin="10,10,0,0" Content="Archives" Height="30" Click="ShowArchivePage"/>
-            <Button Margin="10,10,0,0" Content="Advanced" Height="30" Click="ShowAdvancedPage"/>
+            <Button x:Name="ManageButton" Margin="10,0,0,0" Content="Manage" Height="30" Click="ShowManagePage"/>
+            <Button x:Name="MultiplayerButton" Margin="10,10,0,0" Content="Multiplayer" Height="30" Click="ShowMultiplayerPage"/>
+            <Button x:Name="BackupsButton" Margin="10,10,0,0" Content="Backups" Height="30" Click="ShowBackupsPage"/>
+            <Button x:Name="ArchivesButton" Margin="10,10,0,0" Content="Archives" Height="30" Click="ShowArchivesPage"/>
+            <Button x:Name="AdvancedButton" Margin="10,10,0,0" Content="Advanced" Height="30" Click="ShowAdvancedPage"/>
             <Button Margin="10,10,0,0" Content="Exit" Height="30" Click="Exit"/>
         </StackPanel>
         <Frame x:Name="PageView" Margin="10,10,10,10" NavigationUIVisibility="Hidden"/>

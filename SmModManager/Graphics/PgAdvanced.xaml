@@ -28,10 +28,10 @@
             </DockPanel>
         </TabItem>
         <TabItem Header="Changelog">
-            <TextBlock x:Name="ChangelogText" Margin="10,10,10,10"/>
+            <TextBlock x:Name="ChangelogText" TextWrapping="Wrap" Margin="10,10,10,10"/>
         </TabItem>
         <TabItem Header="Credits">
-            <TextBlock x:Name="CreditsText" Margin="10,10,10,10"/>
+            <TextBlock x:Name="CreditsText" TextWrapping="Wrap" Margin="10,10,10,10"/>
         </TabItem>
     </TabControl>
 </Page>

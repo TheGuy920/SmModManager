@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows;
-using System.Xml.Serialization;
 
 namespace SmModManager.Core
 {
@@ -60,6 +59,20 @@ namespace SmModManager.Core
         public static string GetDirectoryName(string path)
         {
             return new DirectoryInfo(path).Name;
+        }
+
+        public static void OpenBrowserUrl(string url)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            });
+        }
+
+        public static void OpenExplorerUrl(string url)
+        {
+            Process.Start("explorer.exe", url);
         }
 
     }

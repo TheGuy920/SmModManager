@@ -20,7 +20,7 @@
                     <Separator Margin="10,10,10,0"/>
                     <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshCompatibleMods"/>
                 </StackPanel>
-                <ListView x:Name="CompatibleModsList" Margin="0,10,10,10" SelectionChanged="UpdateCompatibleSelection" ItemTemplate="{StaticResource ModItem}"/>
+                <ListView x:Name="CompatibleModsList" Margin="0,10,10,10" ItemTemplate="{StaticResource ModItem}" SelectionChanged="UpdateCompatibleSelection" MouseDoubleClick="OpenCompatibleMod"/>
             </DockPanel>
         </TabItem>
         <TabItem Header="Available Mods">
@@ -31,7 +31,7 @@
                     <Separator Margin="10,10,10,0"/>
                     <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshAvailableMods"/>
                 </StackPanel>
-                <ListView x:Name="AvailableModsList" Margin="10,10,10,10" SelectionChanged="UpdateAvailableModSelection" ItemTemplate="{StaticResource ModItem}"/>
+                <ListView x:Name="AvailableModsList" Margin="10,10,10,10" ItemTemplate="{StaticResource ModItem}" SelectionChanged="UpdateAvailableModSelection" MouseDoubleClick="OpenAvailableMod"/>
             </DockPanel>
         </TabItem>
     </TabControl>
