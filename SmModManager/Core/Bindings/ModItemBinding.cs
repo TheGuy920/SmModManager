@@ -9,13 +9,14 @@ namespace SmModManager.Core.Bindings
     public class ModItemBinding
     {
 
-        public string Name { get; set; }
+        public BitmapFrame Preview { get; private set; }
 
-        public string Path { get; set; }
+        public string Name { get; private set; }
 
-        public string Url { get; set; }
+        public string Path { get; private set; }
 
-        public BitmapFrame Preview { get; set; }
+        public string Url { get; private set; }
+
 
         public static ModItemBinding Create(string path)
         {
@@ -43,11 +44,12 @@ namespace SmModManager.Core.Bindings
                 // TODO: Add placeholder image
             }
             var binding = new ModItemBinding();
+            binding.Preview = BitmapFrame.Create(new Uri(previewPath));
+            binding.Name = description.Name;
+            binding.Path = path;
             if (description.WorkshopId != 0)
                 binding.Url = "https://steamcommunity.com/sharedfiles/filedetails/?id=" + description.WorkshopId;
-            binding.Preview = BitmapFrame.Create(new Uri(previewPath));
-            binding.Path = path;
-            binding.Name = description.Name;
+            binding.Type = description.Type;
             return binding;
         }
 

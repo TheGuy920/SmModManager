@@ -35,10 +35,12 @@ namespace SmModManager
             }
             if (!Directory.Exists(Constants.ArchivesPath))
                 Directory.CreateDirectory(Constants.ArchivesPath);
-            if (!Directory.Exists(Constants.BackupsPath))
-                Directory.CreateDirectory(Constants.BackupsPath);
+            if (!Directory.Exists(Constants.GameBackupsPath))
+                Directory.CreateDirectory(Constants.GameBackupsPath);
             if (!Directory.Exists(Constants.CachePath))
                 Directory.CreateDirectory(Constants.CachePath);
+            if (!Directory.Exists(Constants.WorldBackupsPath))
+                Directory.CreateDirectory(Constants.WorldBackupsPath);
             PageAdvanced = new PgAdvanced();
             PageArchives = new PgArchives();
             PageBackups = new PgBackups();
