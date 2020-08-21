@@ -2,4 +2,4 @@
 
 Credits to dentolos19 for rewriting the entire project in WPF and adding new features such as the global exception handler and the redesigned backup functions.
 
-Want to do more things like managing and modifying recipes? Try out dentolos19's Scrap Mechanic Recipe Modifier by opening this website on your web browser: https://github.com/dentolos19/SmRecipeModifier
+Want to do more things like managing and modifying recipes? Try out dentolos19's Scrap Mechanic Recipe Modifier by opening this web page on your web browser: https://github.com/dentolos19/SmRecipeModifier

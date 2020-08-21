@@ -14,9 +14,6 @@ namespace SmModManager.Core.Models
         [JsonProperty("name")]
         public string Name { get; private set; }
 
-        [JsonProperty("version")]
-        public uint Version { get; private set; }
-
         [JsonProperty("description")]
         public string Description { get; private set; }
 
