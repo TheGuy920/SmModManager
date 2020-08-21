@@ -1,0 +1,31 @@
+﻿using System;
+using System.IO;
+using Newtonsoft.Json;
+
+namespace SmModManager.Core.Models
+{
+
+    public class BackupDescriptionModel
+    {
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("time")]
+        public DateTime Time { get; set; }
+
+        public void Save(string outputPath)
+        {
+            var json = JsonConvert.SerializeObject(this);
+            File.WriteAllText(outputPath, json);
+        }
+
+        public static BackupDescriptionModel Load(string inputFile)
+        {
+            var json = File.ReadAllText(inputFile);
+            return JsonConvert.DeserializeObject<BackupDescriptionModel>(json);
+        }
+
+    }
+
+}

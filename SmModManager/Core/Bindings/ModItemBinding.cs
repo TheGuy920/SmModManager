@@ -39,17 +39,12 @@ namespace SmModManager.Core.Bindings
                     File.Copy(previewPath, previewTempPath);
                 previewPath = previewTempPath;
             }
-            if (string.IsNullOrEmpty(previewPath))
-            {
-                // TODO: Add placeholder image
-            }
             var binding = new ModItemBinding();
             binding.Preview = BitmapFrame.Create(new Uri(previewPath));
             binding.Name = description.Name;
             binding.Path = path;
             if (description.WorkshopId != 0)
                 binding.Url = "https://steamcommunity.com/sharedfiles/filedetails/?id=" + description.WorkshopId;
-            binding.Type = description.Type;
             return binding;
         }
 

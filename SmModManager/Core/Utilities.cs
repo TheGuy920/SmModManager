@@ -31,6 +31,11 @@ namespace SmModManager.Core
             return IsMod(path) && Directory.Exists(Path.Combine(path, "Survival"));
         }
 
+        public static bool IsBackup(string path)
+        {
+            return File.Exists(Path.Combine(path, "description.smmm"));
+        }
+
         public static void CopyDirectory(string sourcePath, string destinationPath)
         {
             var info = new DirectoryInfo(sourcePath);

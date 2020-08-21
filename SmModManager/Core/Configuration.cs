@@ -8,7 +8,7 @@ namespace SmModManager.Core
     public class Configuration
     {
 
-        private static readonly string Source = Path.Combine(AppDomain.CurrentDomain.BaseDirectory!, "SmModManager.cfg");
+        private static readonly string Source = Path.Combine(AppDomain.CurrentDomain.BaseDirectory!, "configuration.smmm");
         private static readonly XmlSerializer Serializer = new XmlSerializer(typeof(Configuration));
 
         public string GameDataPath { get; set; }

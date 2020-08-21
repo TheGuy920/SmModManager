@@ -1,4 +1,4 @@
 ﻿Version 7.0
 > Completety rewritten in WPF
-> Redesigned user interface
 > Added global exception handler
+> Redesigned backup functions
