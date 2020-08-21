@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 
@@ -29,11 +30,6 @@ namespace SmModManager.Core
         public static bool IsCompatibleMod(string path)
         {
             return IsMod(path) && Directory.Exists(Path.Combine(path, "Survival"));
-        }
-
-        public static bool IsBackup(string path)
-        {
-            return File.Exists(Path.Combine(path, "description.smmm"));
         }
 
         public static void CopyDirectory(string sourcePath, string destinationPath)
@@ -78,6 +74,12 @@ namespace SmModManager.Core
         public static void OpenExplorerUrl(string url)
         {
             Process.Start("explorer.exe", url);
+        }
+
+        public static string GenerateAlphanumeric(int length)
+        {
+            var random = new Random();
+            return new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", length).Select(index => index[random.Next(index.Length)]).ToArray());
         }
 
     }

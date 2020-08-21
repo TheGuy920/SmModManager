@@ -12,6 +12,8 @@ namespace SmModManager
 
         internal static Configuration Settings { get; private set; }
 
+        internal static WnManager WindowManager { get; private set; }
+
         internal static PgAdvanced PageAdvanced { get; private set; }
         internal static PgArchives PageArchives { get; private set; }
         internal static PgBackups PageBackups { get; private set; }
@@ -46,7 +48,8 @@ namespace SmModManager
             PageBackups = new PgBackups();
             PageManage = new PgManage();
             PageMultiplayer = new PgMultiplayer();
-            new WnManager().Show();
+            WindowManager = new WnManager();
+            WindowManager.Show();
         }
 
         private void HandleException(object sender, DispatcherUnhandledExceptionEventArgs args)

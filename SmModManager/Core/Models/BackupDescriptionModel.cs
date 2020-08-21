@@ -11,6 +11,12 @@ namespace SmModManager.Core.Models
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("worldName")]
+        public string WorldName { get; set; }
+
+        [JsonProperty("data")]
+        public byte[] Data { get; set; }
+
         [JsonProperty("time")]
         public DateTime Time { get; set; }
 

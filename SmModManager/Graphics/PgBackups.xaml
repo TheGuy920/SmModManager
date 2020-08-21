@@ -12,11 +12,12 @@
                     <Separator Margin="10,10,10,0"/>
                     <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshWorlds"/>
                 </StackPanel>
-                <ListView x:Name="WorldsList" Margin="0,10,10,10" SelectionChanged="UpdateWorldSelection" MouseDoubleClick="OpenWorldFolder">
+                <ListView x:Name="WorldsList" Margin="0,10,10,10" SelectionChanged="UpdateWorldSelection">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}"/>
-                            <GridViewColumn Header="Time" Width="150" DisplayMemberBinding="{Binding Time}"/>
+                            <GridViewColumn Header="World Name" Width="200" DisplayMemberBinding="{Binding WorldName}"/>
+                            <GridViewColumn Header="Time" Width="200" DisplayMemberBinding="{Binding Time}"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -32,11 +33,11 @@
                     <Separator Margin="10,10,10,0"/>
                     <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshGames"/>
                 </StackPanel>
-                <ListView x:Name="GamesList" Margin="0,10,10,10" SelectionChanged="UpdateGameSelection" MouseDoubleClick="OpenGameFolder">
+                <ListView x:Name="GamesList" Margin="0,10,10,10" SelectionChanged="UpdateGameSelection">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}"/>
-                            <GridViewColumn Header="Time" Width="150" DisplayMemberBinding="{Binding Time}"/>
+                            <GridViewColumn Header="Time" Width="200" DisplayMemberBinding="{Binding Time}"/>
                         </GridView>
                     </ListView.View>
                 </ListView>

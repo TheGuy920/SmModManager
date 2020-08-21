@@ -20,7 +20,9 @@ namespace SmModManager.Graphics
 
         private void CreateWorldBackup(object sender, RoutedEventArgs args)
         {
-            // TODO: Create world backup
+            var dialog = new WnWorldBackup { Owner = App.WindowManager };
+            if (dialog.ShowDialog() == true)
+                RefreshWorlds(null, null);
         }
 
         private void RestoreWorld(object sender, RoutedEventArgs args)
@@ -30,23 +32,16 @@ namespace SmModManager.Graphics
 
         private void DeleteWorld(object sender, RoutedEventArgs args)
         {
-            var binding = (BackupItemBinding)GamesList.SelectedItem;
-            Directory.Delete(binding.Path, true);
+            var binding = (BackupItemBinding)WorldsList.SelectedItem;
+            File.Delete(binding.Path);
             RefreshWorlds(null, null);
         }
 
         private void RefreshWorlds(object sender, RoutedEventArgs args)
         {
             WorldsList.Items.Clear();
-            foreach (var path in Directory.GetDirectories(Constants.WorldBackupsPath))
-                if (Utilities.IsBackup(path))
-                    WorldsList.Items.Add(BackupItemBinding.Create(path));
-        }
-
-        private void OpenWorldFolder(object sender, MouseButtonEventArgs args)
-        {
-            var binding = (BackupItemBinding)WorldsList.SelectedItem;
-            Utilities.OpenExplorerUrl(binding.Path);
+            foreach (var path in Directory.GetFiles(Constants.WorldBackupsPath))
+                WorldsList.Items.Add(BackupItemBinding.Create(path));
         }
 
         private void UpdateWorldSelection(object sender, SelectionChangedEventArgs args)
@@ -76,22 +71,15 @@ namespace SmModManager.Graphics
         private void DeleteGame(object sender, RoutedEventArgs args)
         {
             var binding = (BackupItemBinding)GamesList.SelectedItem;
-            Directory.Delete(binding.Path, true);
+            File.Delete(binding.Path);
             RefreshGames(null, null);
         }
 
         private void RefreshGames(object sender, RoutedEventArgs args)
         {
             GamesList.Items.Clear();
-            foreach (var path in Directory.GetDirectories(Constants.GameBackupsPath))
-                if (Utilities.IsBackup(path))
-                    GamesList.Items.Add(BackupItemBinding.Create(path));
-        }
-
-        private void OpenGameFolder(object sender, MouseButtonEventArgs args)
-        {
-            var binding = (BackupItemBinding)GamesList.SelectedItem;
-            Utilities.OpenExplorerUrl(binding.Path);
+            foreach (var path in Directory.GetFiles(Constants.GameBackupsPath))
+                GamesList.Items.Add(BackupItemBinding.Create(path));
         }
 
         private void UpdateGameSelection(object sender, SelectionChangedEventArgs args)

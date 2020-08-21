@@ -1,7 +1,7 @@
 ﻿<Window x:Class="SmModManager.Graphics.WnPrerequisites"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Mod Manager Prerequisites" Width="500" Height="300" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="Mod Manager Prerequisites" Width="500" SizeToContent="Height" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <DockPanel>
         <Grid DockPanel.Dock="Bottom" Height="50">
             <Grid.ColumnDefinitions>
