@@ -1,5 +1,6 @@
 ﻿Version 7.0
-> Completety rewritten in WPF
+> Completely rewritten in WPF
 > Added global exception handler
+> Added analytics and exceptions reports
 > Redesigned backup functions
 > Auto-detects steam location

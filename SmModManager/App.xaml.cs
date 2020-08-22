@@ -1,6 +1,9 @@
 ﻿using System.IO;
 using System.Windows;
 using System.Windows.Threading;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using SmModManager.Core;
 using SmModManager.Core.Options;
 using SmModManager.Graphics;
@@ -23,6 +26,7 @@ namespace SmModManager
 
         private void Initialize(object sender, StartupEventArgs args)
         {
+            AppCenter.Start("c818850e-34d5-4155-850b-348c823bed24", typeof(Analytics), typeof(Crashes));
             Settings = Configuration.Load();
             if (!Directory.Exists(Constants.UsersDataPath))
             {
@@ -92,6 +96,7 @@ namespace SmModManager
         private void HandleException(object sender, DispatcherUnhandledExceptionEventArgs args)
         {
             args.Handled = true;
+            Crashes.TrackError(args.Exception);
             new WnException(args.Exception).ShowDialog();
         }
 
