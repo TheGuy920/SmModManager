@@ -19,7 +19,7 @@
                     <Separator Margin="10,10,10,0"/>
                     <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshMods"/>
                 </StackPanel>
-                <ListView x:Name="ArchivedModsList" Margin="0,10,10,10" SelectionChanged="UpdateSelection" ItemTemplate="{StaticResource ModItem}"/>
+                <ListBox x:Name="ArchivedModsList" Margin="0,10,10,10" SelectionChanged="UpdateSelection" ItemTemplate="{StaticResource ModItem}"/>
             </DockPanel>
         </TabItem>
     </TabControl>

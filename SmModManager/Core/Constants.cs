@@ -13,6 +13,9 @@ namespace SmModManager.Core
         public static readonly string GameBackupsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Backups", "Game");
         public static readonly string CachePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Cache");
 
+        public const uint GameId = 387990;
+        public const uint WorkshopId = 2122179067;
+
     }
 
 }

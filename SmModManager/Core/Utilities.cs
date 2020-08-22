@@ -74,17 +74,30 @@ namespace SmModManager.Core
         {
             var deserialized = VdfConvert.Deserialize(File.ReadAllText(Path.Combine(steamPath, "steamapps", "libraryfolders.vdf")));
             var values = (VObject)deserialized.Value;
-            var value = values["1"]!.Value<string>();
+            var value = values["1"]?.Value<string>() ?? string.Empty;
             return value;
         }
 
         public static bool CheckSteamLocation(string steamPath)
         {
-            if (!Directory.Exists(Path.Combine(steamPath, "steamapps", "workshop", "content", "387990")))
+            if (!Directory.Exists(Path.Combine(steamPath, "steamapps", "workshop", "content", Constants.GameId.ToString())))
                 return false;
             if (!File.Exists(Path.Combine(steamPath, "steamapps", "common", "Scrap Mechanic", "Release", "ScrapMechanic.exe")))
                 return false;
             return true;
+        }
+
+        public static bool CheckForUpdates()
+        {
+            var currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            var fileVersion = Version.Parse(File.ReadAllText(Path.Combine(App.Settings.WorkshopPath, Constants.WorkshopId.ToString(), "sysVer.SMMM")));
+            return fileVersion.CompareTo(currentVersion) > 0;
+        }
+
+        public static void InstallUpdate()
+        {
+            Process.Start(Path.Combine(App.Settings.WorkshopPath, Constants.WorkshopId.ToString(), "update.exe"));
+            Application.Current.Shutdown();
         }
 
         public static string GetDirectoryName(string path)

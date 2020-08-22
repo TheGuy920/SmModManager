@@ -36,28 +36,28 @@ namespace SmModManager
                 if (Utilities.CheckSteamLocation(steamPath))
                 {
                     Settings.GameDataPath = Path.Combine(steamPath, "steamapps" , "common", "Scrap Mechanic");
-                    Settings.WorkshopPath = Path.Combine(steamPath, "steamapps", "workshop", "content", "387990");
+                    Settings.WorkshopPath = Path.Combine(steamPath, "steamapps", "workshop", "content", Constants.GameId.ToString());
                     Settings.UserDataPath = Directory.GetDirectories(Constants.UsersDataPath)[0];
                     Settings.Save();
                     goto SkipToLoading;
                 }
-                else
+                steamPath = Utilities.GetSteamAppsLocation(steamPath);
+                if (string.IsNullOrEmpty(steamPath))
+                    goto SkipToPrerequisites;
+                if (Utilities.CheckSteamLocation(steamPath))
                 {
-                    steamPath = Utilities.GetSteamAppsLocation(steamPath);
-                    if (Utilities.CheckSteamLocation(steamPath))
-                    {
-                        Settings.GameDataPath = Path.Combine(steamPath, "steamapps" , "common", "Scrap Mechanic");
-                        Settings.WorkshopPath = Path.Combine(steamPath, "steamapps", "workshop", "content", "387990");
-                        Settings.UserDataPath = Directory.GetDirectories(Constants.UsersDataPath)[0];
-                        Settings.Save();
-                        goto SkipToLoading;
-                    }
+                    Settings.GameDataPath = Path.Combine(steamPath, "steamapps" , "common", "Scrap Mechanic");
+                    Settings.WorkshopPath = Path.Combine(steamPath, "steamapps", "workshop", "content", Constants.GameId.ToString());
+                    Settings.UserDataPath = Directory.GetDirectories(Constants.UsersDataPath)[0];
+                    Settings.Save();
+                    goto SkipToLoading;
                 }
                 SkipToPrerequisites:
                 var dialog = new WnPrerequisites();
-                if (dialog.ShowDialog() == false)
-                    Current.Shutdown();
-                Utilities.RestartApp();
+                if (dialog.ShowDialog() == true)
+                    goto SkipToLoading;
+                Current.Shutdown();
+                return;
             }
             SkipToLoading:
             if (!Directory.Exists(Constants.ArchivesPath))
@@ -84,4 +84,5 @@ namespace SmModManager
         }
 
     }
+
 }

@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using SmModManager.Core;
 using SmModManager.Core.Bindings;
+using SmModManager.Core.Models;
 
 namespace SmModManager.Graphics
 {
@@ -60,12 +60,17 @@ namespace SmModManager.Graphics
 
         private void CreateGameBackup(object sender, RoutedEventArgs args)
         {
-            // TODO: Create game backup
+            var dialog = new WnGameBackup { Owner = App.WindowManager };
+            if (dialog.ShowDialog() == true)
+                RefreshGames(null, null);
         }
 
         private void RestoreGame(object sender, RoutedEventArgs args)
         {
-            // TODO: Restore game backup
+            var binding = (BackupItemBinding)GamesList.SelectedItem;
+            var description = BackupDescriptionModel.Load(binding.Path);
+            var temporaryPath = Path.Combine(Constants.GameBackupsPath, Path.GetFileNameWithoutExtension(binding.Path)!);
+            File.WriteAllBytes(temporaryPath + ".tmp", description.Data);
         }
 
         private void DeleteGame(object sender, RoutedEventArgs args)
