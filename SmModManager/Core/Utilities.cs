@@ -4,6 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using Gameloop.Vdf;
+using Gameloop.Vdf.Linq;
+using Microsoft.Win32;
+using File = System.IO.File;
 
 namespace SmModManager.Core
 {
@@ -55,6 +59,32 @@ namespace SmModManager.Core
             reader.Close();
             manifest.Close();
             return result;
+        }
+
+        public static string GetSteamLocation()
+        {
+            var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Valve\Steam");
+            if (key == null)
+                return null;
+            var installPath = (string)key.GetValue("InstallPath");
+            return string.IsNullOrEmpty(installPath) ? null : installPath;
+        }
+
+        public static string GetSteamAppsLocation(string steamPath)
+        {
+            var deserialized = VdfConvert.Deserialize(File.ReadAllText(Path.Combine(steamPath, "steamapps", "libraryfolders.vdf")));
+            var values = (VObject)deserialized.Value;
+            var value = values["1"]!.Value<string>();
+            return value;
+        }
+
+        public static bool CheckSteamLocation(string steamPath)
+        {
+            if (!Directory.Exists(Path.Combine(steamPath, "steamapps", "workshop", "content", "387990")))
+                return false;
+            if (!File.Exists(Path.Combine(steamPath, "steamapps", "common", "Scrap Mechanic", "Release", "ScrapMechanic.exe")))
+                return false;
+            return true;
         }
 
         public static string GetDirectoryName(string path)

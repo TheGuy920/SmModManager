@@ -30,11 +30,36 @@ namespace SmModManager
             }
             if (string.IsNullOrEmpty(Settings.GameDataPath) || string.IsNullOrEmpty(Settings.WorkshopPath) || string.IsNullOrEmpty(Settings.UserDataPath))
             {
+                var steamPath = Utilities.GetSteamLocation();
+                if (string.IsNullOrEmpty(steamPath))
+                    goto SkipToPrerequisites;
+                if (Utilities.CheckSteamLocation(steamPath))
+                {
+                    Settings.GameDataPath = Path.Combine(steamPath, "steamapps" , "common", "Scrap Mechanic");
+                    Settings.WorkshopPath = Path.Combine(steamPath, "steamapps", "workshop", "content", "387990");
+                    Settings.UserDataPath = Directory.GetDirectories(Constants.UsersDataPath)[0];
+                    Settings.Save();
+                    goto SkipToLoading;
+                }
+                else
+                {
+                    steamPath = Utilities.GetSteamAppsLocation(steamPath);
+                    if (Utilities.CheckSteamLocation(steamPath))
+                    {
+                        Settings.GameDataPath = Path.Combine(steamPath, "steamapps" , "common", "Scrap Mechanic");
+                        Settings.WorkshopPath = Path.Combine(steamPath, "steamapps", "workshop", "content", "387990");
+                        Settings.UserDataPath = Directory.GetDirectories(Constants.UsersDataPath)[0];
+                        Settings.Save();
+                        goto SkipToLoading;
+                    }
+                }
+                SkipToPrerequisites:
                 var dialog = new WnPrerequisites();
                 if (dialog.ShowDialog() == false)
                     Current.Shutdown();
                 Utilities.RestartApp();
             }
+            SkipToLoading:
             if (!Directory.Exists(Constants.ArchivesPath))
                 Directory.CreateDirectory(Constants.ArchivesPath);
             if (!Directory.Exists(Constants.GameBackupsPath))

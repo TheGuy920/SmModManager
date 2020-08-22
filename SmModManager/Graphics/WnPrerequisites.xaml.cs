@@ -15,6 +15,10 @@ namespace SmModManager.Graphics
             foreach (var userDataPath in Directory.GetDirectories(Constants.UsersDataPath))
                 UserDataPathBox.Items.Add(userDataPath);
             UserDataPathBox.SelectedIndex = 0;
+            if (!string.IsNullOrEmpty(App.Settings.GameDataPath))
+                GameDataPathBox.Text = App.Settings.GameDataPath;
+            if (!string.IsNullOrEmpty(App.Settings.WorkshopPath))
+                WorkshopPathBox.Text = App.Settings.WorkshopPath;
         }
 
         private void Cancel(object sender, RoutedEventArgs args)

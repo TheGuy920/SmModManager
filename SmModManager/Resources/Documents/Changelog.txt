@@ -2,3 +2,4 @@
 > Completety rewritten in WPF
 > Added global exception handler
 > Redesigned backup functions
+> Auto-detects steam location

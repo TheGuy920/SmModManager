@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using SmModManager.Core;
 
 namespace SmModManager.Graphics
 {
