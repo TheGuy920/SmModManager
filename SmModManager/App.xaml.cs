@@ -5,7 +5,7 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using SmModManager.Core;
-using SmModManager.Core.Options;
+using SmModManager.Core.Enums;
 using SmModManager.Graphics;
 
 namespace SmModManager

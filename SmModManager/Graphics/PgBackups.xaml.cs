@@ -28,12 +28,16 @@ namespace SmModManager.Graphics
 
         private void RestoreWorld(object sender, RoutedEventArgs args)
         {
+            if (MessageBox.Show("This might overwrite the existing world, do you want to continue?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                return;
             var binding = (BackupItemBinding)WorldsList.SelectedItem;
             File.WriteAllBytes(Path.Combine(App.Settings.UserDataPath, "Save", "Survival", binding.WorldName + ".db"), BackupDescriptionModel.Load(binding.Path).Data);
         }
 
         private void DeleteWorld(object sender, RoutedEventArgs args)
         {
+            if (MessageBox.Show("Are you sure that you want to delete this backup?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                return;
             var binding = (BackupItemBinding)WorldsList.SelectedItem;
             File.Delete(binding.Path);
             RefreshWorlds(null, null);
@@ -69,6 +73,8 @@ namespace SmModManager.Graphics
 
         private void RestoreGame(object sender, RoutedEventArgs args)
         {
+            if (MessageBox.Show("This might break critical parts of the game, do you want to continue?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                return;
             var binding = (BackupItemBinding)GamesList.SelectedItem;
             var temporaryPath = Path.Combine(Constants.GameBackupsPath, Path.GetFileNameWithoutExtension(binding.Path)!);
             File.WriteAllBytes(temporaryPath + ".tmp", BackupDescriptionModel.Load(binding.Path).Data);
@@ -79,6 +85,8 @@ namespace SmModManager.Graphics
 
         private void DeleteGame(object sender, RoutedEventArgs args)
         {
+            if (MessageBox.Show("Are you sure that you want to delete this backup?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                return;
             var binding = (BackupItemBinding)GamesList.SelectedItem;
             File.Delete(binding.Path);
             RefreshGames(null, null);

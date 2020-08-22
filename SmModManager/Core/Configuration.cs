@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Xml.Serialization;
-using SmModManager.Core.Options;
+using SmModManager.Core.Enums;
 
 namespace SmModManager.Core
 {

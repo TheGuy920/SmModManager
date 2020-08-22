@@ -20,7 +20,7 @@ namespace SmModManager.Core.Bindings
 
         public static ModItemBinding Create(string path)
         {
-            
+
             var previewPath = string.Empty;
             var description = ModDescriptionModel.Load(System.IO.Path.Combine(path, "description.json"));
             if (File.Exists(System.IO.Path.Combine(path, "preview.png")))
@@ -35,7 +35,7 @@ namespace SmModManager.Core.Bindings
             {
                 previewPath = System.IO.Path.Combine(path, "preview.jpg");
                 var previewTempPath = System.IO.Path.Combine(Constants.CachePath, description.Id + ".jpg");
-                if (!File.Exists(previewTempPath)) 
+                if (!File.Exists(previewTempPath))
                     File.Copy(previewPath, previewTempPath);
                 previewPath = previewTempPath;
             }

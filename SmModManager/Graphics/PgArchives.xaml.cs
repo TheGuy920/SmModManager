@@ -18,6 +18,8 @@ namespace SmModManager.Graphics
 
         private void UnarchiveMod(object sender, RoutedEventArgs args)
         {
+            if (MessageBox.Show("Are you sure that you want to unarchive this mod?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                return;
             var binding = (ModItemBinding)ArchivedModsList.SelectedItem;
             Directory.Move(binding.Path, Path.Combine(App.Settings.UserDataPath, "Mods", Utilities.GetDirectoryName(binding.Path)));
             RefreshMods(null, null);
@@ -27,6 +29,8 @@ namespace SmModManager.Graphics
 
         private void DeleteMod(object sender, RoutedEventArgs args)
         {
+            if (MessageBox.Show("Are you sure that you want to delete this archive?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                return;
             var binding = (ModItemBinding)ArchivedModsList.SelectedItem;
             Directory.Delete(binding.Path, true);
             RefreshMods(null, null);

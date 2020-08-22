@@ -1,4 +1,4 @@
-﻿namespace SmModManager.Core.Options
+﻿namespace SmModManager.Core.Enums
 {
 
     public enum UpdatePreferenceOptions { AlwaysAutoUpdate, RemindForUpdates, DontCheckForUpdates }

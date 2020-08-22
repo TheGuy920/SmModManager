@@ -2,7 +2,7 @@
 using System.Windows;
 using Ookii.Dialogs.Wpf;
 using SmModManager.Core;
-using SmModManager.Core.Options;
+using SmModManager.Core.Enums;
 
 namespace SmModManager.Graphics
 {

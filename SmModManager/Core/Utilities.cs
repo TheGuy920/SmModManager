@@ -99,6 +99,12 @@ namespace SmModManager.Core
             Application.Current.Shutdown();
         }
 
+        public static string PathRemoveMatch(string path, string remove, string match)
+        {
+            var temp = path.Remove(0, remove.Length + 1);
+            return Path.Combine(match, temp);
+        }
+
         public static string GetDirectoryName(string path)
         {
             return new DirectoryInfo(path).Name;

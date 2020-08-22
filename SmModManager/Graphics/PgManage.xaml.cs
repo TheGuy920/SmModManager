@@ -21,6 +21,8 @@ namespace SmModManager.Graphics
 
         private void InjectMod(object sender, RoutedEventArgs args)
         {
+            if (MessageBox.Show("Injecting this mod might conflict with the already injected mods, it is recommended to backup before injecting. Do you want to continue?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                return;
             var binding = (ModItemBinding)CompatibleModsList.SelectedItem;
             Utilities.CopyDirectory(Path.Combine(binding.Path, "Survival"), Path.Combine(App.Settings.GameDataPath, "Survival"));
         }
@@ -34,6 +36,8 @@ namespace SmModManager.Graphics
 
         private void DeleteCompatibleMod(object sender, RoutedEventArgs args)
         {
+            if (MessageBox.Show("Are you sure that you want to delete this mod?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                return;
             var binding = (ModItemBinding)CompatibleModsList.SelectedItem;
             Directory.Delete(binding.Path, true);
             RefreshCompatibleMods(null, null);
@@ -84,6 +88,8 @@ namespace SmModManager.Graphics
 
         private void DeleteAvailableMod(object sender, RoutedEventArgs args)
         {
+            if (MessageBox.Show("Are you sure that you want to delete this mod?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                return;
             var binding = (ModItemBinding)AvailableModsList.SelectedItem;
             Directory.Delete(binding.Path, true);
             RefreshAvailableMods(null, null);
