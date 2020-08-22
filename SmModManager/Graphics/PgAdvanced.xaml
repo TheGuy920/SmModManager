@@ -10,20 +10,32 @@
                     <Label Content="Version 7.0-ALPHA" Margin="10,10,10,10" VerticalContentAlignment="Center"/>
                 </DockPanel>
                 <StackPanel Margin="0,0,0,0">
-                    <DockPanel Margin="10,10,10,0">
-                        <Label Content="Game Data Path" Margin="0,0,10,0" Width="100"/>
-                        <Button DockPanel.Dock="Right" Content="Browse" Margin="10,0,0,0" Width="100" Click="BrowseGameDataPath"/>
-                        <TextBox x:Name="GameDataPathBox" VerticalContentAlignment="Center" IsReadOnly="True"/>
-                    </DockPanel>
-                    <DockPanel Margin="10,10,10,0">
-                        <Label Content="Workshop Path" Margin="0,0,10,0" Width="100"/>
-                        <Button DockPanel.Dock="Right" Content="Browse" Margin="10,0,0,0" Width="100" Click="BrowseWorkshopPath"/>
-                        <TextBox x:Name="WorkshopPathBox" VerticalContentAlignment="Center" IsReadOnly="True"/>
-                    </DockPanel>
-                    <DockPanel Margin="10,10,10,0">
-                        <Label Content="User Data Path" Margin="0,0,10,0" Width="100"/>
-                        <ComboBox x:Name="UserDataPathBox" VerticalContentAlignment="Center"/>
-                    </DockPanel>
+                    <StackPanel Margin="10,10,10,0">
+                        <TextBlock Text="Game Data Path"/>
+                        <DockPanel>
+                            <Button DockPanel.Dock="Right" Content="Browse" Margin="10,0,0,0" Width="75" Click="BrowseGameDataPath"/>
+                            <TextBox x:Name="GameDataPathBox" IsReadOnly="True"/>
+                        </DockPanel>
+                    </StackPanel>
+                    <StackPanel Margin="10,10,10,0">
+                        <TextBlock Text="Workshop Path"/>
+                        <DockPanel>
+                            <Button DockPanel.Dock="Right" Content="Browse" Margin="10,0,0,0" Width="75" Click="BrowseWorkshopPath"/>
+                            <TextBox x:Name="WorkshopPathBox" IsReadOnly="True"/>
+                        </DockPanel>
+                    </StackPanel>
+                    <StackPanel Margin="10,10,10,0">
+                        <TextBlock Text="User Data Path"/>
+                        <ComboBox x:Name="UserDataPathBox"/>
+                    </StackPanel>
+                    <StackPanel Margin="10,10,10,0">
+                        <TextBlock Text="Update Preference"/>
+                        <ComboBox x:Name="UpdatePreferenceBox">
+                            <ComboBoxItem Content="Always Auto-Update"/>
+                            <ComboBoxItem Content="Remind For Updates"/>
+                            <ComboBoxItem Content="Don't Check For Updates"/>
+                        </ComboBox>
+                    </StackPanel>
                 </StackPanel>
             </DockPanel>
         </TabItem>

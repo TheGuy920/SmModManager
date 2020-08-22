@@ -2,6 +2,7 @@
 using System.Windows;
 using Ookii.Dialogs.Wpf;
 using SmModManager.Core;
+using SmModManager.Core.Options;
 
 namespace SmModManager.Graphics
 {
@@ -12,13 +13,19 @@ namespace SmModManager.Graphics
         public PgAdvanced()
         {
             InitializeComponent();
+            ChangelogText.Text = Utilities.RetrieveResourceData("SmModManager.Resources.Documents.Changelog.txt");
+            CreditsText.Text = Utilities.RetrieveResourceData("SmModManager.Resources.Documents.Credits.txt");
             foreach (var userDataPath in Directory.GetDirectories(Constants.UsersDataPath))
                 UserDataPathBox.Items.Add(userDataPath);
             GameDataPathBox.Text = App.Settings.GameDataPath;
             WorkshopPathBox.Text = App.Settings.WorkshopPath;
             UserDataPathBox.Text = App.Settings.UserDataPath;
-            ChangelogText.Text = Utilities.RetrieveResourceData("SmModManager.Resources.Documents.Changelog.txt");
-            CreditsText.Text = Utilities.RetrieveResourceData("SmModManager.Resources.Documents.Credits.txt");
+            UpdatePreferenceBox.SelectedIndex = App.Settings.UpdatePreference switch
+            {
+                UpdatePreferenceOptions.RemindForUpdates => 1,
+                UpdatePreferenceOptions.DontCheckForUpdates => 2,
+                _ => 0
+            };
         }
 
         private void ResetSettings(object sender, RoutedEventArgs args)
@@ -32,6 +39,12 @@ namespace SmModManager.Graphics
             App.Settings.GameDataPath = GameDataPathBox.Text;
             App.Settings.WorkshopPath = WorkshopPathBox.Text;
             App.Settings.UserDataPath = UserDataPathBox.Text;
+            App.Settings.UpdatePreference = UpdatePreferenceBox.SelectedIndex switch
+            {
+                1 => UpdatePreferenceOptions.RemindForUpdates,
+                2 => UpdatePreferenceOptions.DontCheckForUpdates,
+                _ => UpdatePreferenceOptions.AlwaysAutoUpdate
+            };
             App.Settings.Save();
         }
 

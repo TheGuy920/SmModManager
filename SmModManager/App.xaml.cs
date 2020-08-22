@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Threading;
 using SmModManager.Core;
+using SmModManager.Core.Options;
 using SmModManager.Graphics;
 
 namespace SmModManager
@@ -39,7 +40,7 @@ namespace SmModManager
                     Settings.WorkshopPath = Path.Combine(steamPath, "steamapps", "workshop", "content", Constants.GameId.ToString());
                     Settings.UserDataPath = Directory.GetDirectories(Constants.UsersDataPath)[0];
                     Settings.Save();
-                    goto SkipToLoading;
+                    goto SkipToStartup;
                 }
                 steamPath = Utilities.GetSteamAppsLocation(steamPath);
                 if (string.IsNullOrEmpty(steamPath))
@@ -50,16 +51,27 @@ namespace SmModManager
                     Settings.WorkshopPath = Path.Combine(steamPath, "steamapps", "workshop", "content", Constants.GameId.ToString());
                     Settings.UserDataPath = Directory.GetDirectories(Constants.UsersDataPath)[0];
                     Settings.Save();
-                    goto SkipToLoading;
+                    goto SkipToStartup;
                 }
                 SkipToPrerequisites:
                 var dialog = new WnPrerequisites();
                 if (dialog.ShowDialog() == true)
-                    goto SkipToLoading;
+                    goto SkipToStartup;
                 Current.Shutdown();
                 return;
             }
-            SkipToLoading:
+            if (Settings.UpdatePreference != UpdatePreferenceOptions.DontCheckForUpdates)
+            {
+                var isUpdateAvailable = Utilities.CheckForUpdates();
+                if (isUpdateAvailable)
+                {
+                    if (Settings.UpdatePreference == UpdatePreferenceOptions.RemindForUpdates)
+                        if (MessageBox.Show("An update is available! Would you like to install the new update?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                            goto SkipToStartup;
+                    Utilities.InstallUpdate();
+                }
+            }
+            SkipToStartup:
             if (!Directory.Exists(Constants.ArchivesPath))
                 Directory.CreateDirectory(Constants.ArchivesPath);
             if (!Directory.Exists(Constants.GameBackupsPath))

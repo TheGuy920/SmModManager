@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.IO.Compression;
 using System.Windows;
 using System.Windows.Controls;
 using SmModManager.Core;
@@ -27,7 +28,8 @@ namespace SmModManager.Graphics
 
         private void RestoreWorld(object sender, RoutedEventArgs args)
         {
-            // TODO: Restore world backup
+            var binding = (BackupItemBinding)WorldsList.SelectedItem;
+            File.WriteAllBytes(Path.Combine(App.Settings.UserDataPath, "Save", "Survival", binding.WorldName + ".db"), BackupDescriptionModel.Load(binding.Path).Data);
         }
 
         private void DeleteWorld(object sender, RoutedEventArgs args)
@@ -68,9 +70,11 @@ namespace SmModManager.Graphics
         private void RestoreGame(object sender, RoutedEventArgs args)
         {
             var binding = (BackupItemBinding)GamesList.SelectedItem;
-            var description = BackupDescriptionModel.Load(binding.Path);
             var temporaryPath = Path.Combine(Constants.GameBackupsPath, Path.GetFileNameWithoutExtension(binding.Path)!);
-            File.WriteAllBytes(temporaryPath + ".tmp", description.Data);
+            File.WriteAllBytes(temporaryPath + ".tmp", BackupDescriptionModel.Load(binding.Path).Data);
+            Directory.CreateDirectory(temporaryPath);
+            ZipFile.ExtractToDirectory(temporaryPath + ".tmp", temporaryPath);
+            Utilities.CopyDirectory(temporaryPath, Path.Combine(App.Settings.GameDataPath, "Survival"));
         }
 
         private void DeleteGame(object sender, RoutedEventArgs args)

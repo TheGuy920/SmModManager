@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Xml.Serialization;
+using SmModManager.Core.Options;
 
 namespace SmModManager.Core
 {
@@ -14,6 +15,8 @@ namespace SmModManager.Core
         public string GameDataPath { get; set; }
         public string WorkshopPath { get; set; }
         public string UserDataPath { get; set; }
+
+        public UpdatePreferenceOptions UpdatePreference { get; set; } = UpdatePreferenceOptions.RemindForUpdates;
 
         public void Save()
         {

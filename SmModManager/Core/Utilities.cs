@@ -7,7 +7,6 @@ using System.Windows;
 using Gameloop.Vdf;
 using Gameloop.Vdf.Linq;
 using Microsoft.Win32;
-using File = System.IO.File;
 
 namespace SmModManager.Core
 {
