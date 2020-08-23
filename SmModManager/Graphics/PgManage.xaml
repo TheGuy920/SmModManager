@@ -6,7 +6,7 @@
         <DataTemplate x:Key="ModItem" DataType="bindings:ModItemBinding">
             <DockPanel>
                 <Image Source="{Binding Preview}" Stretch="UniformToFill" Height="100" Margin="10,10,10,10"/>
-                <Label Content="{Binding Name}"  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="0,10,10,10"/>
+                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,10,10,10"/>
             </DockPanel>
         </DataTemplate>
     </Page.Resources>

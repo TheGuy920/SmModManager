@@ -17,10 +17,8 @@ namespace SmModManager.Core.Bindings
 
         public string Url { get; private set; }
 
-
         public static ModItemBinding Create(string path)
         {
-
             var previewPath = string.Empty;
             var description = ModDescriptionModel.Load(System.IO.Path.Combine(path, "description.json"));
             if (File.Exists(System.IO.Path.Combine(path, "preview.png")))

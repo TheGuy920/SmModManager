@@ -33,7 +33,7 @@ namespace SmModManager.Graphics
             App.Settings.Reset();
             Utilities.RestartApp();
         }
-        
+
         private void SaveSettings(object sender, RoutedEventArgs args)
         {
             App.Settings.GameDataPath = GameDataPathBox.Text;

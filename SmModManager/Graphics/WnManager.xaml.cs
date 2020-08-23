@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Windows;
-using SmModManager.Core;
+﻿using System.Windows;
 
 namespace SmModManager.Graphics
 {

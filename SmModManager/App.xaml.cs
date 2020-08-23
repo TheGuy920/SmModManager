@@ -40,7 +40,7 @@ namespace SmModManager
                     goto SkipToPrerequisites;
                 if (Utilities.CheckSteamLocation(steamPath))
                 {
-                    Settings.GameDataPath = Path.Combine(steamPath, "steamapps" , "common", "Scrap Mechanic");
+                    Settings.GameDataPath = Path.Combine(steamPath, "steamapps", "common", "Scrap Mechanic");
                     Settings.WorkshopPath = Path.Combine(steamPath, "steamapps", "workshop", "content", Constants.GameId.ToString());
                     Settings.UserDataPath = Directory.GetDirectories(Constants.UsersDataPath)[0];
                     Settings.Save();
@@ -51,7 +51,7 @@ namespace SmModManager
                     goto SkipToPrerequisites;
                 if (Utilities.CheckSteamLocation(steamPath))
                 {
-                    Settings.GameDataPath = Path.Combine(steamPath, "steamapps" , "common", "Scrap Mechanic");
+                    Settings.GameDataPath = Path.Combine(steamPath, "steamapps", "common", "Scrap Mechanic");
                     Settings.WorkshopPath = Path.Combine(steamPath, "steamapps", "workshop", "content", Constants.GameId.ToString());
                     Settings.UserDataPath = Directory.GetDirectories(Constants.UsersDataPath)[0];
                     Settings.Save();
