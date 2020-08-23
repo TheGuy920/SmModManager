@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using SmModManager.Core.Models;
 
@@ -12,6 +13,8 @@ namespace SmModManager.Core.Bindings
         public BitmapFrame Preview { get; private set; }
 
         public string Name { get; private set; }
+
+        public string Description { get; private set; }
 
         public string Path { get; private set; }
 
@@ -40,6 +43,7 @@ namespace SmModManager.Core.Bindings
             var binding = new ModItemBinding();
             binding.Preview = BitmapFrame.Create(new Uri(previewPath));
             binding.Name = description.Name;
+            binding.Description = description.Description;
             binding.Path = path;
             if (description.WorkshopId != 0)
                 binding.Url = "https://steamcommunity.com/sharedfiles/filedetails/?id=" + description.WorkshopId;

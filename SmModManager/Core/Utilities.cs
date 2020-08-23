@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Markup;
 using Gameloop.Vdf;
 using Gameloop.Vdf.Linq;
 using Microsoft.Win32;
@@ -86,6 +88,30 @@ namespace SmModManager.Core
             return true;
         }
 
+        public static FlowDocument ConvertToFlowDocument(string description)
+        {
+            description = description.Replace(@"\n", "<LineBreak/>");
+            description = description.Replace("[h1]", "<Bold FontSize=\"12\">");
+            description = description.Replace("[/h1]", "</Bold>");
+            description = description.Replace("[h2]", "<Bold FontSize=\"14\">");
+            description = description.Replace("[/h2]", "</Bold>");
+            description = description.Replace("[h3]", "<Bold FontSize=\"16\">");
+            description = description.Replace("[/h3]", "</Bold>");
+            description = description.Replace("[b]", "<Bold>");
+            description = description.Replace("[/b]", "</Bold>");
+            description = description.Replace("[u]", "<Underline>");
+            description = description.Replace("[/u]", "</Underline>");
+            description = description.Replace("[i]", "<Italic>");
+            description = description.Replace("[/i]", "</Italic>");
+            return (FlowDocument)XamlReader.Parse($"<FlowDocument xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"><Paragraph>{description}</Paragraph></FlowDocument>");
+        }
+
+        public static string PathRemoveMatch(string path, string remove, string match)
+        {
+            var temp = path.Remove(0, remove.Length + 1);
+            return Path.Combine(match, temp);
+        }
+
         public static bool CheckForUpdates()
         {
             var currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -97,12 +123,6 @@ namespace SmModManager.Core
         {
             Process.Start(Path.Combine(App.Settings.WorkshopPath, Constants.WorkshopId.ToString(), "update.exe"));
             Application.Current.Shutdown();
-        }
-
-        public static string PathRemoveMatch(string path, string remove, string match)
-        {
-            var temp = path.Remove(0, remove.Length + 1);
-            return Path.Combine(match, temp);
         }
 
         public static string GetDirectoryName(string path)

@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <TabControl>
         <TabItem Header="Multiplayer">
-            <Label Content="This feature is not implemented yet." VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock Text="This feature is not implemented yet." VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </TabItem>
     </TabControl>
 </Page>
