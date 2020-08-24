@@ -1,12 +1,15 @@
 ﻿using System;
 using System.IO;
 using Newtonsoft.Json;
+using SmModManager.Core.Enums;
 
 namespace SmModManager.Core.Models
 {
 
     public class BackupDescriptionModel
     {
+
+        [JsonProperty("type")] public BackupType Type { get; set; } 
 
         [JsonProperty("name")] public string Name { get; set; }
 

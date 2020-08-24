@@ -9,6 +9,7 @@ using System.Windows.Markup;
 using Gameloop.Vdf;
 using Gameloop.Vdf.Linq;
 using Microsoft.Win32;
+using SmModManager.Core.Enums;
 
 namespace SmModManager.Core
 {

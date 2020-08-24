@@ -64,12 +64,12 @@ namespace SmModManager
                 Current.Shutdown();
                 return;
             }
-            if (Settings.UpdatePreference != UpdatePreferenceOptions.DontCheckForUpdates)
+            if (Settings.UpdatePreference != UpdateBehaviorOptions.DontCheckForUpdates)
             {
                 var isUpdateAvailable = Utilities.CheckForUpdates();
                 if (isUpdateAvailable)
                 {
-                    if (Settings.UpdatePreference == UpdatePreferenceOptions.RemindForUpdates)
+                    if (Settings.UpdatePreference == UpdateBehaviorOptions.RemindForUpdates)
                         if (MessageBox.Show("An update is available! Would you like to install the new update?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                             goto SkipToStartup;
                     Utilities.InstallUpdate();
@@ -96,7 +96,9 @@ namespace SmModManager
         private void HandleException(object sender, DispatcherUnhandledExceptionEventArgs args)
         {
             args.Handled = true;
+            #if !DEBUG
             Crashes.TrackError(args.Exception);
+            #endif
             new WnException(args.Exception).ShowDialog();
         }
 

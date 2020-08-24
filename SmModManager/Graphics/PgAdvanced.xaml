@@ -7,7 +7,7 @@
                 <DockPanel DockPanel.Dock="Bottom" Height="50">
                     <Button DockPanel.Dock="Right" Content="Save" Margin="0,10,10,10" Width="100" Click="SaveSettings"/>
                     <Button DockPanel.Dock="Right" Content="Reset" Margin="0,10,10,10" Width="100" Click="ResetSettings"/>
-                    <Label Content="Version 7.0-ALPHA" Margin="10,10,10,10" VerticalContentAlignment="Center"/>
+                    <TextBlock x:Name="VersionText" Text="Version " Margin="10,10,10,10" VerticalAlignment="Center"/>
                 </DockPanel>
                 <StackPanel Margin="0,0,0,0">
                     <StackPanel Margin="10,10,10,0">
@@ -29,8 +29,8 @@
                         <ComboBox x:Name="UserDataPathBox"/>
                     </StackPanel>
                     <StackPanel Margin="10,10,10,0">
-                        <TextBlock Text="Update Preference"/>
-                        <ComboBox x:Name="UpdatePreferenceBox">
+                        <TextBlock Text="Update Behavior"/>
+                        <ComboBox x:Name="UpdateBehaviorBox">
                             <ComboBoxItem Content="Always Auto-Update"/>
                             <ComboBoxItem Content="Remind For Updates"/>
                             <ComboBoxItem Content="Don't Check For Updates"/>

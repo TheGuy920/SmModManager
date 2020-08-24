@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Reflection;
 using System.Windows;
 using Ookii.Dialogs.Wpf;
 using SmModManager.Core;
@@ -13,6 +14,18 @@ namespace SmModManager.Graphics
         public PgAdvanced()
         {
             InitializeComponent();
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            if (version == null)
+            {
+                VersionText.Text = "Unknown";
+            }
+            else
+            {
+                VersionText.Text += $"{version.Major}.{version.Minor}";
+                #if DEBUG
+                VersionText.Text += "-DEBUG";
+                #endif
+            }
             ChangelogText.Text = Utilities.RetrieveResourceData("SmModManager.Resources.Documents.Changelog.txt");
             CreditsText.Text = Utilities.RetrieveResourceData("SmModManager.Resources.Documents.Credits.txt");
             foreach (var userDataPath in Directory.GetDirectories(Constants.UsersDataPath))
@@ -20,10 +33,10 @@ namespace SmModManager.Graphics
             GameDataPathBox.Text = App.Settings.GameDataPath;
             WorkshopPathBox.Text = App.Settings.WorkshopPath;
             UserDataPathBox.Text = App.Settings.UserDataPath;
-            UpdatePreferenceBox.SelectedIndex = App.Settings.UpdatePreference switch
+            UpdateBehaviorBox.SelectedIndex = App.Settings.UpdatePreference switch
             {
-                UpdatePreferenceOptions.RemindForUpdates => 1,
-                UpdatePreferenceOptions.DontCheckForUpdates => 2,
+                UpdateBehaviorOptions.RemindForUpdates => 1,
+                UpdateBehaviorOptions.DontCheckForUpdates => 2,
                 _ => 0
             };
         }
@@ -39,11 +52,11 @@ namespace SmModManager.Graphics
             App.Settings.GameDataPath = GameDataPathBox.Text;
             App.Settings.WorkshopPath = WorkshopPathBox.Text;
             App.Settings.UserDataPath = UserDataPathBox.Text;
-            App.Settings.UpdatePreference = UpdatePreferenceBox.SelectedIndex switch
+            App.Settings.UpdatePreference = UpdateBehaviorBox.SelectedIndex switch
             {
-                1 => UpdatePreferenceOptions.RemindForUpdates,
-                2 => UpdatePreferenceOptions.DontCheckForUpdates,
-                _ => UpdatePreferenceOptions.AlwaysAutoUpdate
+                1 => UpdateBehaviorOptions.RemindForUpdates,
+                2 => UpdateBehaviorOptions.DontCheckForUpdates,
+                _ => UpdateBehaviorOptions.AlwaysAutoUpdate
             };
             App.Settings.Save();
         }

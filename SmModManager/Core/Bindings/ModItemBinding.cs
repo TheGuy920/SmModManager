@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using SmModManager.Core.Models;
 

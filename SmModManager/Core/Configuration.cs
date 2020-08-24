@@ -16,7 +16,7 @@ namespace SmModManager.Core
         public string WorkshopPath { get; set; }
         public string UserDataPath { get; set; }
 
-        public UpdatePreferenceOptions UpdatePreference { get; set; } = UpdatePreferenceOptions.RemindForUpdates;
+        public UpdateBehaviorOptions UpdatePreference { get; set; } = UpdateBehaviorOptions.RemindForUpdates;
 
         public void Save()
         {

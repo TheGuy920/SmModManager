@@ -5,8 +5,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>SmModManager.App</StartupObject>
-    <Authors>Dennise Catolos</Authors>
-    <Company>TGO</Company>
+    <Authors>dentolos19, TheGuy920</Authors>
+    <Company>Mod Manager Contributors</Company>
     <Copyright>Copyright © 2020</Copyright>
     <Product>Scrap Mechanic Mod Manager</Product>
     <SignAssembly>true</SignAssembly>
