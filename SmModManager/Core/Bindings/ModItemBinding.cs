@@ -15,6 +15,7 @@ namespace SmModManager.Core.Bindings
         public string Name { get; private set; }
 
         public string Description { get; private set; }
+        public string ImagePath { get; private set; }
 
         public string Path { get; private set; }
 
@@ -42,6 +43,7 @@ namespace SmModManager.Core.Bindings
             }
             var binding = new ModItemBinding();
             binding.Preview = BitmapFrame.Create(new Uri(previewPath));
+            binding.ImagePath = previewPath;
             binding.Name = description.Name;
             binding.Description = description.Description;
             binding.Path = path;

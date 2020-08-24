@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Scrap Mechanic Mod Manager" Width="800" Height="400" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip">
-    <DockPanel>
-        <StackPanel Margin="0,10,0,10" Width="150">
+    <DockPanel Background="#1b2838">
+        <StackPanel Margin="0,10,0,10" Width="150" Background="#1b2838">
             <Button x:Name="ManageButton" Margin="10,0,0,0" Content="Manage" Height="30" Click="ShowManagePage"/>
             <Button x:Name="MultiplayerButton" Margin="10,10,0,0" Content="Multiplayer" Height="30" Click="ShowMultiplayerPage"/>
             <Button x:Name="BackupsButton" Margin="10,10,0,0" Content="Backups" Height="30" Click="ShowBackupsPage"/>
@@ -11,6 +11,6 @@
             <Button x:Name="AdvancedButton" Margin="10,10,0,0" Content="Advanced" Height="30" Click="ShowAdvancedPage"/>
             <Button Margin="10,10,0,0" Content="Exit" Height="30" Click="Exit"/>
         </StackPanel>
-        <Frame x:Name="PageView" Margin="10,10,10,10" NavigationUIVisibility="Hidden"/>
+        <Frame x:Name="PageView" Margin="10,10,10,10" NavigationUIVisibility="Hidden" Background="#1b2838"/>
     </DockPanel>
 </Window>

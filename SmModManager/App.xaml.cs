@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections;
+using System.ComponentModel;
+using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 using Microsoft.AppCenter;
@@ -13,7 +17,7 @@ namespace SmModManager
 
     public partial class App
     {
-
+        internal static bool IsWindowOpen { get; private set; }
         internal static Configuration Settings { get; private set; }
 
         internal static WnManager WindowManager { get; private set; }
@@ -23,6 +27,7 @@ namespace SmModManager
         internal static PgBackups PageBackups { get; private set; }
         internal static PgManage PageManage { get; private set; }
         internal static PgMultiplayer PageMultiplayer { get; private set; }
+        Thread FixedUpdateThread;
 
         private void Initialize(object sender, StartupEventArgs args)
         {
@@ -91,6 +96,9 @@ namespace SmModManager
             PageMultiplayer = new PgMultiplayer();
             WindowManager = new WnManager();
             WindowManager.Show();
+            IsWindowOpen = true;
+            FixedUpdateThread = new Thread(Updater);
+            FixedUpdateThread.Start();
         }
 
         private void HandleException(object sender, DispatcherUnhandledExceptionEventArgs args)
@@ -100,6 +108,27 @@ namespace SmModManager
             new WnException(args.Exception).ShowDialog();
         }
 
+        private void AppExit(object sender, ExitEventArgs e)
+        {
+            IsWindowOpen = false;
+            FixedUpdateThread.Abort();
+        }
+        public void Updater()
+        {
+            //call methods to be updated every 10 ms
+            while (IsWindowOpen)
+            {
+                Thread.Sleep(50);
+                this.Dispatcher.Invoke((Action)(() =>
+                {
+                    RunVoidList();
+                }));
+            }
+        }
+        public void RunVoidList() 
+        {
+            PgManage.GetPgManage.UpdatePreviewImages();
+        }
     }
 
 }
