@@ -88,7 +88,10 @@ namespace SmModManager.Graphics
             CompatibleModsListName.Text = binding.Name;
             CompatibleModsListDescription.Text = binding.Description;
         }
-
+        public double previousHeight = 0;
+        public double previousWidth = 0;
+        public object previousItemA;
+        public object previousItemC;
         public void UpdatePreviewImages()
         {
             var binding = (ModItemBinding)AvailableModsList.SelectedItem;
@@ -101,7 +104,7 @@ namespace SmModManager.Graphics
             {
                 ratio = Math.Clamp(Math.Clamp(App.WindowManager.ActualHeight + 500, 500, 1200) - 700, 100, 1200);
             }
-            if (binding != null)
+            if (binding != null && (previousWidth != App.WindowManager.ActualWidth || previousHeight != App.WindowManager.ActualHeight || previousItemA != binding))
             {
                 System.Drawing.Image img = System.Drawing.Image.FromFile(binding.ImagePath);
                 var width = (double)img.Width - img.Width / 7;
@@ -112,8 +115,9 @@ namespace SmModManager.Graphics
                 AvailableModsListPreview.Height = Math.Clamp((height / width) * ratio, 10, 400);
                 AvailableModsListPreview.Width = Math.Clamp((width / height) * ratio, 10, 600);
             }
+            previousItemA = binding;
             binding = (ModItemBinding)CompatibleModsList.SelectedItem;
-            if (binding != null)
+            if (binding != null && (previousWidth != App.WindowManager.ActualWidth || previousHeight != App.WindowManager.ActualHeight || previousItemC != binding))
             {
                 System.Drawing.Image img = System.Drawing.Image.FromFile(binding.ImagePath);
                 var width = (double)img.Width - img.Width / 7;
@@ -124,6 +128,9 @@ namespace SmModManager.Graphics
                 CompatibleModsListPreview.Height = Math.Clamp((height / width) * ratio, 10, 400);
                 CompatibleModsListPreview.Width = Math.Clamp((width / height) * ratio, 10, 600);
             }
+            previousItemC = binding;
+            previousWidth = App.WindowManager.ActualWidth;
+            previousHeight = App.WindowManager.ActualHeight;
             if (CompatibleModsTab.IsSelected)
             {
                 CompatibleModsTab.Foreground = new SolidColorBrush(Colors.Black);
