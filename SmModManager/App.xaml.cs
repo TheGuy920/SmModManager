@@ -120,7 +120,7 @@ namespace SmModManager
             //call methods to be updated every 10 ms
             while (IsWindowOpen)
             {
-                Thread.Sleep(50);
+                Thread.Sleep(10);
                 this.Dispatcher.Invoke((Action)(() =>
                 {
                     RunVoidList();
@@ -130,6 +130,7 @@ namespace SmModManager
         public void RunVoidList() 
         {
             PgManage.GetPgManage.UpdatePreviewImages();
+            WnManager.GetWnManager.UpdateTopMenu();
         }
     }
 

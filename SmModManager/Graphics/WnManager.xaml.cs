@@ -5,12 +5,18 @@ namespace SmModManager.Graphics
 
     public partial class WnManager
     {
-
+        public static WnManager GetWnManager;
         public WnManager()
         {
             InitializeComponent();
+            GetWnManager = this;
         }
 
+        public void UpdateTopMenu()
+        {
+            TopMenuPanel.Width = App.WindowManager.ActualWidth;
+            PageView.Width = App.WindowManager.ActualWidth - 15;
+        }
         private void ClearButtonFontWeight()
         {
             ManageButton.FontWeight = FontWeights.Normal;

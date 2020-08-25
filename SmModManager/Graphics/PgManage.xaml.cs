@@ -84,9 +84,12 @@ namespace SmModManager.Graphics
                 DeleteCompatibleButton.IsEnabled = true;
             }
             var binding = (ModItemBinding)CompatibleModsList.SelectedItem;
-            CompatibleModsListPreview.Source = binding.Preview;
-            CompatibleModsListName.Text = binding.Name;
-            CompatibleModsListDescription.Text = binding.Description;
+            if (binding != null)
+            {
+                CompatibleModsListPreview.Source = binding.Preview;
+                CompatibleModsListName.Text = binding.Name;
+                CompatibleModsListDescription.Text = binding.Description;
+            }
         }
         public double previousHeight = 0;
         public double previousWidth = 0;
@@ -98,11 +101,11 @@ namespace SmModManager.Graphics
             double ratio;
             if (App.WindowManager.ActualWidth < App.WindowManager.ActualHeight + 550)
             {
-                ratio = Math.Clamp(Math.Clamp(App.WindowManager.ActualWidth + 100, 500, 1650) - 1000, 100, 1650);
+                ratio = Math.Clamp(Math.Clamp(App.WindowManager.ActualWidth + 100, 500, 1650) - 800, 100, 1650);
             }
             else
             {
-                ratio = Math.Clamp(Math.Clamp(App.WindowManager.ActualHeight + 500, 500, 1200) - 700, 100, 1200);
+                ratio = Math.Clamp(Math.Clamp(App.WindowManager.ActualHeight + 500, 500, 1200) - 500, 100, 1200);
             }
             if (binding != null && (previousWidth != App.WindowManager.ActualWidth || previousHeight != App.WindowManager.ActualHeight || previousItemA != binding))
             {
@@ -111,9 +114,11 @@ namespace SmModManager.Graphics
                 var height = (double)img.Height;
                 AvailableModsListScroll.Height = App.WindowManager.ActualHeight;
                 AvailableModsListDescription.Height = Count(AvailableModsListDescription.Text, '\n') * 25 + 50;
-                AvailableModsListDescription.Width = Math.Clamp(App.WindowManager.ActualWidth - 700, 10, 700);
+                AvailableModsListDescription.Width = Math.Clamp(App.WindowManager.ActualWidth - 500, 10, 700);
                 AvailableModsListPreview.Height = Math.Clamp((height / width) * ratio, 10, 400);
-                AvailableModsListPreview.Width = Math.Clamp((width / height) * ratio, 10, 600);
+                AvailableModsListPreview.Width = Math.Clamp((width / height) * ratio, 10, 800);
+                ArchiveAvailableButton.Width = Math.Clamp((width / height) * ratio, 150, 275) - 50;
+                DeleteAvailableButton.Width = Math.Clamp((width / height) * ratio, 150, 275) - 50;
             }
             previousItemA = binding;
             binding = (ModItemBinding)CompatibleModsList.SelectedItem;
@@ -124,9 +129,12 @@ namespace SmModManager.Graphics
                 var height = (double)img.Height;
                 CompatibleModsListScroll.Height = App.WindowManager.ActualHeight;
                 CompatibleModsListDescription.Height = Count(CompatibleModsListDescription.Text, '\n') * 25 + 50;
-                CompatibleModsListDescription.Width = Math.Clamp(App.WindowManager.ActualWidth - 700, 10, 700);
+                CompatibleModsListDescription.Width = Math.Clamp(App.WindowManager.ActualWidth - 500, 10, 700);
                 CompatibleModsListPreview.Height = Math.Clamp((height / width) * ratio, 10, 400);
-                CompatibleModsListPreview.Width = Math.Clamp((width / height) * ratio, 10, 600);
+                CompatibleModsListPreview.Width = Math.Clamp((width / height) * ratio, 10, 800);
+                InjectButton.Width = Math.Clamp(((width / height) * ratio) + 250, 300, 600)/2 - 150;
+                ArchiveCompatibleButton.Width = Math.Clamp(((width / height) * ratio) + 250, 300, 600)/2 - 150;
+                DeleteCompatibleButton.Width = Math.Clamp(((width / height) * ratio) + 250, 300, 600)/2 - 150;
             }
             previousItemC = binding;
             previousWidth = App.WindowManager.ActualWidth;
@@ -220,9 +228,12 @@ namespace SmModManager.Graphics
                 DeleteAvailableButton.IsEnabled = true;
             }
             var binding = (ModItemBinding)AvailableModsList.SelectedItem;
-            AvailableModsListPreview.Source = binding.Preview;
-            AvailableModsListName.Text = binding.Name;
-            AvailableModsListDescription.Text = binding.Description;
+            if (binding != null)
+            {
+                AvailableModsListPreview.Source = binding.Preview;
+                AvailableModsListName.Text = binding.Name;
+                AvailableModsListDescription.Text = binding.Description;
+            }
         }
 
         private void AvailableModsList_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)

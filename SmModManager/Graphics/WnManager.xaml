@@ -3,14 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Scrap Mechanic Mod Manager" Width="800" Height="400" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip">
     <DockPanel Background="#1b2838">
-        <StackPanel Margin="0,10,0,10" Width="150" Background="#1b2838">
-            <Button x:Name="ManageButton" Margin="10,0,0,0" Content="Manage" Height="30" Click="ShowManagePage"/>
-            <Button x:Name="MultiplayerButton" Margin="10,10,0,0" Content="Multiplayer" Height="30" Click="ShowMultiplayerPage"/>
-            <Button x:Name="BackupsButton" Margin="10,10,0,0" Content="Backups" Height="30" Click="ShowBackupsPage"/>
-            <Button x:Name="ArchivesButton" Margin="10,10,0,0" Content="Archives" Height="30" Click="ShowArchivesPage"/>
-            <Button x:Name="AdvancedButton" Margin="10,10,0,0" Content="Advanced" Height="30" Click="ShowAdvancedPage"/>
-            <Button Margin="10,10,0,0" Content="Exit" Height="30" Click="Exit"/>
+        <StackPanel x:Name="TopMenuPanel" Background="#202228" Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,0,0,0" Width="800" Height="50" HorizontalAlignment="Center" VerticalAlignment="Top" >
+            <Button x:Name="ManageButton" Margin="30,0,0,0" Content="MANAGE" Height="30" Click="ShowManagePage" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
+            <Button x:Name="MultiplayerButton" Margin="30,0,0,0" Content="MULTIPLAYER" Height="30" Click="ShowMultiplayerPage" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
+            <Button x:Name="BackupsButton" Margin="30,0,0,0" Content="BACKUPS" Height="30" Click="ShowBackupsPage" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
+            <Button x:Name="ArchivesButton" Margin="30,0,0,0" Content="ARCHIVES" Height="30" Click="ShowArchivesPage" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
+            <Button x:Name="AdvancedButton" Margin="30,0,0,0" Content="ADVANCED" Height="30" Click="ShowAdvancedPage" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
+            <Button Margin="30,0,0,0" Content="EXIT" Height="30" Click="Exit" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
         </StackPanel>
-        <Frame x:Name="PageView" Margin="10,10,10,10" NavigationUIVisibility="Hidden" Background="#1b2838"/>
+        <Frame x:Name="PageView" NavigationUIVisibility="Hidden" Background="#1b2838" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left"/>
     </DockPanel>
 </Window>

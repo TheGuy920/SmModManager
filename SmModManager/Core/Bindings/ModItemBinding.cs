@@ -40,12 +40,14 @@ namespace SmModManager.Core.Bindings
                     File.Copy(previewPath, previewTempPath);
                 previewPath = previewTempPath;
             }
-            var binding = new ModItemBinding();
-            binding.Preview = BitmapFrame.Create(new Uri(previewPath));
-            binding.ImagePath = previewPath;
-            binding.Name = description.Name;
-            binding.Description = description.Description;
-            binding.Path = path;
+            var binding = new ModItemBinding
+            {
+                Preview = BitmapFrame.Create(new Uri(previewPath)),
+                ImagePath = previewPath,
+                Name = description.Name,
+                Description = description.Description,
+                Path = path
+            };
             if (description.WorkshopId != 0)
                 binding.Url = "https://steamcommunity.com/sharedfiles/filedetails/?id=" + description.WorkshopId;
             return binding;

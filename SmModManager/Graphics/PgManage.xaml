@@ -11,41 +11,39 @@
         </DataTemplate>
     </Page.Resources>
     <TabControl Background="#1b2838" BorderThickness="0">
-        <TabItem Header="Compatible Mods" Background="#1b2838" Foreground="White" x:Name="CompatibleModsTab" BorderThickness="0">
+        <TabItem Header="Compatible Mods" Background="#366e93" Foreground="White" x:Name="CompatibleModsTab" BorderThickness="0">
             <DockPanel>
-                <StackPanel Width="150" Margin="0,0,0,10" Background="#1b2838">
-                    <Button x:Name="InjectButton" Content="Inject" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="InjectMod" Background="#1b2838" Foreground="White"/>
-                    <Button x:Name="ArchiveCompatibleButton" Content="Archive" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ArchiveCompatibleMod" Background="#1b2838" Foreground="White"/>
-                    <Button x:Name="DeleteCompatibleButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteCompatibleMod" Background="#1b2838" Foreground="White"/>
-                    <Separator Margin="10,10,10,0" Background="White"/>
-                    <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshCompatibleMods" Background="#1b2838" Foreground="White"/>
-                </StackPanel>
-                <ListBox x:Name="CompatibleModsList" Margin="0,10,10,10" ItemTemplate="{StaticResource ModItem}" SelectionChanged="UpdateCompatibleSelection" MouseDoubleClick="OpenCompatibleMod" Background="#1b2838"/>
+                <Button x:Name="RefreshCompatibleButton" Content="Refresh" Margin="10,15,10,0" Height="30" Click="RefreshCompatibleMods" Background="Green" Foreground="White" Width="250" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <ListBox x:Name="CompatibleModsList" Margin="-260,60,10,10" ItemTemplate="{StaticResource ModItem}" SelectionChanged="UpdateCompatibleSelection" MouseDoubleClick="OpenCompatibleMod" Background="#1b2838"/>
                 <StackPanel Margin="0,0,0,10" VerticalAlignment="Top" HorizontalAlignment="Center" Background="#1b2838">
                     <ScrollViewer x:Name="CompatibleModsListScroll" VerticalScrollBarVisibility="Hidden" Height="1" Background="#1b2838">
                         <StackPanel Margin="0,0,0,10" VerticalAlignment="Top" HorizontalAlignment="Center" Background="#1b2838">
                             <Image x:Name="CompatibleModsListPreview" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10,10,10,10" Width="1" Height="1"/>
                             <TextBlock x:Name="CompatibleModsListName" TextAlignment="Center" FontSize="20" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button x:Name="InjectButton" Content="Inject" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="InjectMod" Background="Green" Foreground="White" Width="20"/>
+                                <Button x:Name="ArchiveCompatibleButton" Content="Archive" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ArchiveCompatibleMod" Background="Green" Foreground="White" Width="20"/>
+                                <Button x:Name="DeleteCompatibleButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteCompatibleMod" Background="Green" Foreground="White" Width="20"/>
+                            </StackPanel>
                             <TextBlock x:Name="CompatibleModsListDescription" Padding="0,20,0,0" TextAlignment="Left" FontSize="11" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White"/>
                         </StackPanel>
                     </ScrollViewer>
                 </StackPanel>
             </DockPanel>
         </TabItem>
-        <TabItem Header="Available Mods" Background="#1b2838" Foreground="White" x:Name="AvailableModsTab" BorderThickness="0">
+        <TabItem Header="Available Mods" Background="#366e93" Foreground="White" x:Name="AvailableModsTab" BorderThickness="0">
             <DockPanel Background="#1b2838">
-                <StackPanel Width="150" Margin="0,0,0,10" Background="#1b2838">
-                    <Button x:Name="ArchiveAvailableButton" Content="Archive" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ArchiveAvailableMod" Background="#1b2838" Foreground="White"/>
-                    <Button x:Name="DeleteAvailableButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteAvailableMod" Background="#1b2838" Foreground="White"/>
-                    <Separator Margin="10,10,10,0" Background="White"/>
-                    <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshAvailableMods" Background="#1b2838" Foreground="White"/>
-                </StackPanel>
-                <ListBox x:Name="AvailableModsList" Margin="10,10,10,10" ItemTemplate="{StaticResource ModItem}" SelectionChanged="UpdateAvailableModSelection" MouseDoubleClick="OpenAvailableMod" Background="#1b2838"/>
+                <Button x:Name="RefreshAvailableButton" Content="Refresh" Margin="10,15,10,0" Height="30" Click="RefreshAvailableMods" Background="Green" Foreground="White" Width="250" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <ListBox x:Name="AvailableModsList" Margin="-260,60,10,10" ItemTemplate="{StaticResource ModItem}" SelectionChanged="UpdateAvailableModSelection" MouseDoubleClick="OpenAvailableMod" Background="#1b2838"/>
                 <StackPanel Margin="0,0,0,10" VerticalAlignment="Top" HorizontalAlignment="Center" Background="#1b2838">
                     <ScrollViewer x:Name="AvailableModsListScroll" VerticalScrollBarVisibility="Hidden" Height="1" Background="#1b2838">
                         <StackPanel Margin="0,0,0,10" VerticalAlignment="Top" HorizontalAlignment="Center" Background="#1b2838">
                             <Image x:Name="AvailableModsListPreview" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10,10,10,10" Width="1" Height="1" />
                             <TextBlock x:Name="AvailableModsListName" TextAlignment="Center" FontSize="20" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button x:Name="ArchiveAvailableButton" Content="Archive" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ArchiveAvailableMod" Background="Green" Foreground="White" Width="20"/>
+                                <Button x:Name="DeleteAvailableButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteAvailableMod" Background="Green" Foreground="White" Width="20"/>
+                            </StackPanel>
                             <TextBlock x:Name="AvailableModsListDescription" Padding="0,20,0,0" TextAlignment="Left" FontSize="11" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White"/>
                         </StackPanel>
                     </ScrollViewer>
