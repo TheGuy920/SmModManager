@@ -4,3 +4,4 @@
 > Added analytics and exceptions reports
 > Redesigned backup functions
 > Auto-detects steam location
+> Easy import & export backups

@@ -7,6 +7,9 @@
                 <StackPanel Width="150" Margin="0,0,0,10">
                     <Button Content="Create" Margin="10,10,10,0" Height="30" Click="CreateWorldBackup"/>
                     <Separator Margin="10,10,10,0"/>
+                    <Button Content="Import" Margin="10,10,10,0" Height="30" Click="ImportWorld"/>
+                    <Button x:Name="ExportWorldButton" Content="Export" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ExportWorld"/>
+                    <Separator Margin="10,10,10,0"/>
                     <Button x:Name="RestoreWorldButton" Content="Restore" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="RestoreWorld"/>
                     <Button x:Name="DeleteWorldButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteWorld"/>
                     <Separator Margin="10,10,10,0"/>
@@ -27,6 +30,9 @@
             <DockPanel>
                 <StackPanel Width="150" Margin="0,0,0,10">
                     <Button Content="Create" Margin="10,10,10,0" Height="30" Click="CreateGameBackup"/>
+                    <Separator Margin="10,10,10,0"/>
+                    <Button Content="Import" Margin="10,10,10,0" Height="30" Click="ImportGame"/>
+                    <Button x:Name="ExportGameButton" Content="Export" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ExportGame"/>
                     <Separator Margin="10,10,10,0"/>
                     <Button x:Name="RestoreGameButton" Content="Restore" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="RestoreGame"/>
                     <Button x:Name="DeleteGameButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteGame"/>

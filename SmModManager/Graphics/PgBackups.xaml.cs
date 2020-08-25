@@ -2,8 +2,10 @@
 using System.IO.Compression;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 using SmModManager.Core;
 using SmModManager.Core.Bindings;
+using SmModManager.Core.Enums;
 using SmModManager.Core.Models;
 
 namespace SmModManager.Graphics
@@ -24,6 +26,28 @@ namespace SmModManager.Graphics
             var dialog = new WnWorldBackup { Owner = App.WindowManager };
             if (dialog.ShowDialog() == true)
                 RefreshWorlds(null, null);
+        }
+
+        private void ImportWorld(object sender, RoutedEventArgs args)
+        {
+            var dialog = new OpenFileDialog { Filter = "Scrap Mechanic Mod Manager|*.smmm", Multiselect = true };
+            if (dialog.ShowDialog() == false)
+                return;
+            foreach (var path in dialog.FileNames)
+            {
+                var description = BackupDescriptionModel.Load(path);
+                if (description.Type != BackupType.World)
+                    continue;
+                File.Copy(path, Path.Combine(Constants.WorldBackupsPath, Utilities.GenerateAlphanumeric(16) + ".smmm"));
+            }
+            RefreshWorlds(null, null);
+        }
+
+        private void ExportWorld(object sender, RoutedEventArgs args)
+        {
+            var dialog = new SaveFileDialog { Filter = "Scrap Mechanic Mod Manager|*.smmm" };
+            if (dialog.ShowDialog() == true)
+                File.Copy(((BackupItemBinding)WorldsList.SelectedItem).Path, dialog.FileName);
         }
 
         private void RestoreWorld(object sender, RoutedEventArgs args)
@@ -54,11 +78,13 @@ namespace SmModManager.Graphics
         {
             if (WorldsList.SelectedItem == null)
             {
+                ExportWorldButton.IsEnabled = false;
                 RestoreWorldButton.IsEnabled = false;
                 DeleteWorldButton.IsEnabled = false;
             }
             else
             {
+                ExportWorldButton.IsEnabled = true;
                 RestoreWorldButton.IsEnabled = true;
                 DeleteWorldButton.IsEnabled = true;
             }
@@ -69,6 +95,28 @@ namespace SmModManager.Graphics
             var dialog = new WnGameBackup { Owner = App.WindowManager };
             if (dialog.ShowDialog() == true)
                 RefreshGames(null, null);
+        }
+
+        private void ImportGame(object sender, RoutedEventArgs args)
+        {
+            var dialog = new OpenFileDialog { Filter = "Scrap Mechanic Mod Manager|*.smmm", Multiselect = true };
+            if (dialog.ShowDialog() == false)
+                return;
+            foreach (var path in dialog.FileNames)
+            {
+                var description = BackupDescriptionModel.Load(path);
+                if (description.Type != BackupType.Game)
+                    continue;
+                File.Copy(path, Path.Combine(Constants.GameBackupsPath, Utilities.GenerateAlphanumeric(16) + ".smmm"));
+            }
+            RefreshGames(null, null);
+        }
+
+        private void ExportGame(object sender, RoutedEventArgs args)
+        {
+            var dialog = new SaveFileDialog { Filter = "Scrap Mechanic Mod Manager|*.smmm" };
+            if (dialog.ShowDialog() == true)
+                File.Copy(((BackupItemBinding)GamesList.SelectedItem).Path, dialog.FileName);
         }
 
         private void RestoreGame(object sender, RoutedEventArgs args)
@@ -103,11 +151,13 @@ namespace SmModManager.Graphics
         {
             if (GamesList.SelectedItem == null)
             {
+                ExportGameButton.IsEnabled = false;
                 RestoreGameButton.IsEnabled = false;
                 DeleteGameButton.IsEnabled = false;
             }
             else
             {
+                ExportGameButton.IsEnabled = true;
                 RestoreGameButton.IsEnabled = true;
                 DeleteGameButton.IsEnabled = true;
             }
