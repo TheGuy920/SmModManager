@@ -14,7 +14,7 @@
     <Grid Background="White" Margin="0,0,0,-6">
         <TextBlock TextAlignment="Center" FontSize="23" Margin="10,10,18,387" FontWeight="Bold" Foreground="Red" FontFamily="Comic Sans MS">Oh No! It looks like there was an issue launching the Mod Manager!</TextBlock>
         <TextBlock TextAlignment="Left" Background="White" FontSize="18" FontFamily="Comic Sans MS" Margin="18,52,18,355">Error Report:</TextBlock>
-        <TextBox x:Name="ErrorReport" Margin="18,86,16,259" BorderThickness="2" FontSize="15" InputScope="" TextWrapping="WrapWithOverflow"></TextBox>
+        <TextBox x:Name="ErrorReport" Margin="18,86,16,259" BorderThickness="2" FontSize="15" InputScope="" TextWrapping="WrapWithOverflow"/>
         <TextBlock TextAlignment="Left" Background="White" FontSize="18" FontFamily="Comic Sans MS" Margin="18,201,18,205">Possible Solutions:</TextBlock>
         <ListBox x:Name="PossibleSolutions" Margin="18,234,16,47" ItemTemplate="{StaticResource Solutions}" SelectionChanged="UpdateSolutionSelection" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
         <Button Margin="18,416,16,10" Background="Green" Foreground="White" FontSize="20" Click="TakeAction">Take Action</Button>

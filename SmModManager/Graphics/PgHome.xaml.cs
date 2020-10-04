@@ -1,24 +1,23 @@
-﻿using CefSharp;
-using CefSharp.Wpf;
-using SmModManager.Core;
-using System;
-using System.Collections;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows;
-using System.Windows.Media;
+using CefSharp;
+using CefSharp.Handlers;
+using SmModManager.Core;
 
 namespace SmModManager.Graphics
 {
 
     public partial class PgHome
     {
-        public bool IsLogedIn = false;
+
         public static PgHome GetPgHome;
         public Thread CheckLoggedIn;
+        public bool IsLogedIn;
         public bool ThreadCanRun = true;
+
         public PgHome()
         {
             GetPgHome = this;
@@ -29,9 +28,10 @@ namespace SmModManager.Graphics
             };
             SetUp();
         }
+
         private void PlayGame(object sender, RoutedEventArgs args)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo
+            var startInfo = new ProcessStartInfo
             {
                 FileName = Path.Combine(Utilities.GetSteamLocation(), "steam.exe"),
                 Arguments = @"steam://run/387990//"
@@ -39,10 +39,11 @@ namespace SmModManager.Graphics
             Process.Start(startInfo);
             WnManager.GetWnManager.MinimizeWindow();
         }
+
         public void SetUp()
         {
             HomePageSite.Address = "https://steamcommunity.com/login/home/?goto=";
-            HomePageSite.MenuHandler = new CefSharp.Handlers.MenuHandler();
+            HomePageSite.MenuHandler = new MenuHandler();
             CheckLoggedIn.Start();
         }
 
@@ -57,10 +58,10 @@ namespace SmModManager.Graphics
                     {
                         if (HomePageSite.Address != "https://steamcommunity.com/login/home/?goto=")
                         {
-                            using (WebClient client = new WebClient())
+                            using (var client = new WebClient())
                             {
-                                string htmlCode = client.DownloadString(HomePageSite.Address);
-                                string sub1 = htmlCode.Substring(htmlCode.IndexOf("steamid\":\""), 30);
+                                var htmlCode = client.DownloadString(HomePageSite.Address);
+                                var sub1 = htmlCode.Substring(htmlCode.IndexOf("steamid\":\""), 30);
                                 var SteamId = sub1[10..sub1.IndexOf("\",\"")];
                                 App.UserSteamId = SteamId;
                             }
@@ -82,16 +83,19 @@ namespace SmModManager.Graphics
             }
             catch { }
         }
+
         public void MoveForward(object sender, RoutedEventArgs args)
         {
             if (HomePageSite.CanGoForward)
                 HomePageSite.Forward();
         }
+
         public void MoveBackward(object sender, RoutedEventArgs args)
         {
             if (HomePageSite.CanGoBack)
                 HomePageSite.Back();
         }
+
         public void GoHome(object sender, RoutedEventArgs args)
         {
             HomePageSite.Address = "https://steamcommunity.com/app/387990";
@@ -102,5 +106,7 @@ namespace SmModManager.Graphics
             if (CurrentUrl.Text != HomePageSite.Address)
                 CurrentUrl.Text = HomePageSite.Address;
         }
+
     }
+
 }

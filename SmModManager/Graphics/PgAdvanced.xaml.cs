@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Ookii.Dialogs.Wpf;
 using SmModManager.Core;
 using SmModManager.Core.Enums;
@@ -15,12 +15,14 @@ namespace SmModManager.Graphics
 
     public partial class PgAdvanced
     {
+
         public static string BackBlazeFolder = Path.Combine(Constants.Resources, "Api", "BackBlaze", "report");
         public static string RunBackBlaze = Path.Combine(Constants.Resources, "Api", "BackBlaze", "report", "b2.bat");
         public static string ReportBucket = "SmUserReports";
         public static string BackBlazeApiKey = "b2f43e974cff 0027e35a1f2600a7c06de4936ea8d91c7784266ab7";
-        public static bool IsReporting = false;
+        public static bool IsReporting;
         public static PgAdvanced GetPgAdvanced;
+
         public PgAdvanced()
         {
             GetPgAdvanced = this;
@@ -71,10 +73,12 @@ namespace SmModManager.Graphics
             };
             App.Settings.Save();
         }
+
         public void UpdateTextBoxSize()
         {
             ReportBox.Height = Math.Clamp(App.WindowManager.ActualHeight - 220, 100, 9999);
         }
+
         public void SubmitReport(object sender, RoutedEventArgs args)
         {
             if (!IsReporting)
@@ -84,7 +88,7 @@ namespace SmModManager.Graphics
                     double time = 61;
                     if (File.Exists(Path.Combine(BackBlazeFolder, "FileDetailsReport.json")))
                     {
-                        FileInfo oFileInfo = new FileInfo(Path.Combine(BackBlazeFolder, "FileDetailsReport.json"));
+                        var oFileInfo = new FileInfo(Path.Combine(BackBlazeFolder, "FileDetailsReport.json"));
                         time = (DateTime.Now - oFileInfo.LastAccessTime).TotalMinutes;
                     }
                     if (time > 60)
@@ -95,14 +99,14 @@ namespace SmModManager.Graphics
                             File.Delete(Path.Combine(BackBlazeFolder, "FileDetailsReport.json"));
                         var UniqueFileName = App.UserSteamId;
                         if (UniqueFileName == null)
-                            UniqueFileName = DateTime.UtcNow.Ticks.ToString() + "report";
+                            UniqueFileName = DateTime.UtcNow.Ticks + "report";
                         else
                             UniqueFileName += "report";
                         if (File.Exists(Path.Combine(BackBlazeFolder, UniqueFileName + ".txt")))
                             File.Delete(Path.Combine(BackBlazeFolder, UniqueFileName + ".txt"));
                         File.WriteAllText(Path.Combine(BackBlazeFolder, UniqueFileName + ".txt"), ReportBox.Text);
                         ReportBox.Text = "";
-                        ProcessStartInfo p2Info = new ProcessStartInfo
+                        var p2Info = new ProcessStartInfo
                         {
                             FileName = "cmd.exe",
                             Arguments = "/c \"" + RunBackBlaze + "\" " + UniqueFileName + ".txt " + ReportBucket + " " + BackBlazeApiKey + @" .\report\FileDetailsReport.json",
@@ -133,13 +137,25 @@ namespace SmModManager.Graphics
                 WnManager.GetWnManager.SendNotification("Warnging: Still processing first report!");
             }
         }
+
         public void WaitForReportUpload()
         {
             var UploadCompleted = false;
-            while (!UploadCompleted) { try { File.ReadAllText(Path.Combine(BackBlazeFolder, "FileDetailsReport.json")); UploadCompleted = true; } catch { UploadCompleted = false; Thread.Sleep(250); } }
+            while (!UploadCompleted)
+                try
+                {
+                    File.ReadAllText(Path.Combine(BackBlazeFolder, "FileDetailsReport.json"));
+                    UploadCompleted = true;
+                }
+                catch
+                {
+                    UploadCompleted = false;
+                    Thread.Sleep(250);
+                }
             WnManager.GetWnManager.SendNotification("Your report has been successfully sent!");
             IsReporting = false;
         }
+
         private void BrowseGameDataPath(object sender, RoutedEventArgs args)
         {
             var dialog = new VistaFolderBrowserDialog();
@@ -167,19 +183,21 @@ namespace SmModManager.Graphics
                 WorkshopPathBox.Text = dialog.SelectedPath;
             }
         }
+
         public void UpdateTabSelection(object sender, SelectionChangedEventArgs args)
         {
             if (args.AddedItems.Count > 0 && args.AddedItems[0].GetType() == typeof(TabItem))
             {
                 var item = (TabItem)args.AddedItems[0];
-                item.Foreground = System.Windows.Media.Brushes.Black;
+                item.Foreground = Brushes.Black;
             }
             if (args.RemovedItems.Count > 0 && args.RemovedItems[0].GetType() == typeof(TabItem))
             {
                 var item = (TabItem)args.RemovedItems[0];
-                item.Foreground = System.Windows.Media.Brushes.White;
+                item.Foreground = Brushes.White;
             }
         }
+
     }
 
 }

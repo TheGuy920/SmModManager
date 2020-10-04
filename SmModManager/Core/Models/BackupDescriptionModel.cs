@@ -9,7 +9,7 @@ namespace SmModManager.Core.Models
     public class BackupDescriptionModel
     {
 
-        [JsonProperty("type")] public BackupType Type { get; set; } 
+        [JsonProperty("type")] public BackupType Type { get; set; }
 
         [JsonProperty("name")] public string Name { get; set; }
 
