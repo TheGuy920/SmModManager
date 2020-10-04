@@ -1,7 +1,63 @@
-﻿Version 7.0
-> Completely rewritten in WPF
-> Added global exception handler
-> Added analytics and exceptions reports
-> Redesigned backup functions
-> Auto-detects steam location
-> Easy import & export backups
+﻿===Version 7.97===
+■ Updated Changelog
+■ Update Tutorial
+■ Small bug fixes and reporting changes
+■ Created WebSite => http://smmodmanager.ml
+
+===Version 7.92===
+■ Updated Changelog
+■ Updated Crash and Error reporting
+■ Updated User Crash and Error reporting
+■ Fixed Common threading issues
+■ Fixed smaller bugs and issues when loading mods
+■ Fixed bug when deleting arhived, compatible, or available mods
+■ Added auto deep scan for mods expanding the list of compatible mods
+■ Fixed most crashes, unexpected erros, and silent erros
+
+===Version 7.86===
+■ Updated Changelog
+■ Added Multiplayer
+■ Updated User Crash and Error reporting
+■ Fixed auto update
+
+===Version 7.72===
+■ Updated Changelog
+■ Added Multiplayer
+■ Updated User Crash and Error reporting
+
+===Version 7.68===
+■ Updated Changelog
+■ Updated "other" information
+■ Added "other" Features
+
+===Version 7.64===
+■ Fixed auto update, installation, and archive, and mod loading crashes
+
+===Version 7.62===
+■ Fixed common crash due to improper config file
+
+===Version 7.49===
+■ dev error test build
+
+===Version 7.42===
+■ dev crash test build
+
+===Version 7.39===
+■ Fixed common launch crash
+
+===Version 7.35===
+■ bug fixes
+
+===Version 7.2 - Big Release===
+■ Injection update
+■ Complete Merge
+■ Store Update
+■ Home Update
+
+===Version 7.0===
+■ Completely rewritten in WPF
+■ Added global exception handler
+■ Added analytics and exceptions reports
+■ Redesigned backup functions
+■ Auto-detects steam location
+■ Easy import & export backups

@@ -8,8 +8,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Cancel" Margin="10,10,5,10" Click="Cancel"/>
-            <Button Grid.Column="1" Content="Create" Margin="5,10,10,10" Click="Create"/>
+            <Button Grid.Column="0" Content="Create" Margin="5,10,10,10" Click="Create"/>
+            <Button Grid.Column="1" Content="Cancel" Margin="10,10,5,10" Click="Cancel"/>
         </Grid>
         <DockPanel>
             <TextBox x:Name="BackupNameBox" Margin="10,10,10,0" DockPanel.Dock="Bottom" Height="30" VerticalContentAlignment="Center"/>

@@ -8,18 +8,19 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Restart" Margin="10,10,0,10" Click="Restart"/>
-            <Button Grid.Column="1" Content="Exit" Margin="10,10,10,10" Click="Exit"/>
+            <Button Grid.Column="0" Content="Dont Send" Margin="10,10,0,10" Click="CloseButton"/>
+            <Button Grid.Column="1" Content="Send Report" Margin="10,10,10,10" Click="SendButton"/>
         </Grid>
         <StackPanel Margin="10,10,10,0">
-            <TextBlock Text="An exception had occurred internally!" FontWeight="Bold"/>
+            <TextBlock Text="An error had occurred internally!" FontWeight="Bold"/>
+            <TextBlock Text="Whould you like to send an error report?"/>
             <StackPanel Margin="0,10,0,0">
-                <TextBlock Text="Message"/>
-                <TextBox x:Name="MessageText" IsReadOnly="True"/>
+                <TextBlock Text="Error Message:"/>
+                <TextBox x:Name="MessageText" IsReadOnly="True" Height="41" TextWrapping="Wrap"/>
             </StackPanel>
             <StackPanel Margin="0,10,0,0">
-                <TextBlock Text="Stack Trace"/>
-                <TextBox x:Name="StackTraceText" IsReadOnly="True" Height="100"/>
+                <TextBlock Text="What did you do?"/>
+                <TextBox x:Name="NotesText" InputScope="Default" Height="100" TextChanged="TextLimitCheck" Cursor="IBeam" TextWrapping="Wrap" Width="464" HorizontalAlignment="Left"/>
             </StackPanel>
         </StackPanel>
     </DockPanel>

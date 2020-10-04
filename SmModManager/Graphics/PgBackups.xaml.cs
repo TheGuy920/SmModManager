@@ -1,5 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.IO.Compression;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
@@ -116,7 +120,16 @@ namespace SmModManager.Graphics
         {
             var dialog = new SaveFileDialog { Filter = "Scrap Mechanic Mod Manager|*.smmm" };
             if (dialog.ShowDialog() == true)
-                File.Copy(((BackupItemBinding)GamesList.SelectedItem).Path, dialog.FileName);
+                try
+                {
+                    File.Copy(((BackupItemBinding)GamesList.SelectedItem).Path, dialog.FileName);
+                }
+                catch
+                {
+                    if (MessageBox.Show("A file with that name already exists!\nWould you like to overwrite it?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                        return;
+                    File.Copy(((BackupItemBinding)GamesList.SelectedItem).Path, dialog.FileName, true);
+                }
         }
 
         private void RestoreGame(object sender, RoutedEventArgs args)
@@ -135,8 +148,15 @@ namespace SmModManager.Graphics
         {
             if (MessageBox.Show("Are you sure that you want to delete this backup?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                 return;
-            var binding = (BackupItemBinding)GamesList.SelectedItem;
-            File.Delete(binding.Path);
+            try
+            {
+                var binding = (BackupItemBinding)GamesList.SelectedItem;
+                File.Delete(binding.Path);
+            }
+            catch
+            {
+                MessageBox.Show("There was an error", "SmModManager", MessageBoxButton.OK);
+            }
             RefreshGames(null, null);
         }
 
@@ -144,7 +164,17 @@ namespace SmModManager.Graphics
         {
             GamesList.Items.Clear();
             foreach (var path in Directory.GetFiles(Constants.GameBackupsPath))
-                GamesList.Items.Add(BackupItemBinding.Create(path));
+            {
+                try
+                {
+                    GamesList.Items.Add(BackupItemBinding.Create(path));
+                }
+                catch
+                {
+                    if (MessageBox.Show("It apears that there are some corrput files inside the backups directory!\nWoudld you like to delete to corrupt entry?", "Error Loading backup", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        Directory.Delete(path, true);
+                }
+            }
         }
 
         private void UpdateGameSelection(object sender, SelectionChangedEventArgs args)
@@ -162,7 +192,46 @@ namespace SmModManager.Graphics
                 DeleteGameButton.IsEnabled = true;
             }
         }
-
+        public void UpdateTabSelection(object sender, SelectionChangedEventArgs args)
+        {
+            if (args.AddedItems.Count > 0 && args.AddedItems[0].GetType() == typeof(TabItem))
+            {
+                var item = (TabItem)args.AddedItems[0];
+                item.Foreground = System.Windows.Media.Brushes.Black;
+            }
+            if (args.RemovedItems.Count > 0 && args.RemovedItems[0].GetType() == typeof(TabItem))
+            {
+                var item = (TabItem)args.RemovedItems[0];
+                item.Foreground = System.Windows.Media.Brushes.White;
+            }
+            if (args.AddedItems.Count > 0 && args.AddedItems[0] == OpenFileExporer && OpenFileExporer.IsSelected)
+            {
+                var item = (TabItem)args.AddedItems[0];
+                item.IsSelected = true;
+                item = (TabItem)args.RemovedItems[0];
+                item.IsSelected = true;
+                var thread = new Thread(RunUrlNew);
+                thread.IsBackground = true;
+                if (Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "backups")))
+                {
+                    thread.Start();
+                }
+                else
+                {
+                    thread.Start();
+                }
+            }
+        }
+        public void RunUrlOld()
+        {
+            Utilities.OpenExplorerUrl(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "backups"));
+            return;
+        }
+        public void RunUrlNew()
+        {
+            Utilities.OpenExplorerUrl(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "backups"));
+            return;
+        }
     }
 
 }

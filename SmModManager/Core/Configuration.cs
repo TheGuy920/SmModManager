@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Xml.Serialization;
 using SmModManager.Core.Enums;
@@ -15,6 +16,7 @@ namespace SmModManager.Core
         public string GameDataPath { get; set; }
         public string WorkshopPath { get; set; }
         public string UserDataPath { get; set; }
+        public bool HasTakenTutorial { get; set; }
 
         public UpdateBehaviorOptions UpdatePreference { get; set; } = UpdateBehaviorOptions.RemindForUpdates;
 
@@ -32,10 +34,17 @@ namespace SmModManager.Core
 
         public static Configuration Load()
         {
-            if (!File.Exists(Source))
-                return new Configuration();
-            using var stream = new FileStream(Source, FileMode.Open);
-            return (Configuration)Serializer.Deserialize(stream);
+            try
+            {
+                if (!File.Exists(Source))
+                    return new Configuration();
+                File.OpenRead(Source);
+                return (Configuration)Serializer.Deserialize(new FileStream(Source, FileMode.Open));
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
 
     }
