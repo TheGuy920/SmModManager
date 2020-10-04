@@ -14,48 +14,40 @@ using Newtonsoft.Json;
 using SmModManager.Core;
 using SmModManager.Core.Bindings;
 using SmModManager.Core.Enums;
+using SmModManager.Core.Models;
 using SmModManager.Graphics;
 
 namespace SmModManager
 {
 
-    public partial class App : Application
+    public partial class App
     {
 
-        public enum ApplicationExitCode
-        {
-
-            Success = 0,
-            Failure = 1,
-            CantWriteToApplicationLog = 2,
-            CantPersistApplicationState = 3
-
-        }
-
         public static App GetApp;
-        public string ScrapMechanicFile;
-        public string SurvivalFile;
+        private string ScrapMechanicFile;
+        private string SurvivalFile;
 
         public App()
         {
             GetApp = this;
             var settings = new CefSettings
             {
-                //By default CefSharp will use an in-memory cache, you need to specify a Cache Folder to persist data
                 CachePath = Path.Combine(Constants.CachePath, "UserDataCache")
             };
-
-            //Example of setting a command line argument
-            //Enables WebRTC
             settings.CefCommandLineArgs.Add("enable-media-stream");
-
-            //Perform dependency check to make sure all relevant resources are in our output directory.
             Cef.Initialize(settings, true, browserProcessHandler: null);
             IsClosing = false;
             HasFormattedAllMods = false;
         }
 
+        #region OtherStuff
+
         internal static Configuration Settings { get; private set; }
+
+        #endregion
+
+        #region WindowAndStuff
+
         internal static WnManager WindowManager { get; private set; }
         internal static PgStore PageStore { get; private set; }
         internal static PgAdvanced PageAdvanced { get; private set; }
@@ -64,22 +56,24 @@ namespace SmModManager
         internal static PgManage PageManage { get; private set; }
         internal static JoinFriend PageJoinFriend { get; private set; }
         internal static PgMultiplayer PageMultiplayer { get; private set; }
+
+        #endregion
+
+        #region UserDataRegion
+
         public static string UserSteamId { get; set; }
         public static bool IsClosing { get; set; }
         public static bool HasFormattedAllMods { get; set; }
 
-        public void OnAppExit(object sender, ExitEventArgs e)
-        {
-            // bruh
-        }
+        #endregion
 
         private void Initialize(object sender, StartupEventArgs args)
         {
             AppCenter.Start("c818850e-34d5-4155-850b-348c823bed24", typeof(Analytics), typeof(Crashes));
             try
             {
-                //throw new Exception("There was an error accessing the folder");
-                File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory!, "configuration.smmm"), "eorororooror");
+                // throw new Exception("There was an error accessing the folder");
+                // File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory!, "configuration.smmm"), "eorororooror");
                 Settings = Configuration.Load();
                 if (!Directory.Exists(Constants.UsersDataPath))
                     MessageBox.Show("WARNING: Scrap Mechanic save file missing! Please launch the game once before using this app!", "SmModManager");
@@ -155,8 +149,7 @@ namespace SmModManager
             {
                 try
                 {
-                    if (WindowManager != null)
-                        WindowManager.Close();
+                    WindowManager?.Close();
                 }
                 catch { }
                 var ErrorWindow = new StartUpError();
@@ -165,53 +158,47 @@ namespace SmModManager
             }
         }
 
-        public void FormatAllMods()
+        private void FormatAllMods()
         {
             var StartDir = Settings.WorkshopPath;
-            if (StartDir.Length > 3)
+            if (StartDir.Length <= 3)
+                return;
+            foreach (var SubDirectory in Directory.GetDirectories(StartDir))
             {
-                foreach (var SubDirectory in Directory.GetDirectories(StartDir))
-                {
-                    var FormatFile = Path.Combine(SubDirectory, "format.smmm");
-                    if (!File.Exists(FormatFile))
+                var FormatFile = Path.Combine(SubDirectory, "format.smmm");
+                if (File.Exists(FormatFile))
+                    continue;
+                var NewFolder = FormatMod(SubDirectory);
+                var TopFolder = NewFolder.Split("\\")[^1];
+                if (NewFolder != SubDirectory)
+                    if (!Directory.Exists(Path.Combine(StartDir, "Scrap Mechanic")) && !Directory.Exists(Path.Combine(StartDir, "Survival")))
                     {
-                        var NewFolder = FormatMod(SubDirectory);
-                        var TopFolder = NewFolder.Split("\\")[^1];
-                        if (NewFolder != SubDirectory)
-                            if (!Directory.Exists(Path.Combine(StartDir, "Scrap Mechanic")) && !Directory.Exists(Path.Combine(StartDir, "Survival")))
-                            {
-                                Directory.CreateDirectory(Path.Combine(SubDirectory, TopFolder));
-                                Utilities.CopyDirectory(NewFolder, Path.Combine(SubDirectory, TopFolder));
-                            }
-                        File.WriteAllText(FormatFile, "");
+                        Directory.CreateDirectory(Path.Combine(SubDirectory, TopFolder));
+                        Utilities.CopyDirectory(NewFolder, Path.Combine(SubDirectory, TopFolder));
                     }
-                }
-                HasFormattedAllMods = true;
-                Dispatcher.Invoke(() =>
-                {
-                    PgManage.GetPgManage.RefreshAll();
-                });
+                File.WriteAllText(FormatFile, "");
             }
-        }
-
-        public string FormatMod(string StartDir)
-        {
-            if (!Directory.Exists(Path.Combine(StartDir, "Scrap Mechanic")) && !Directory.Exists(Path.Combine(StartDir, "Survival")))
+            HasFormattedAllMods = true;
+            Dispatcher.Invoke(() =>
             {
-                ScrapMechanicFile = "";
-                SurvivalFile = "";
-                FindScrapMechanicFile(StartDir);
-                if (ScrapMechanicFile != "")
-                    return ScrapMechanicFile;
-                FindSurvivalFile(StartDir);
-                if (SurvivalFile != "")
-                    return SurvivalFile;
-                return StartDir;
-            }
-            return StartDir;
+                PgManage.GetPgManage.RefreshAll();
+            });
         }
 
-        public void FindScrapMechanicFile(string StartDir)
+        private string FormatMod(string StartDir)
+        {
+            if (Directory.Exists(Path.Combine(StartDir, "Scrap Mechanic")) || Directory.Exists(Path.Combine(StartDir, "Survival")))
+                return StartDir;
+            ScrapMechanicFile = "";
+            SurvivalFile = "";
+            FindScrapMechanicFile(StartDir);
+            if (ScrapMechanicFile != "")
+                return ScrapMechanicFile;
+            FindSurvivalFile(StartDir);
+            return SurvivalFile != "" ? SurvivalFile : StartDir;
+        }
+
+        private void FindScrapMechanicFile(string StartDir)
         {
             foreach (var SubDirectory in Directory.GetDirectories(StartDir))
             {
@@ -227,7 +214,7 @@ namespace SmModManager
             ScrapMechanicFile = "";
         }
 
-        public void FindSurvivalFile(string StartDir)
+        private void FindSurvivalFile(string StartDir)
         {
             foreach (var SubDirectory in Directory.GetDirectories(StartDir))
             {
@@ -302,56 +289,41 @@ namespace SmModManager
                     if (valid)
                         IsValidFileName = true;
                 }
-                if (file.Contains(".zip"))
+                if (!file.Contains(".zip"))
+                    continue;
+                var name = file.Split(@"\")[^1].Replace(".zip", "");
+                if (Address.Contains("smmods"))
                 {
-                    var name = file.Split(@"\")[^1].Replace(".zip", "");
-                    if (Address.Contains("smmods"))
-                    {
-                        var indexBeg = name.LastIndexOf("(");
-                        var indexEnd = name.LastIndexOf(")");
-                        Address = "https://smmods.com/mod/" + name[(indexBeg + 1)..indexEnd];
-                        name = name[..indexBeg];
-                    }
-                    Directory.CreateDirectory(Path.Combine(Constants.ArchivesPath, randomInt, "Scrap Mechanic"));
-                    ZipFile.ExtractToDirectory(file, Path.Combine(Constants.ArchivesPath, randomInt, "Scrap Mechanic"));
-                    File.Delete(file);
-                    var _data = new List<JsonData>
-                    {
-                        new JsonData
-                        {
-                            name = name,
-                            description = "Description Here",
-                            fileId = randomInt,
-                            type = "Blocks and Parts",
-                            Location = Address.Length.ToString().Length + Address.Length.ToString() + Address,
-                            version = 1
-                        }
-                    };
-                    var json = JsonConvert.SerializeObject(_data);
-                    File.WriteAllText(Path.Combine(Constants.ArchivesPath, randomInt, "description.json"), json.Replace("[", "").Replace("]", ""));
-                    File.Copy(Path.Combine(Constants.Resources, "Assets", "empty.png"), Path.Combine(Constants.ArchivesPath, randomInt, "preview.png"));
-                    Dispatcher.Invoke(() =>
-                    {
-                        PgManage.GetPgManage.ArchivedModsList.Items.Add(ModItemBinding.Create(Path.Combine(Constants.ArchivesPath, randomInt)));
-                        PgManage.GetPgManage.ArchivedModsList.SelectedItem = PgManage.GetPgManage.ArchivedModsList.Items[^1];
-                        PgManage.GetPgManage.RefreshCompatibleMods(null, null);
-                        WnManager.GetWnManager.ShowManagePage(null, null);
-                        PgManage.GetPgManage.ArchivedModsTab.IsSelected = true;
-                    });
+                    var indexBeg = name.LastIndexOf("(");
+                    var indexEnd = name.LastIndexOf(")");
+                    Address = "https://smmods.com/mod/" + name[(indexBeg + 1)..indexEnd];
+                    name = name[..indexBeg];
                 }
+                Directory.CreateDirectory(Path.Combine(Constants.ArchivesPath, randomInt, "Scrap Mechanic"));
+                ZipFile.ExtractToDirectory(file, Path.Combine(Constants.ArchivesPath, randomInt, "Scrap Mechanic"));
+                File.Delete(file);
+                var _data = new List<ModDescriptionModel>
+                {
+                    new ModDescriptionModel
+                    {
+                        Name = name,
+                        Description = "Description Here",
+                        Type = "Blocks and Parts",
+                        Location = Address.Length.ToString().Length + Address.Length.ToString() + Address
+                    }
+                };
+                var json = JsonConvert.SerializeObject(_data);
+                File.WriteAllText(Path.Combine(Constants.ArchivesPath, randomInt, "description.json"), json.Replace("[", "").Replace("]", ""));
+                File.Copy(Path.Combine(Constants.Resources, "Assets", "empty.png"), Path.Combine(Constants.ArchivesPath, randomInt, "preview.png"));
+                Dispatcher.Invoke(() =>
+                {
+                    PgManage.GetPgManage.ArchivedModsList.Items.Add(ModItemBinding.Create(Path.Combine(Constants.ArchivesPath, randomInt)));
+                    PgManage.GetPgManage.ArchivedModsList.SelectedItem = PgManage.GetPgManage.ArchivedModsList.Items[^1];
+                    PgManage.GetPgManage.RefreshCompatibleMods(null, null);
+                    WnManager.GetWnManager.ShowManagePage(null, null);
+                    PgManage.GetPgManage.ArchivedModsTab.IsSelected = true;
+                });
             }
-        }
-
-        public class JsonData
-        {
-
-            public string description { get; set; }
-            public string fileId { get; set; }
-            public string name { get; set; }
-            public string Location { get; set; }
-            public string type { get; set; }
-            public int version { get; set; }
-
         }
 
     }

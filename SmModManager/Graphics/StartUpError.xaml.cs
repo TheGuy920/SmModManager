@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using SmModManager.Core;
 using SmModManager.Core.Bindings;
 
 namespace SmModManager.Graphics
@@ -96,6 +97,7 @@ namespace SmModManager.Graphics
                             KillAllAndRestart();
                             break;
                     }
+            Utilities.RestartApp();
         }
 
     }
