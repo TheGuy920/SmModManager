@@ -1,0 +1,22 @@
+﻿<Window x:Class="SmModManager.Graphics.JoinFriend"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SmModManager.Graphics"
+        mc:Ignorable="d"
+        Title="JoinFriend" Height="80" Width="288" WindowStartupLocation="Manual"
+        xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+        ResizeMode="NoResize">
+    <StackPanel Orientation="Vertical" >
+        <StackPanel x:Name="SelectOption" Orientation="Vertical" Visibility="Visible" Height="65">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="40" Width="270">
+                <Button Content="Cancel" Click="Cancel" FontSize="20" Width="130" Height="35" HorizontalAlignment="Center" Margin="2,0,5,0"/>
+                <Button Content="Join Game" Click="JoinGame" FontSize="20" Width="130" Height="35" Margin="0,0,0,0"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel x:Name="StatusBox" Orientation="Vertical" Visibility="Hidden" Margin="0,-150,0,0" Height="229">
+            <TextBlock x:Name="StatusTextBox" FontSize="20" Width="500" TextAlignment="Center" Height="75" HorizontalAlignment="Center" Margin="0,70,0,0"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

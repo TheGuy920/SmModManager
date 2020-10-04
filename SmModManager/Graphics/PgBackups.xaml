@@ -1,53 +1,58 @@
 ﻿<Page x:Class="SmModManager.Graphics.PgBackups"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <TabControl>
-        <TabItem Header="World Backups">
-            <DockPanel>
-                <StackPanel Width="150" Margin="0,0,0,10">
-                    <Button Content="Create" Margin="10,10,10,0" Height="30" Click="CreateWorldBackup"/>
-                    <Separator Margin="10,10,10,0"/>
-                    <Button Content="Import" Margin="10,10,10,0" Height="30" Click="ImportWorld"/>
-                    <Button x:Name="ExportWorldButton" Content="Export" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ExportWorld"/>
-                    <Separator Margin="10,10,10,0"/>
-                    <Button x:Name="RestoreWorldButton" Content="Restore" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="RestoreWorld"/>
-                    <Button x:Name="DeleteWorldButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteWorld"/>
-                    <Separator Margin="10,10,10,0"/>
-                    <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshWorlds"/>
-                </StackPanel>
-                <ListView x:Name="WorldsList" Margin="0,10,10,10" SelectionChanged="UpdateWorldSelection">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}"/>
-                            <GridViewColumn Header="World Name" Width="200" DisplayMemberBinding="{Binding WorldName}"/>
-                            <GridViewColumn Header="Time" Width="200" DisplayMemberBinding="{Binding Time}"/>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </DockPanel>
-        </TabItem>
-        <TabItem Header="Game Backups">
-            <DockPanel>
-                <StackPanel Width="150" Margin="0,0,0,10">
-                    <Button Content="Create" Margin="10,10,10,0" Height="30" Click="CreateGameBackup"/>
-                    <Separator Margin="10,10,10,0"/>
-                    <Button Content="Import" Margin="10,10,10,0" Height="30" Click="ImportGame"/>
-                    <Button x:Name="ExportGameButton" Content="Export" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ExportGame"/>
-                    <Separator Margin="10,10,10,0"/>
-                    <Button x:Name="RestoreGameButton" Content="Restore" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="RestoreGame"/>
-                    <Button x:Name="DeleteGameButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteGame"/>
-                    <Separator Margin="10,10,10,0"/>
-                    <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshGames"/>
-                </StackPanel>
-                <ListView x:Name="GamesList" Margin="0,10,10,10" SelectionChanged="UpdateGameSelection">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}"/>
-                            <GridViewColumn Header="Time" Width="200" DisplayMemberBinding="{Binding Time}"/>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </DockPanel>
-        </TabItem>
-    </TabControl>
+    <Grid Background="#366e93">
+        <TabControl BorderThickness="0" Background="#1b2838" Margin="0,0,0,0" SelectionChanged="UpdateTabSelection">
+            <TabItem Header="World Backups" Background="#366e93" Foreground="White" BorderThickness="0" Width="150" Margin="-7,-6,0,0" Height="30" FontSize="16">
+                <DockPanel Background="#1b2838" Margin="-2,-4,-2,0">
+                    <StackPanel Width="150" Margin="0,0,0,10">
+                        <Button Content="Create" Margin="10,10,10,0" Height="30" Click="CreateWorldBackup" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Separator Margin="10,10,10,0"/>
+                        <Button Content="Import" Margin="10,10,10,0" Height="30" Click="ImportWorld" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button x:Name="ExportWorldButton" Content="Export" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ExportWorld" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Separator Margin="10,10,10,0"/>
+                        <Button x:Name="RestoreWorldButton" Content="Restore" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="RestoreWorld" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button x:Name="DeleteWorldButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteWorld" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Separator Margin="10,10,10,0"/>
+                        <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshWorlds" Background="Green" Foreground="White" BorderThickness="0"/>
+                    </StackPanel>
+                    <ListView x:Name="WorldsList" Margin="0,10,10,10" SelectionChanged="UpdateWorldSelection" Background="#366e93" Foreground="Black" FontWeight="Heavy">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}"/>
+                                <GridViewColumn Header="World Name" Width="200" DisplayMemberBinding="{Binding WorldName}"/>
+                                <GridViewColumn Header="Time" Width="200" DisplayMemberBinding="{Binding Time}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </DockPanel>
+            </TabItem>
+            <TabItem Header="Game Backups" Background="#366e93" Foreground="White" BorderThickness="0" Width="150" Margin="-8,-6,0,0" Height="30" FontSize="16">
+                <DockPanel Background="#1b2838" Margin="-2,-4,-2,0">
+                    <StackPanel Width="150" Margin="0,0,0,10">
+                        <Button Content="Create" Margin="10,10,10,0" Height="30" Click="CreateGameBackup" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Separator Margin="10,10,10,0"/>
+                        <Button Content="Import" Margin="10,10,10,0" Height="30" Click="ImportGame" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button x:Name="ExportGameButton" Content="Export" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ExportGame" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Separator Margin="10,10,10,0"/>
+                        <Button x:Name="RestoreGameButton" Content="Restore" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="RestoreGame" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button x:Name="DeleteGameButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteGame" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Separator Margin="10,10,10,0"/>
+                        <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshGames" Background="Green" Foreground="White" BorderThickness="0"/>
+                    </StackPanel>
+                    <ListView x:Name="GamesList" Margin="0,10,10,10" SelectionChanged="UpdateGameSelection" BorderThickness="1" Background="#366e93" Foreground="Black" FontWeight="Heavy">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}"/>
+                                <GridViewColumn Header="Time" Width="200" DisplayMemberBinding="{Binding Time}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </DockPanel>
+            </TabItem>
+            <TabItem x:Name="OpenFileExporer" Header="Open Old Backups Folder" Background="#366e93" Foreground="White" BorderThickness="0" Width="250" Margin="-8,-6,0,0" Height="30" FontSize="16">
+                <DockPanel Background="#1b2838" Margin="-2,-4,-2,0"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
 </Page>

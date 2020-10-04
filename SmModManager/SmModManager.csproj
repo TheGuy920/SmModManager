@@ -1,21 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-
+  
   <PropertyGroup>
+    <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>SmModManager.App</StartupObject>
     <Authors>dentolos19, TheGuy920</Authors>
-    <Company>Mod Manager Contributors</Company>
+    <Company>TGO INC</Company>
     <Copyright>Copyright © 2020</Copyright>
     <Product>Scrap Mechanic Mod Manager</Product>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Properties\AssemblyKey.snk</AssemblyOriginatorKeyFile>
     <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
-    <Version>7.0</Version>
+    <Version>7.97</Version>
+    <Platforms>AnyCPU;x64</Platforms>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Resources\Api\SteamLoading\**" />
+    <EmbeddedResource Remove="Resources\Api\SteamLoading\**" />
+    <None Remove="Resources\Api\SteamLoading\**" />
+    <Page Remove="Resources\Api\SteamLoading\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Graphics\JoinFriend.xaml.cs~RF1110177.TMP" />
+    <None Remove="Graphics\JoinFriend.xaml.cs~RF1c24605.TMP" />
     <None Remove="Graphics\WnManager.xaml.cs~RFb290084.TMP" />
     <None Remove="Resources\Assets\Icon.png" />
     <None Remove="Resources\Documents\Changelog.txt" />
@@ -28,16 +51,94 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CefSharp.WinForms" Version="84.4.10" />
+    <PackageReference Include="CefSharp.Wpf" Version="84.4.10" />
     <PackageReference Include="Gameloop.Vdf" Version="0.6.1" />
-    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="3.4.0" />
-    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="3.4.0" />
+    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="3.4.1" />
+    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="3.4.1" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Ookii.Dialogs.Wpf.NETCore" Version="2.1.0" />
+    <PackageReference Include="MvvmLight" Version="5.4.1.1" />
+    <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
+    <PackageReference Include="Nancy" Version="2.0.0" />
+    <PackageReference Include="Ookii.Dialogs.Wpf.NETCore" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\Assets\Icon.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Core\Models\FileDetailsModel.cs">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\Api\BackBlaze\b2.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Api\BackBlaze\b2.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Api\BackBlaze\report\b2.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Api\Pastebin\PastebinGet.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Api\Pastebin\PastebinShare.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Api\SteamCMD\steamcmd.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Assets\empty.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Assets\SiteManager.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Assets\PastebinGet.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Assets\PastebinShare.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <!-- TODO: These updates are currently required because CefSharp.Wpf specifies
+         <Private>false</Private>, which means these libraries will not be specified in
+         the .deps.json file, and so the CoreCLR wouldn't load these. -->
+    <Reference Update="CefSharp">
+      <Private>true</Private>
+    </Reference>
+    <Reference Update="CefSharp.Core">
+      <Private>true</Private>
+    </Reference>
+    <Reference Update="CefSharp.Wpf">
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Include CefSharp.BrowserSubprocess.Core so we can selfhost the BrowserSubProcess using our exe -->
+  <Choose>
+    <When Condition="'$(PlatformTarget)' == 'x64'">
+      <ItemGroup>
+        <Reference Include="CefSharp.BrowserSubprocess.Core">
+          <HintPath>$(CefSharpBrowserProcessCore64)</HintPath>
+          <Private>true</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <!-- x86, Win32 and AnyCPU -->
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="CefSharp.BrowserSubprocess.Core">
+          <HintPath>$(CefSharpBrowserProcessCore32)</HintPath>
+          <Private>true</Private>
+        </Reference>
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
 </Project>

@@ -1,0 +1,48 @@
+﻿// ==UserScript==
+// @name         user profile, auto launch chat
+// @version      1.0
+// @description  get the user's ID as a file
+// @author       theguy920#1402(discord)
+// @match        https://steamcommunity.com/profiles/*
+// @match        https://steamcommunity.com/id/*
+// @match        https://steamcommunity.com/chat/*
+// ==/UserScript==
+var currentUrl = window.location.href
+var canRun = false;
+if(currentUrl.includes("friends"))
+{
+	setTimeout(function() {
+		list = document.getElementsByTagName("a");
+		for(var f in list)
+		{
+			var ref = list[f].href;
+			var id = "".concat(list[f].href.split('/')[list[f].href.split('/').length-2], "/", list[f].href.split('/')[list[f].href.split('/').length-1]);
+			list[f].href = "https://google.com/smm.connect/".concat(id)
+		}
+	}, 500);
+}
+if(canRun){
+	if(!currentUrl.includes("chat"))
+	{
+		if(!currentUrl.includes("friends"))
+		{
+			var id1 = "hostid";
+			var id2 = "friendid";
+			//if (!id1.includes("id") && !id2.includes("id") && !currentUrl.includes("chat") && !currentUrl.includes("about")){
+				//OpenFriendChatInWebChat( id2, id1 );
+			//}
+			var SteamFriendUser = g_rgProfileData["steamid"]
+			LaunchWebChat( { friend: g_steamID }, {command: 'ShowFriendChatDialog', steamid: SteamFriendUser} );
+		}
+	}
+	else
+	{
+		setTimeout(function() {
+			var object = document.querySelector("#friendslist-container > div > div.chat_main_flex.displayRow > div.DropTarget.multiChatDialog > div.chatDialogs > div > div.ChatRoomGroupDialog_contents > div > div > div > div > div > div > div.displayColumn.fullWidth > div.chatEntry > form > textarea");
+			var text = "https://smm.join/code-here/";
+			object.focus();
+			object.select();
+			object.value = text;
+		}, 2500);
+	}
+}
