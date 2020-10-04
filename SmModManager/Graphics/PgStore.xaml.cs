@@ -1,30 +1,26 @@
-﻿using System;
-using System.IO;
-using System.IO.Compression;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using CefSharp;
-using CefSharp.Wpf;
-using Microsoft.Win32;
+using CefSharp.Handlers;
 using SmModManager.Core;
-using SmModManager.Core.Bindings;
-using SmModManager.Core.Enums;
-using SmModManager.Core.Models;
 
 namespace SmModManager.Graphics
 {
 
     public partial class PgStore
     {
+
         public static PgStore getPgStore;
+
         public PgStore()
         {
             getPgStore = this;
             InitializeComponent();
-            WorkShop.DownloadHandler = new CefSharp.Handlers.DownloadHandler();
-            SmModManager_1.DownloadHandler = new CefSharp.Handlers.DownloadHandler();
-            SmModManager_2.DownloadHandler = new CefSharp.Handlers.DownloadHandler();
+            WorkShop.DownloadHandler = new DownloadHandler();
+            SmModManager_1.DownloadHandler = new DownloadHandler();
+            SmModManager_2.DownloadHandler = new DownloadHandler();
             var requestContextSettings = new RequestContextSettings { CachePath = Path.Combine(Constants.CachePath, "UserDataCache") };
             requestContextSettings.PersistSessionCookies = true;
             requestContextSettings.PersistUserPreferences = true;
@@ -32,10 +28,11 @@ namespace SmModManager.Graphics
             WorkShop.RequestContext = requestContext;
             SmModManager_1.RequestContext = requestContext;
             SmModManager_2.RequestContext = requestContext;
-            WorkShop.MenuHandler = new CefSharp.Handlers.MenuHandler();
-            SmModManager_1.MenuHandler = new CefSharp.Handlers.MenuHandler();
-            SmModManager_2.MenuHandler = new CefSharp.Handlers.MenuHandler();
+            WorkShop.MenuHandler = new MenuHandler();
+            SmModManager_1.MenuHandler = new MenuHandler();
+            SmModManager_2.MenuHandler = new MenuHandler();
         }
+
         public void MoveForward(object sender, RoutedEventArgs args)
         {
             if (WS.IsSelected)
@@ -48,6 +45,7 @@ namespace SmModManager.Graphics
                 if (SmModManager_2.CanGoForward)
                     SmModManager_2.Forward();
         }
+
         public void MoveBackward(object sender, RoutedEventArgs args)
         {
             if (WS.IsSelected)
@@ -60,6 +58,7 @@ namespace SmModManager.Graphics
                 if (SmModManager_2.CanGoBack)
                     SmModManager_2.Back();
         }
+
         public void GoHome(object sender, RoutedEventArgs args)
         {
             if (WS.IsSelected)
@@ -80,35 +79,23 @@ namespace SmModManager.Graphics
                 SMMD_CurrentUrl.Text = SmModManager_2.Address;
 
             if (WS.IsSelected)
-            {
                 WS.Foreground = new SolidColorBrush(Colors.Black);
-            }
             else
-            {
                 WS.Foreground = new SolidColorBrush(Colors.White);
-            }
             if (SMMT.IsSelected)
-            {
                 SMMT.Foreground = new SolidColorBrush(Colors.Black);
-            }
             else
-            {
                 SMMT.Foreground = new SolidColorBrush(Colors.White);
-            }
             if (SMMD.IsSelected)
-            {
                 SMMD.Foreground = new SolidColorBrush(Colors.Black);
-            }
             else
-            {
                 SMMD.Foreground = new SolidColorBrush(Colors.White);
-            }
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
         }
+
     }
 
 }

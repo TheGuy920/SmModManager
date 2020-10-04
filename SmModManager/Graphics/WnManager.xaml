@@ -5,17 +5,10 @@
         Title="Scrap Mechanic Mod Manager" Width="1250" Height="900" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip"
         Closing="AppClosing">
     <Window.Resources>
-        <Storyboard x:Key="MessagePopup" RepeatBehavior="1x" AutoReverse="True" Completed="SetInVisible">
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="NotificationBox" Storyboard.TargetProperty="Margin" BeginTime="00:00:00">
-                <SplineThicknessKeyFrame KeyTime="00:00:00" Value="0,0,-200,0"/>
-                <SplineThicknessKeyFrame KeyTime="00:00:01" Value="0,0,0,0"/>
-            </ThicknessAnimationUsingKeyFrames>
-            <DoubleAnimation Storyboard.TargetName="NotificationBox" Storyboard.TargetProperty="Opacity" From="1" To="1" Duration="0:0:3" BeginTime="0:0:0"/>
-        </Storyboard>
     </Window.Resources>
     <DockPanel Background="#1b2838">
         <StackPanel Orientation="Vertical" Margin="0,0,-601,0">
-            <StackPanel x:Name="TopMenuPanel" Background="#202228" Orientation="Horizontal" Margin="0,0,0,0" Width="1250" Height="50" HorizontalAlignment="Center" >
+            <StackPanel x:Name="TopMenuPanel" Background="#202228" Orientation="Horizontal" Margin="0,0,0,0" Width="1250" Height="50" HorizontalAlignment="Center">
                 <Button x:Name="HomeButton" Margin="30,0,0,0" Content="HOME" Height="30" Click="ShowHomePage" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
                 <Button x:Name="ManageButton" Margin="30,0,0,0" Content="MANAGE MODS" Height="30" Click="ShowManagePage" Width="117" BorderThickness="0" Background="#202228" Foreground="White"/>
                 <Button x:Name="MultiplayerButton" Margin="30,0,0,0" Content="MULTIPLAYER" Height="30" Click="ShowMultiplayerPage" Width="108" BorderThickness="0" Background="#202228" Foreground="White"/>
@@ -32,8 +25,10 @@
                 <TextBlock Text=" Notification" FontWeight="Bold" TextAlignment="Left" Background="LightGray" Margin="0,1,1,33"/>
                 <Rectangle Fill="Green" Height="600" VerticalAlignment="Top" Margin="0,18,1,-25"/>
                 <TextBlock x:Name="NotificationMessage" Text="Message" Margin="10,22,10,-25" TextWrapping="WrapWithOverflow" FontWeight="Bold" TextAlignment="Left" Foreground="White"/>
-                <TextBlock TextAlignment="Left" Margin="75,3,1,33" FontSize="9" Foreground="Blue" HorizontalAlignment="Center" VerticalAlignment="Top"><Underline>Click To Hide Notification</Underline></TextBlock>
-                <Button Margin="0,0,0,-25" Opacity="0" Click="ClearNotification"></Button>
+                <TextBlock TextAlignment="Left" Margin="75,3,1,33" FontSize="9" Foreground="Blue" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Underline>Click To Hide Notification</Underline>
+                </TextBlock>
+                <Button Margin="0,0,0,-25" Opacity="0" Click="ClearNotification"/>
             </Grid>
         </StackPanel>
     </DockPanel>

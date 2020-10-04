@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Media.Imaging;
 using SmModManager.Core.Models;
@@ -51,7 +50,7 @@ namespace SmModManager.Core.Bindings
                 Path = path
             };
             string Url;
-            if (description.Location == null) 
+            if (description.Location == null)
             {
                 binding.ModIdLocation = "12ws" + description.WorkshopId;
                 Url = "https://steamcommunity.com/sharedfiles/filedetails/?id=";
@@ -63,12 +62,14 @@ namespace SmModManager.Core.Bindings
                 Url = site;
             }
             if (description.WorkshopId != 0 && description.Location == null)
+            {
                 binding.Url = Url + description.WorkshopId;
+            }
             else if (description.WorkshopId != 0)
             {
                 var numbers = "0123456789";
                 var subStrStartIndex = numbers.IndexOf(Url[0]);
-                Url = Url.Remove(0, subStrStartIndex+1);
+                Url = Url.Remove(0, subStrStartIndex + 1);
                 binding.Url = Url;
             }
             binding.ModId = (int)description.WorkshopId;

@@ -2,18 +2,20 @@
 //
 // Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
 
-using CefSharp.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using CefSharp.Wpf;
 using GalaSoft.MvvmLight.Command;
 
 namespace CefSharp.Handlers
 {
+
     public class MenuHandler : IContextMenuHandler
     {
+
         void IContextMenuHandler.OnBeforeContextMenu(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
         {
             Console.WriteLine("Context menu opened");
@@ -34,15 +36,11 @@ namespace CefSharp.Handlers
         bool IContextMenuHandler.OnContextMenuCommand(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
         {
             if (commandId == (CefMenuCommand)26501)
-            {
                 //browser.GetHost().ShowDevTools();
                 return true;
-            }
             if (commandId == (CefMenuCommand)26502)
-            {
                 //browser.GetHost().CloseDevTools();
                 return true;
-            }
 
             return false;
         }
@@ -82,15 +80,12 @@ namespace CefSharp.Handlers
                     //If the callback has been disposed then it's already been executed
                     //so don't call Cancel
                     if (!callback.IsDisposed)
-                    {
                         callback.Cancel();
-                    }
                 };
 
                 menu.Closed += handler;
 
                 foreach (var item in menuItems)
-                {
                     if (!item.Item1.Contains("View page source") && item.Item2 != CefMenuCommand.ViewSource)
                     {
                         if (item.Item2 == CefMenuCommand.NotFound && string.IsNullOrWhiteSpace(item.Item1))
@@ -105,104 +100,103 @@ namespace CefSharp.Handlers
                             IsEnabled = item.Item3,
                             Command = new RelayCommand(() =>
                             {
-                            //BUG: CEF currently not executing callbacks correctly so we manually map the commands below
-                            //see https://github.com/cefsharp/CefSharp/issues/1767
-                            //The following line worked in previous versions, it doesn't now, so custom EXAMPLE below
-                            //callback.Continue(item.Item2, CefEventFlags.None);
+                                //BUG: CEF currently not executing callbacks correctly so we manually map the commands below
+                                //see https://github.com/cefsharp/CefSharp/issues/1767
+                                //The following line worked in previous versions, it doesn't now, so custom EXAMPLE below
+                                //callback.Continue(item.Item2, CefEventFlags.None);
 
-                            //NOTE: Note all menu item options below have been tested, you can work out the rest
-                            switch (item.Item2)
+                                //NOTE: Note all menu item options below have been tested, you can work out the rest
+                                switch (item.Item2)
                                 {
                                     case CefMenuCommand.Back:
-                                        {
-                                            browser.GoBack();
-                                            break;
-                                        }
+                                    {
+                                        browser.GoBack();
+                                        break;
+                                    }
                                     case CefMenuCommand.Forward:
-                                        {
-                                            browser.GoForward();
-                                            break;
-                                        }
+                                    {
+                                        browser.GoForward();
+                                        break;
+                                    }
                                     case CefMenuCommand.Cut:
-                                        {
-                                            browser.FocusedFrame.Cut();
-                                            break;
-                                        }
+                                    {
+                                        browser.FocusedFrame.Cut();
+                                        break;
+                                    }
                                     case CefMenuCommand.Copy:
-                                        {
-                                            browser.FocusedFrame.Copy();
-                                            break;
-                                        }
+                                    {
+                                        browser.FocusedFrame.Copy();
+                                        break;
+                                    }
                                     case CefMenuCommand.Paste:
-                                        {
-                                            browser.FocusedFrame.Paste();
-                                            break;
-                                        }
+                                    {
+                                        browser.FocusedFrame.Paste();
+                                        break;
+                                    }
                                     case CefMenuCommand.Print:
-                                        {
-                                            browser.GetHost().Print();
-                                            break;
-                                        }
+                                    {
+                                        browser.GetHost().Print();
+                                        break;
+                                    }
                                     case CefMenuCommand.ViewSource:
-                                        {
+                                    {
                                         //browser.FocusedFrame.ViewSource();
                                         break;
-                                        }
+                                    }
                                     case CefMenuCommand.Undo:
-                                        {
-                                            browser.FocusedFrame.Undo();
-                                            break;
-                                        }
+                                    {
+                                        browser.FocusedFrame.Undo();
+                                        break;
+                                    }
                                     case CefMenuCommand.StopLoad:
-                                        {
-                                            browser.StopLoad();
-                                            break;
-                                        }
+                                    {
+                                        browser.StopLoad();
+                                        break;
+                                    }
                                     case CefMenuCommand.SelectAll:
-                                        {
-                                            browser.FocusedFrame.SelectAll();
-                                            break;
-                                        }
+                                    {
+                                        browser.FocusedFrame.SelectAll();
+                                        break;
+                                    }
                                     case CefMenuCommand.Redo:
-                                        {
-                                            browser.FocusedFrame.Redo();
-                                            break;
-                                        }
+                                    {
+                                        browser.FocusedFrame.Redo();
+                                        break;
+                                    }
                                     case CefMenuCommand.Find:
-                                        {
-                                            browser.GetHost().Find(0, parameters.SelectionText, true, false, false);
-                                            break;
-                                        }
+                                    {
+                                        browser.GetHost().Find(0, parameters.SelectionText, true, false, false);
+                                        break;
+                                    }
                                     case CefMenuCommand.AddToDictionary:
-                                        {
-                                            browser.GetHost().AddWordToDictionary(parameters.MisspelledWord);
-                                            break;
-                                        }
+                                    {
+                                        browser.GetHost().AddWordToDictionary(parameters.MisspelledWord);
+                                        break;
+                                    }
                                     case CefMenuCommand.Reload:
-                                        {
-                                            browser.Reload();
-                                            break;
-                                        }
+                                    {
+                                        browser.Reload();
+                                        break;
+                                    }
                                     case CefMenuCommand.ReloadNoCache:
-                                        {
-                                            browser.Reload(ignoreCache: true);
-                                            break;
-                                        }
+                                    {
+                                        browser.Reload(true);
+                                        break;
+                                    }
                                     case (CefMenuCommand)26501:
-                                        {
+                                    {
                                         //browser.GetHost().ShowDevTools();
                                         break;
-                                        }
+                                    }
                                     case (CefMenuCommand)26502:
-                                        {
+                                    {
                                         //browser.GetHost().CloseDevTools();
                                         break;
-                                        }
+                                    }
                                 }
-                            }, keepTargetAlive: true)
+                            }, true)
                         });
                     }
-                }
                 webBrowser.ContextMenu = menu;
             });
 
@@ -219,5 +213,7 @@ namespace CefSharp.Handlers
                 yield return new Tuple<string, CefMenuCommand, bool>(header, commandId, isEnabled);
             }
         }
+
     }
+
 }

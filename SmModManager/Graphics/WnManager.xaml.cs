@@ -1,26 +1,25 @@
-﻿using SmModManager.Core;
-using System;
+﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
 using System.Numerics;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
+using Application = System.Windows.Application;
 
 namespace SmModManager.Graphics
 {
+
     public partial class WnManager
     {
+
         public static WnManager GetWnManager;
         public static Vector2 PreviousPosition;
-        readonly Thread FixedUpdateThread;
+        private readonly Thread FixedUpdateThread;
         public bool UpdateTopMenuBool = true;
-        public static bool IsWindowOpen { get; private set; }
+
         public WnManager()
         {
             InitializeComponent();
@@ -30,12 +29,16 @@ namespace SmModManager.Graphics
             FixedUpdateThread.Start();
             IsWindowOpen = true;
         }
+
+        public static bool IsWindowOpen { get; private set; }
+
         public void AppClosing(object sender, CancelEventArgs e)
         {
             App.IsClosing = true;
             PgHome.GetPgHome.ThreadCanRun = false;
             Environment.Exit(Environment.ExitCode);
         }
+
         public void SendNotification(string message)
         {
             Dispatcher.Invoke(() =>
@@ -43,9 +46,10 @@ namespace SmModManager.Graphics
                 Notification(message);
             });
         }
+
         public void Notification(string Message, float WindowHeight = 50, float WindowWidth = 200)
         {
-            Storyboard sb = FindResource("MessagePopup") as Storyboard;
+            var sb = FindResource("MessagePopup") as Storyboard;
             sb.Stop();
             sb.Begin();
             NotificationBox.Width = Math.Clamp(WindowWidth, 200, 600);
@@ -53,16 +57,19 @@ namespace SmModManager.Graphics
             NotificationMessage.Text = Message;
             NotificationBox.Visibility = Visibility.Visible;
         }
+
         public void ClearNotification(object sender, EventArgs e)
         {
-            Storyboard sb = this.FindResource("MessagePopup") as Storyboard;
+            var sb = FindResource("MessagePopup") as Storyboard;
             sb.Seek(new TimeSpan(50000000));
         }
+
         public void SetInVisible(object sender, EventArgs e)
         {
             NotificationBox.Visibility = Visibility.Hidden;
             UpdateTopMenuBool = true;
         }
+
         public void Updater()
         {
             //call methods to be updated every 20 ms
@@ -77,8 +84,9 @@ namespace SmModManager.Graphics
                     });
                 }
             }
-            catch{ }
+            catch { }
         }
+
         public void RunVoidList()
         {
             PgManage.GetPgManage.UpdatePreviewImages();
@@ -86,6 +94,7 @@ namespace SmModManager.Graphics
             PgStore.getPgStore.UpdateUrl();
             PgHome.GetPgHome.UpdateUrl();
         }
+
         public void UpdateTopMenu()
         {
             if (PreviousPosition.X != App.WindowManager.ActualHeight || PreviousPosition.Y != App.WindowManager.ActualWidth)
@@ -98,10 +107,10 @@ namespace SmModManager.Graphics
                 PreviousPosition.X = (float)App.WindowManager.ActualHeight;
                 PreviousPosition.Y = (float)App.WindowManager.ActualWidth;
                 PageView.Height = Math.Clamp((float)App.WindowManager.ActualHeight - 89, 10, 999999);
-                PageView.Width = Math.Clamp((float)App.WindowManager.ActualWidth-15, 10, 999999);
+                PageView.Width = Math.Clamp((float)App.WindowManager.ActualWidth - 15, 10, 999999);
             }
-
         }
+
         private void ClearButtonFontWeight()
         {
             ManageButton.FontWeight = FontWeights.Normal;
@@ -142,6 +151,7 @@ namespace SmModManager.Graphics
             BackupsButton.FontWeight = FontWeights.Bold;
             BackupsButton.FontSize = 15;
         }
+
         public void ShowHomePage(object sender, RoutedEventArgs args)
         {
             ClearButtonFontWeight();
@@ -149,6 +159,7 @@ namespace SmModManager.Graphics
             HomeButton.FontWeight = FontWeights.Bold;
             HomeButton.FontSize = 15;
         }
+
         private void ShowStorePage(object sender, RoutedEventArgs args)
         {
             ClearButtonFontWeight();
@@ -167,13 +178,14 @@ namespace SmModManager.Graphics
 
         private void Exit(object sender, RoutedEventArgs args)
         {
-            System.Windows.Application.Current.Shutdown();
+            Application.Current.Shutdown();
         }
 
         public void MinimizeWindow()
         {
-            this.WindowState = (WindowState)FormWindowState.Minimized;
-        }        
+            WindowState = (WindowState)FormWindowState.Minimized;
+        }
+
         public void CallMinimizeWindow()
         {
             Dispatcher.Invoke(() =>
@@ -181,22 +193,25 @@ namespace SmModManager.Graphics
                 MinimizeWindow();
             });
         }
+
     }
+
     public static class DisableNavigation
     {
+
+        public static readonly DependencyProperty DisableProperty =
+            DependencyProperty.RegisterAttached("Disable", typeof(bool), typeof(DisableNavigation),
+                new PropertyMetadata(false, DisableChanged));
+
         public static bool GetDisable(DependencyObject o)
         {
             return (bool)o.GetValue(DisableProperty);
         }
+
         public static void SetDisable(DependencyObject o, bool value)
         {
             o.SetValue(DisableProperty, value);
         }
-
-        public static readonly DependencyProperty DisableProperty =
-            DependencyProperty.RegisterAttached("Disable", typeof(bool), typeof(DisableNavigation),
-                                                new PropertyMetadata(false, DisableChanged));
-
 
 
         public static void DisableChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -210,5 +225,7 @@ namespace SmModManager.Graphics
         {
             ((Frame)sender).NavigationService.RemoveBackEntry();
         }
+
     }
+
 }

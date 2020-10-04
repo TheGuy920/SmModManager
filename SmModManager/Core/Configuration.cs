@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Xml.Serialization;
 using SmModManager.Core.Enums;
@@ -41,7 +40,7 @@ namespace SmModManager.Core
                 File.OpenRead(Source);
                 return (Configuration)Serializer.Deserialize(new FileStream(Source, FileMode.Open));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw e;
             }

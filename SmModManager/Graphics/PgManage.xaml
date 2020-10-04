@@ -1,8 +1,8 @@
 ﻿<Page
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:bindings="clr-namespace:SmModManager.Core.Bindings" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="SmModManager.Graphics.PgManage"
-      xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:bindings="clr-namespace:SmModManager.Core.Bindings" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="SmModManager.Graphics.PgManage"
+    xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf">
     <Page.Resources>
         <DataTemplate x:Key="ModItem" DataType="bindings:ModItemBinding">
             <DockPanel>
@@ -17,7 +17,7 @@
                 <DockPanel Background="#1b2838" Margin="-2,-5,-2,0">
                     <Grid>
                         <Button FontSize="20" x:Name="RefreshCompatibleButton" Content="Refresh" Margin="10,15,10,0" Height="30" Click="RefreshCompatibleMods" Background="Green" Foreground="White" Width="400" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0"/>
-                        <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Height="24" Width="400" Margin="0,50,0,0" InputScope="Default" TextChanged="SearchTextChanged" GotFocus="RemoveText" LostFocus="AddText" Text="Search Filter" Foreground="Gray"></TextBox>
+                        <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Height="24" Width="400" Margin="0,50,0,0" InputScope="Default" TextChanged="SearchTextChanged" GotFocus="RemoveText" LostFocus="AddText" Text="Search Filter" Foreground="Gray"/>
                         <ListBox x:Name="CompatibleModsList" Margin="10,79,10,10" ItemTemplate="{StaticResource ModItem}" SelectionChanged="UpdateCompatibleSelection" MouseDoubleClick="OpenCompatibleMod" Background="#1b2838" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
                     </Grid>
                     <StackPanel Margin="0,0,0,10" VerticalAlignment="Top" HorizontalAlignment="Center" Background="#1b2838">
@@ -26,14 +26,14 @@
                                 <Grid Margin="0,60,0,0">
                                     <Button Content="&lt;" Margin="0,0,0,0" Height="20" Click="MoveBackward" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
                                     <Button Content="&gt;" Margin="50,0,0,0" Height="20" Click="MoveForward" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
-                                    <TextBlock x:Name="Compatible_CurrentUrl" Margin="105,0,50,0" FontSize="13" FontWeight="Bold" Foreground="White"></TextBlock>
+                                    <TextBlock x:Name="Compatible_CurrentUrl" Margin="105,0,50,0" FontSize="13" FontWeight="Bold" Foreground="White"/>
                                     <Button Content="Home" Margin="100,0,0,0" Height="20" Click="GoHome" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Right" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
                                     <wpf:ChromiumWebBrowser x:Name="CompatibleModsListWebPage" Margin="0,25,0,0"/>
                                 </Grid>
                                 <StackPanel x:Name="CompatibleModsListManualView" VerticalAlignment="Top" HorizontalAlignment="Center" Background="#1b2838">
                                     <Image x:Name="CompatibleModsListPreview" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10,10,10,10" Width="1" Height="1"/>
                                     <TextBlock x:Name="CompatibleModsListName" TextAlignment="Center" FontSize="20" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White"/>
-                                    <RichTextBox Grid.Row="1" x:Name="CompatibleModsListDescription" Padding="0,20,0,0" FontSize="12"  HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White" BorderThickness="0" IsReadOnly="True"/>
+                                    <RichTextBox x:Name="CompatibleModsListDescription" Padding="0,20,0,0" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White" BorderThickness="0" IsReadOnly="True"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
                                     <Button FontSize="20" x:Name="InjectButton" Content="Install" Margin="10,15,10,0" Height="30" Click="InjectMod" Background="Green" Foreground="White" Width="20" BorderThickness="0"/>
@@ -49,7 +49,7 @@
                 <DockPanel Background="#1b2838" Margin="-2,-5,-2,-2">
                     <Grid>
                         <Button FontSize="20" x:Name="RefreshAvailableButton" Content="Refresh" Margin="10,15,10,0" Height="30" Click="RefreshAvailableMods" Background="Green" Foreground="White" Width="400" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0"/>
-                        <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Height="24" Width="400" Margin="0,50,0,0" InputScope="Default" TextChanged="SearchTextChanged" GotFocus="RemoveText" LostFocus="AddText" Text="Search Filter" Foreground="Gray"></TextBox>
+                        <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Height="24" Width="400" Margin="0,50,0,0" InputScope="Default" TextChanged="SearchTextChanged" GotFocus="RemoveText" LostFocus="AddText" Text="Search Filter" Foreground="Gray"/>
                         <ListBox x:Name="AvailableModsList" Margin="10,79,10,10" ItemTemplate="{StaticResource ModItem}" SelectionChanged="UpdateAvailableModSelection" MouseDoubleClick="OpenAvailableMod" Background="#1b2838" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
                     </Grid>
                     <StackPanel Margin="0,0,0,10" VerticalAlignment="Top" HorizontalAlignment="Center" Background="#1b2838">
@@ -58,14 +58,14 @@
                                 <Grid Margin="0,60,0,0">
                                     <Button Content="&lt;" Margin="0,0,0,0" Height="20" Click="MoveBackward" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
                                     <Button Content="&gt;" Margin="50,0,0,0" Height="20" Click="MoveForward" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
-                                    <TextBlock x:Name="Available_CurrentUrl" Margin="105,0,50,0" FontSize="13" FontWeight="Bold" Foreground="White"></TextBlock>
+                                    <TextBlock x:Name="Available_CurrentUrl" Margin="105,0,50,0" FontSize="13" FontWeight="Bold" Foreground="White"/>
                                     <Button Content="Home" Margin="100,0,0,0" Height="20" Click="GoHome" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Right" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
                                     <wpf:ChromiumWebBrowser x:Name="AvailableModsListWebPage" Margin="0,25,0,0"/>
                                 </Grid>
                                 <StackPanel x:Name="AvailableModsListManualView" Margin="0,0,0,10" VerticalAlignment="Top" HorizontalAlignment="Center" Background="#1b2838" Visibility="Hidden" Height="10">
-                                    <Image x:Name="AvailableModsListPreview" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10,10,10,10" Width="1" Height="1" />
+                                    <Image x:Name="AvailableModsListPreview" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10,10,10,10" Width="1" Height="1"/>
                                     <TextBlock x:Name="AvailableModsListName" TextAlignment="Center" FontSize="20" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White"/>
-                                    <RichTextBox Grid.Row="1" x:Name="AvailableModsListDescription" Padding="0,20,0,0" FontSize="12"  HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White" BorderThickness="0" IsReadOnly="True"/>
+                                    <RichTextBox x:Name="AvailableModsListDescription" Padding="0,20,0,0" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White" BorderThickness="0" IsReadOnly="True"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
                                     <Button FontSize="20" x:Name="ArchiveAvailableButton" Content="Archive" Margin="10,15,10,0" Height="30" Click="ArchiveAvailableMod" Background="Green" Foreground="White" Width="20" BorderThickness="0"/>
@@ -78,9 +78,9 @@
             </TabItem>
             <TabItem Header="Archived Mods" Background="#366e93" Foreground="White" x:Name="ArchivedModsTab" BorderThickness="0" Width="150" Margin="-9,-7,0,0" Height="30" FontSize="16">
                 <DockPanel Background="#1b2838" Margin="-2,-5,-2,-2">
-                   <Grid>
+                    <Grid>
                         <Button FontSize="20" Content="Refresh" Margin="10,15,10,0" Height="30" Click="RefreshArchivedMods" Background="Green" Foreground="White" Width="400" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0"/>
-                        <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Height="24" Width="400" Margin="0,50,0,0" InputScope="Default" TextChanged="SearchTextChanged" GotFocus="RemoveText" LostFocus="AddText" Text="Search Filter" Foreground="Gray"></TextBox>
+                        <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Height="24" Width="400" Margin="0,50,0,0" InputScope="Default" TextChanged="SearchTextChanged" GotFocus="RemoveText" LostFocus="AddText" Text="Search Filter" Foreground="Gray"/>
                         <ListBox x:Name="ArchivedModsList" Margin="10,79,10,10" ItemTemplate="{StaticResource ModItem}" SelectionChanged="UpdateArchivedSelection" MouseDoubleClick="OpenAvailableMod" Background="#1b2838" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
                     </Grid>
                     <StackPanel Margin="0,0,0,10" VerticalAlignment="Top" HorizontalAlignment="Center" Background="#1b2838">
@@ -89,14 +89,14 @@
                                 <Grid Margin="0,60,0,0">
                                     <Button Content="&lt;" Margin="0,0,0,0" Height="20" Click="MoveBackward" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
                                     <Button Content="&gt;" Margin="50,0,0,0" Height="20" Click="MoveForward" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
-                                    <TextBlock x:Name="Archived_CurrentUrl" Margin="105,0,50,0" FontSize="13" FontWeight="Bold" Foreground="White"></TextBlock>
+                                    <TextBlock x:Name="Archived_CurrentUrl" Margin="105,0,50,0" FontSize="13" FontWeight="Bold" Foreground="White"/>
                                     <Button Content="Home" Margin="100,0,0,0" Height="20" Click="GoHome" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Right" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
                                     <wpf:ChromiumWebBrowser x:Name="ArchivedModsListWebPage" Margin="0,25,0,0"/>
                                 </Grid>
                                 <StackPanel x:Name="ArchivedModsListManualView" VerticalAlignment="Top" HorizontalAlignment="Center" Background="#1b2838">
-                                    <Image x:Name="ArchivedModsListPreview" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10,10,10,10" Width="1" Height="1" />
+                                    <Image x:Name="ArchivedModsListPreview" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10,10,10,10" Width="1" Height="1"/>
                                     <TextBlock x:Name="ArchivedModsListName" TextAlignment="Center" FontSize="20" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White"/>
-                                    <RichTextBox Grid.Row="1" x:Name="ArchivedModsListDescription" Padding="0,20,0,0" FontSize="12"  HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White" BorderThickness="0" IsReadOnly="True"/>
+                                    <RichTextBox x:Name="ArchivedModsListDescription" Padding="0,20,0,0" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White" BorderThickness="0" IsReadOnly="True"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
                                     <Button FontSize="20" x:Name="UnarchiveButton" Content="Unarchive" Margin="10,15,10,0" Height="30" Click="UnarchiveMod" Background="Green" Foreground="White" BorderThickness="0"/>
@@ -111,7 +111,7 @@
                 <DockPanel Background="#1b2838" Margin="-2,-5,-2,-2">
                     <Grid>
                         <Button x:Name="RemoveAllModsButton" FontSize="20" Content="Remove All" Margin="10,15,10,0" Height="30" Click="RemoveAllCurrentMods" Background="Green" Foreground="White" Width="400" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0"/>
-                        <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Height="24" Width="400" Margin="0,50,0,0" InputScope="Default" TextChanged="SearchTextChanged" GotFocus="RemoveText" LostFocus="AddText" Text="Search Filter" Foreground="Gray"></TextBox>
+                        <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" Height="24" Width="400" Margin="0,50,0,0" InputScope="Default" TextChanged="SearchTextChanged" GotFocus="RemoveText" LostFocus="AddText" Text="Search Filter" Foreground="Gray"/>
                         <ListBox x:Name="CurrentModsList" Margin="10,79,10,10" ItemTemplate="{StaticResource ModItem}" SelectionChanged="UpdateCurrentModSelection" MouseDoubleClick="OpenCurrentMod" Background="#1b2838" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
                     </Grid>
                     <StackPanel Margin="0,0,0,10" VerticalAlignment="Top" HorizontalAlignment="Center" Background="#1b2838">
@@ -120,14 +120,14 @@
                                 <Grid Margin="0,60,0,0">
                                     <Button Content="&lt;" Margin="0,0,0,0" Height="20" Click="MoveBackward" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
                                     <Button Content="&gt;" Margin="50,0,0,0" Height="20" Click="MoveForward" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
-                                    <TextBlock x:Name="Current_CurrentUrl" Margin="105,0,50,0" FontSize="13" FontWeight="Bold" Foreground="White"></TextBlock>
+                                    <TextBlock x:Name="Current_CurrentUrl" Margin="105,0,50,0" FontSize="13" FontWeight="Bold" Foreground="White"/>
                                     <Button Content="Home" Margin="100,0,0,0" Height="20" Click="GoHome" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Right" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
                                     <wpf:ChromiumWebBrowser x:Name="CurrentModsListWebPage" Margin="0,25,0,0"/>
                                 </Grid>
                                 <StackPanel x:Name="CurrentModsListManualView" Margin="0,0,0,10" VerticalAlignment="Top" HorizontalAlignment="Center" Background="#1b2838">
-                                    <Image x:Name="CurrentModsListPreview" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10,10,10,10" Width="1" Height="1" />
+                                    <Image x:Name="CurrentModsListPreview" Stretch="Fill" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10,10,10,10" Width="1" Height="1"/>
                                     <TextBlock x:Name="CurrentModsListName" TextAlignment="Center" FontSize="20" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White"/>
-                                    <RichTextBox Grid.Row="1" x:Name="CurrentModsListDescription" Padding="0,20,0,0" FontSize="12"  HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White" BorderThickness="0" IsReadOnly="True"/>
+                                    <RichTextBox x:Name="CurrentModsListDescription" Padding="0,20,0,0" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#1b2838" Foreground="White" BorderThickness="0" IsReadOnly="True"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
                                     <Button FontSize="20" x:Name="DeleteCurrentButton" Content="Uninstall" Margin="10,15,10,0" Height="30" Click="DeleteCurrentMod" Background="Green" Foreground="White" Width="20" BorderThickness="0"/>

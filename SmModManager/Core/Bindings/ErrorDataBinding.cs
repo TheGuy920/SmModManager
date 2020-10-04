@@ -1,16 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
-using SmModManager.Core.Models;
-
-namespace SmModManager.Core.Bindings
+﻿namespace SmModManager.Core.Bindings
 {
 
     public class ErrorDataBinding
     {
-
 
         public string Name { get; private set; }
         public string Function { get; private set; }
@@ -21,7 +13,7 @@ namespace SmModManager.Core.Bindings
             var binding = new ErrorDataBinding
             {
                 Name = Name,
-                Function = func,
+                Function = func
             };
             return binding;
         }

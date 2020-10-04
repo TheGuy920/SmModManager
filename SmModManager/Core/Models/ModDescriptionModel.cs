@@ -7,6 +7,7 @@ namespace SmModManager.Core.Models
 
     public class ModDescriptionModel
     {
+
         [JsonProperty("version")] public string Version { get; private set; }
         [JsonProperty("localId")] public string Id { get; private set; }
 

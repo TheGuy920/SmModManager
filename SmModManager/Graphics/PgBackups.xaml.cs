@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Microsoft.Win32;
 using SmModManager.Core;
 using SmModManager.Core.Bindings;
@@ -164,7 +163,6 @@ namespace SmModManager.Graphics
         {
             GamesList.Items.Clear();
             foreach (var path in Directory.GetFiles(Constants.GameBackupsPath))
-            {
                 try
                 {
                     GamesList.Items.Add(BackupItemBinding.Create(path));
@@ -174,7 +172,6 @@ namespace SmModManager.Graphics
                     if (MessageBox.Show("It apears that there are some corrput files inside the backups directory!\nWoudld you like to delete to corrupt entry?", "Error Loading backup", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         Directory.Delete(path, true);
                 }
-            }
         }
 
         private void UpdateGameSelection(object sender, SelectionChangedEventArgs args)
@@ -192,17 +189,18 @@ namespace SmModManager.Graphics
                 DeleteGameButton.IsEnabled = true;
             }
         }
+
         public void UpdateTabSelection(object sender, SelectionChangedEventArgs args)
         {
             if (args.AddedItems.Count > 0 && args.AddedItems[0].GetType() == typeof(TabItem))
             {
                 var item = (TabItem)args.AddedItems[0];
-                item.Foreground = System.Windows.Media.Brushes.Black;
+                item.Foreground = Brushes.Black;
             }
             if (args.RemovedItems.Count > 0 && args.RemovedItems[0].GetType() == typeof(TabItem))
             {
                 var item = (TabItem)args.RemovedItems[0];
-                item.Foreground = System.Windows.Media.Brushes.White;
+                item.Foreground = Brushes.White;
             }
             if (args.AddedItems.Count > 0 && args.AddedItems[0] == OpenFileExporer && OpenFileExporer.IsSelected)
             {
@@ -213,25 +211,22 @@ namespace SmModManager.Graphics
                 var thread = new Thread(RunUrlNew);
                 thread.IsBackground = true;
                 if (Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "backups")))
-                {
                     thread.Start();
-                }
                 else
-                {
                     thread.Start();
-                }
             }
         }
+
         public void RunUrlOld()
         {
             Utilities.OpenExplorerUrl(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "backups"));
-            return;
         }
+
         public void RunUrlNew()
         {
             Utilities.OpenExplorerUrl(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "backups"));
-            return;
         }
+
     }
 
 }
