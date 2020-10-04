@@ -1,14 +1,12 @@
 ﻿<Window x:Class="SmModManager.Graphics.StartUpError"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
+        xmlns:bindings="clr-namespace:SmModManager.Core.Bindings"
         Title="StartUpError" Height="470" Width="820" WindowStartupLocation="CenterScreen" SizeToContent="Height" ResizeMode="CanMinimize">
     <Window.Resources>
         <DataTemplate x:Key="Solutions" DataType="bindings:ErrorDataBinding">
             <DockPanel>
-                <CheckBox VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10,10,10"/>
+                <CheckBox VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10,10,10" IsChecked="{Binding BoxIsChecked}"/>
                 <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10,10,10" Foreground="Black"/>
             </DockPanel>
         </DataTemplate>

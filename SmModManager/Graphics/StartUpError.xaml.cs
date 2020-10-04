@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -57,36 +58,39 @@ namespace SmModManager.Graphics
         }
         public void UpdateSolutionSelection(object sender, SelectionChangedEventArgs e)
         {
-
+            
         }
         public void KillAllAndRestart()
         {
+            Console.WriteLine(Process.GetCurrentProcess().Id);
             foreach (var process in Process.GetProcessesByName("SmModManager"))
             {
+                Console.WriteLine(process.Id);
                 if (process.Id != Process.GetCurrentProcess().Id)
+                {
                     process.Kill();
+                }
             }
         }
         public void DeleteCoruptObject()
         {
-
+            MessageBox.Show("it works! DELETE CORRUPTED OBJECT");
         }
         public void DeleteCoruptFile()
         {
-
+            MessageBox.Show("it works! DELETE CORRUPTED FILE");
         }
         public void DeleteCoruptFolder()
         {
-
-        }
-        public void TakeAction(object sender, RoutedEventArgs e)
+            MessageBox.Show("it works! DELETE CORRUPTED FOLDER");
+        } 
+        private void TakeAction(object sender, RoutedEventArgs e)
         {
-            foreach (var item in PossibleSolutions.Items)
+            foreach (var item in PossibleSolutions.Items.OfType<ErrorDataBinding>())
             {
-                var binding = (ErrorDataBinding)item;
-                if (binding.Box.IsChecked == true)
+                if (item.BoxIsChecked)
                 {
-                    switch (binding.Function)
+                    switch (item.Function)
                     {
                         case "DeleteCoruptObject":
                             DeleteCoruptObject();
