@@ -20,7 +20,7 @@ using SmModManager.Graphics;
 namespace SmModManager
 {
 
-    public partial class App
+    public partial class App : Application
     {
 
         public static App GetApp;
@@ -215,6 +215,22 @@ namespace SmModManager
         }
 
         private void FindSurvivalFile(string StartDir)
+        {
+            foreach (var SubDirectory in Directory.GetDirectories(StartDir))
+            {
+                if (SurvivalFile != "")
+                    return;
+                if (SubDirectory.Split("\\")[^1] == "Survival")
+                {
+                    SurvivalFile = SubDirectory;
+                    return;
+                }
+                FindSurvivalFile(SubDirectory);
+            }
+            SurvivalFile = "";
+        }
+
+        public void FindSurvivalFile(string StartDir)
         {
             foreach (var SubDirectory in Directory.GetDirectories(StartDir))
             {
