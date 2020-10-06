@@ -14,14 +14,10 @@
     <AssemblyOriginatorKeyFile>Properties\AssemblyKey.snk</AssemblyOriginatorKeyFile>
     <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
     <Version>7.97</Version>
-    <Platforms>AnyCPU;x64</Platforms>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Platforms>x64</Platforms>
     <DelaySign>false</DelaySign>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <Prefer32Bit>false</Prefer32Bit>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <IsPackable>false</IsPackable>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -37,9 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Graphics\JoinFriend.xaml.cs~RF1110177.TMP" />
-    <None Remove="Graphics\JoinFriend.xaml.cs~RF1c24605.TMP" />
-    <None Remove="Graphics\WnManager.xaml.cs~RFb290084.TMP" />
     <None Remove="Resources\Assets\Icon.png" />
     <None Remove="Resources\Documents\Changelog.txt" />
     <None Remove="Resources\Documents\Credits.txt" />
@@ -61,6 +54,7 @@
     <PackageReference Include="MvvmLight" Version="5.4.1.1" />
     <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
     <PackageReference Include="Nancy" Version="2.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Ookii.Dialogs.Wpf.NETCore" Version="2.0.0" />
   </ItemGroup>
 
@@ -106,10 +100,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  
   <ItemGroup>
-    <!-- TODO: These updates are currently required because CefSharp.Wpf specifies
-         <Private>false</Private>, which means these libraries will not be specified in
-         the .deps.json file, and so the CoreCLR wouldn't load these. -->
     <Reference Update="CefSharp">
       <Private>true</Private>
     </Reference>
@@ -120,8 +112,7 @@
       <Private>true</Private>
     </Reference>
   </ItemGroup>
-
-  <!-- Include CefSharp.BrowserSubprocess.Core so we can selfhost the BrowserSubProcess using our exe -->
+  
   <Choose>
     <When Condition="'$(PlatformTarget)' == 'x64'">
       <ItemGroup>
@@ -131,7 +122,7 @@
         </Reference>
       </ItemGroup>
     </When>
-    <!-- x86, Win32 and AnyCPU -->
+    
     <Otherwise>
       <ItemGroup>
         <Reference Include="CefSharp.BrowserSubprocess.Core">
@@ -141,4 +132,5 @@
       </ItemGroup>
     </Otherwise>
   </Choose>
+  
 </Project>

@@ -196,7 +196,7 @@ namespace SmModManager.Graphics
 
         public void UpdateOnlineStatus(object sender, RoutedEventArgs args)
         {
-            App.PageWnJoinFriend.RefreshCurrentModsStatus();
+            App.PageJoinFriend.RefreshCurrentModsStatus();
         }
 
         public void UpdateStuff()

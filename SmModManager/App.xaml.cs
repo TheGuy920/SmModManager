@@ -20,7 +20,7 @@ using SmModManager.Graphics;
 namespace SmModManager
 {
 
-    public partial class App : Application
+    public partial class App
     {
 
         public static App GetApp;
@@ -40,13 +40,21 @@ namespace SmModManager
             HasFormattedAllMods = false;
         }
 
-        #region OtherStuff
+        #region AppData
 
         internal static Configuration Settings { get; private set; }
 
         #endregion
 
-        #region WindowAndStuff
+        #region UserData
+
+        public static string UserSteamId { get; set; }
+        public static bool IsClosing { get; set; }
+        public static bool HasFormattedAllMods { get; set; }
+
+        #endregion
+        
+        #region GraphicVariables
 
         internal static WnManager WindowManager { get; private set; }
         internal static PgStore PageStore { get; private set; }
@@ -54,16 +62,8 @@ namespace SmModManager
         internal static PgHome PageHome { get; private set; }
         internal static PgBackups PageBackups { get; private set; }
         internal static PgManage PageManage { get; private set; }
-        internal static WnJoinFriend PageWnJoinFriend { get; private set; }
+        internal static WnJoinFriend PageJoinFriend { get; private set; }
         internal static PgMultiplayer PageMultiplayer { get; private set; }
-
-        #endregion
-
-        #region UserDataRegion
-
-        public static string UserSteamId { get; set; }
-        public static bool IsClosing { get; set; }
-        public static bool HasFormattedAllMods { get; set; }
 
         #endregion
 
@@ -73,7 +73,7 @@ namespace SmModManager
             try
             {
                 // throw new Exception("There was an error accessing the folder");
-                // File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory!, "configuration.smmm"), "eorororooror");
+                // File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory!, "configuration.smmm"), "intentional error");
                 Settings = Configuration.Load();
                 if (!Directory.Exists(Constants.UsersDataPath))
                     MessageBox.Show("WARNING: Scrap Mechanic save file missing! Please launch the game once before using this app!", "SmModManager");
@@ -109,6 +109,7 @@ namespace SmModManager
                     return;
                 }
                 if (Settings.UpdatePreference != UpdateBehaviorOptions.DontCheckForUpdates)
+                {
                     if (Utilities.CheckForUpdates())
                     {
                         if (Settings.UpdatePreference == UpdateBehaviorOptions.RemindForUpdates)
@@ -116,6 +117,7 @@ namespace SmModManager
                                 goto SkipToStartup;
                         Utilities.InstallUpdate();
                     }
+                }
                 SkipToStartup:
                 if (!Directory.Exists(Constants.ArchivesPath))
                     Directory.CreateDirectory(Constants.ArchivesPath);
@@ -131,18 +133,14 @@ namespace SmModManager
                 PageManage = new PgManage();
                 PageStore = new PgStore();
                 PageHome = new PgHome();
-                PageWnJoinFriend = new WnJoinFriend();
+                PageJoinFriend = new WnJoinFriend();
                 PageMultiplayer = new PgMultiplayer();
                 WindowManager = new WnManager();
                 WindowManager.Show();
                 WnManager.GetWnManager.ShowHomePage(null, null);
                 if (!Settings.HasTakenTutorial)
-                    WnManager.GetWnManager.Notification("You look like your new\nHead over to Advanced and check out the tutorial");
-                var formatmods = new Thread(FormatAllMods)
-                {
-                    IsBackground = true,
-                    Priority = ThreadPriority.Highest
-                };
+                    WnManager.GetWnManager.Notification("Looks like your new!\nHead over to Advanced section and check out the tutorial!");
+                var formatmods = new Thread(FormatAllMods) { IsBackground = true, Priority = ThreadPriority.Highest };
                 formatmods.Start();
             }
             catch (Exception error)

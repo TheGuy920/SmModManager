@@ -74,7 +74,18 @@ namespace SmModManager.Graphics
         {
             WorldsList.Items.Clear();
             foreach (var path in Directory.GetFiles(Constants.WorldBackupsPath))
-                WorldsList.Items.Add(BackupItemBinding.Create(path));
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(path))
+                        continue;
+                    WorldsList.Items.Add(BackupItemBinding.Create(path));
+                }
+                catch
+                {
+                    // nothing
+                }
+            }
         }
 
         private void UpdateWorldSelection(object sender, SelectionChangedEventArgs args)
@@ -118,17 +129,14 @@ namespace SmModManager.Graphics
         private void ExportGame(object sender, RoutedEventArgs args)
         {
             var dialog = new SaveFileDialog { Filter = "Scrap Mechanic Mod Manager|*.smmm" };
-            if (dialog.ShowDialog() == true)
-                try
-                {
-                    File.Copy(((BackupItemBinding)GamesList.SelectedItem).Path, dialog.FileName);
-                }
-                catch
-                {
-                    if (MessageBox.Show("A file with that name already exists!\nWould you like to overwrite it?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
-                        return;
-                    File.Copy(((BackupItemBinding)GamesList.SelectedItem).Path, dialog.FileName, true);
-                }
+            if (dialog.ShowDialog() != true)
+                return;
+            if (File.Exists(dialog.FileName))
+            {
+                if (MessageBox.Show("A file with that name already exists!\nWould you like to overwrite it?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                    return;
+            }
+            File.Copy(((BackupItemBinding)GamesList.SelectedItem).Path, dialog.FileName, true);
         }
 
         private void RestoreGame(object sender, RoutedEventArgs args)
@@ -152,9 +160,9 @@ namespace SmModManager.Graphics
                 var binding = (BackupItemBinding)GamesList.SelectedItem;
                 File.Delete(binding.Path);
             }
-            catch
+            catch (Exception error)
             {
-                MessageBox.Show("There was an error", "SmModManager", MessageBoxButton.OK);
+                MessageBox.Show($"Unable to delete game backup. {error.Message}", "SmModManager", MessageBoxButton.OK);
             }
             RefreshGames(null, null);
         }
@@ -163,15 +171,18 @@ namespace SmModManager.Graphics
         {
             GamesList.Items.Clear();
             foreach (var path in Directory.GetFiles(Constants.GameBackupsPath))
+            {
                 try
                 {
+                    if (string.IsNullOrEmpty(path))
+                        continue;
                     GamesList.Items.Add(BackupItemBinding.Create(path));
                 }
                 catch
                 {
-                    if (MessageBox.Show("It apears that there are some corrput files inside the backups directory!\nWoudld you like to delete to corrupt entry?", "Error Loading backup", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                        Directory.Delete(path, true);
+                    // nothing
                 }
+            }
         }
 
         private void UpdateGameSelection(object sender, SelectionChangedEventArgs args)
@@ -190,7 +201,7 @@ namespace SmModManager.Graphics
             }
         }
 
-        public void UpdateTabSelection(object sender, SelectionChangedEventArgs args)
+        private void UpdateTabSelection(object sender, SelectionChangedEventArgs args)
         {
             if (args.AddedItems.Count > 0 && args.AddedItems[0].GetType() == typeof(TabItem))
             {
@@ -208,8 +219,7 @@ namespace SmModManager.Graphics
                 item.IsSelected = true;
                 item = (TabItem)args.RemovedItems[0];
                 item.IsSelected = true;
-                var thread = new Thread(RunUrlNew);
-                thread.IsBackground = true;
+                var thread = new Thread(OpenOldBackups) { IsBackground = true };
                 if (Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "backups")))
                     thread.Start();
                 else
@@ -217,12 +227,7 @@ namespace SmModManager.Graphics
             }
         }
 
-        public void RunUrlOld()
-        {
-            Utilities.OpenExplorerUrl(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "backups"));
-        }
-
-        public void RunUrlNew()
+        private void OpenOldBackups()
         {
             Utilities.OpenExplorerUrl(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "backups"));
         }
