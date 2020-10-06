@@ -16,14 +16,14 @@
                             <StackPanel Margin="10,10,10,0">
                                 <TextBlock Text="{DynamicResource GameDataPathText}" Foreground="White"/>
                                 <DockPanel>
-                                    <Button DockPanel.Dock="Right" Content="Browse" Margin="10,0,0,0" Width="75" Click="BrowseGameDataPath" Background="Green" Foreground="White" BorderThickness="0" FontWeight="UltraBold" FontSize="18"/>
+                                    <Button DockPanel.Dock="Right" Content="{DynamicResource BrowseText}" Margin="10,0,0,0" Width="75" Click="BrowseGameDataPath" Background="Green" Foreground="White" BorderThickness="0" FontWeight="UltraBold" FontSize="18"/>
                                     <TextBox x:Name="GameDataPathBox" IsReadOnly="True"/>
                                 </DockPanel>
                             </StackPanel>
                             <StackPanel Margin="10,10,10,0">
                                 <TextBlock Text="{DynamicResource WorkshopPathText}" Foreground="White"/>
                                 <DockPanel>
-                                    <Button DockPanel.Dock="Right" Content="Browse" Margin="10,0,0,0" Width="75" Click="BrowseWorkshopPath" Background="Green" Foreground="White" BorderThickness="0" FontWeight="UltraBold" FontSize="18"/>
+                                    <Button DockPanel.Dock="Right" Content="{DynamicResource BrowseText}" Margin="10,0,0,0" Width="75" Click="BrowseWorkshopPath" Background="Green" Foreground="White" BorderThickness="0" FontWeight="UltraBold" FontSize="18"/>
                                     <TextBox x:Name="WorkshopPathBox" IsReadOnly="True"/>
                                 </DockPanel>
                             </StackPanel>
@@ -37,6 +37,12 @@
                                     <ComboBoxItem Content="{DynamicResource UpdateOption1}"/>
                                     <ComboBoxItem Content="{DynamicResource UpdateOption2}"/>
                                     <ComboBoxItem Content="{DynamicResource UpdateOption3}"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Margin="10,10,10,0">
+                                <TextBlock Text="{DynamicResource AppLanguageText}" Foreground="White"/>
+                                <ComboBox x:Name="AppLanguageBox">
+                                    <ComboBoxItem Content="English"/>
                                 </ComboBox>
                             </StackPanel>
                         </StackPanel>

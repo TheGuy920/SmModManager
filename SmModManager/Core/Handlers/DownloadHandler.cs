@@ -5,10 +5,9 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using SmModManager;
-using SmModManager.Core;
+using CefSharp;
 
-namespace CefSharp.Handlers
+namespace SmModManager.Core.Handlers
 {
 
     public class DownloadHandler : IDownloadHandler

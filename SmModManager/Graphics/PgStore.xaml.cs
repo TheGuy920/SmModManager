@@ -3,8 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using CefSharp;
-using CefSharp.Handlers;
 using SmModManager.Core;
+using SmModManager.Core.Handlers;
 
 namespace SmModManager.Graphics
 {

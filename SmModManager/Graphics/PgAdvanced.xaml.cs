@@ -52,6 +52,10 @@ namespace SmModManager.Graphics
                 UpdateBehaviorOptions.DontCheckForUpdates => 2,
                 _ => 0
             };
+            UpdateBehaviorBox.SelectedIndex = App.Settings.AppLanguage switch
+            {
+                _ => 0
+            };
         }
 
         private void ResetSettings(object sender, RoutedEventArgs args)
@@ -70,6 +74,10 @@ namespace SmModManager.Graphics
                 1 => UpdateBehaviorOptions.RemindForUpdates,
                 2 => UpdateBehaviorOptions.DontCheckForUpdates,
                 _ => UpdateBehaviorOptions.AlwaysAutoUpdate
+            };
+            App.Settings.AppLanguage = AppLanguageBox.SelectedIndex switch
+            {
+                _ => LanguageOptions.English
             };
             App.Settings.Save();
         }

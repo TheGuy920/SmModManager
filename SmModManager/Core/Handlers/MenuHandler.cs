@@ -7,10 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using CefSharp;
 using CefSharp.Wpf;
 using GalaSoft.MvvmLight.Command;
 
-namespace CefSharp.Handlers
+namespace SmModManager.Core.Handlers
 {
 
     public class MenuHandler : IContextMenuHandler

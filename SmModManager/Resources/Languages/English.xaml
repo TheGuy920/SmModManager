@@ -2,13 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     
-    <!-- TRANSLATOR -->
-    
-    <system:String x:Key="TranslationAuthor">Mod Manager Contributors</system:String>
-    <system:String x:Key="TranslationLanguage">English</system:String>
-    
-    <!-- TRANSLATOR -->
-    
     <!-- UNIVERSAL -->
     
     <system:String x:Key="ContinueText">Continue</system:String>
@@ -55,6 +48,8 @@
     <system:String x:Key="UpdateOption1">Always Auto-Update</system:String>
     <system:String x:Key="UpdateOption2">Remind For Updates</system:String>
     <system:String x:Key="UpdateOption3">Don't Check For Updates</system:String>
+    
+    <system:String x:Key="AppLanguageText">Application Language</system:String>
     
     <!-- FILE -->
     

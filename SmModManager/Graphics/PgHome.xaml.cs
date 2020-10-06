@@ -4,8 +4,8 @@ using System.Net;
 using System.Threading;
 using System.Windows;
 using CefSharp;
-using CefSharp.Handlers;
 using SmModManager.Core;
+using SmModManager.Core.Handlers;
 
 namespace SmModManager.Graphics
 {

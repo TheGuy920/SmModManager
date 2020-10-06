@@ -1,6 +1,6 @@
 ﻿namespace SmModManager.Core.Enums
 {
 
-    public enum LanguageOptions { English, Spanish }
+    public enum LanguageOptions { English }
 
 }

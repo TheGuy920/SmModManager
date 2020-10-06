@@ -18,6 +18,7 @@ namespace SmModManager.Core
         public bool HasTakenTutorial { get; set; }
 
         public UpdateBehaviorOptions UpdatePreference { get; set; } = UpdateBehaviorOptions.RemindForUpdates;
+        public LanguageOptions AppLanguage { get; set; } = LanguageOptions.English;
 
         public void Save()
         {

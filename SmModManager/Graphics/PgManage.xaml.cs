@@ -9,9 +9,9 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using CefSharp;
-using CefSharp.Handlers;
 using SmModManager.Core;
 using SmModManager.Core.Bindings;
+using SmModManager.Core.Handlers;
 using Image = System.Drawing.Image;
 
 namespace SmModManager.Graphics
