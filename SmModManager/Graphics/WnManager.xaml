@@ -2,33 +2,30 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Nav="clr-namespace:SmModManager.Graphics"
-        Title="Scrap Mechanic Mod Manager" Width="1250" Height="900" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip"
-        Closing="AppClosing">
+        Title="Scrap Mechanic Mod Manager" Width="1250" Height="900" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" Closing="AppClosing">
     <Window.Resources>
     </Window.Resources>
     <DockPanel Background="#1b2838">
         <StackPanel Orientation="Vertical" Margin="0,0,-601,0">
             <StackPanel x:Name="TopMenuPanel" Background="#202228" Orientation="Horizontal" Margin="0,0,0,0" Width="1250" Height="50" HorizontalAlignment="Center">
-                <Button x:Name="HomeButton" Margin="30,0,0,0" Content="HOME" Height="30" Click="ShowHomePage" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
-                <Button x:Name="ManageButton" Margin="30,0,0,0" Content="MANAGE MODS" Height="30" Click="ShowManagePage" Width="117" BorderThickness="0" Background="#202228" Foreground="White"/>
-                <Button x:Name="MultiplayerButton" Margin="30,0,0,0" Content="MULTIPLAYER" Height="30" Click="ShowMultiplayerPage" Width="108" BorderThickness="0" Background="#202228" Foreground="White"/>
-                <Button x:Name="StoreButton" Margin="30,0,0,0" Content="STORE" Height="30" Click="ShowStorePage" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
-                <Button x:Name="BackupsButton" Margin="30,0,0,0" Content="BACKUPS" Height="30" Click="ShowBackupsPage" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
-                <Button x:Name="AdvancedButton" Margin="30,0,0,0" Content="ADVANCED" Height="30" Click="ShowAdvancedPage" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
-                <Button Margin="30,0,0,0" Content="EXIT" Height="30" Click="Exit" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
+                <Button x:Name="HomeButton" Margin="30,0,0,0" Content="{DynamicResource HomeTabHeader}" Height="30" Click="ShowHomePage" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
+                <Button x:Name="ManageButton" Margin="30,0,0,0" Content="{DynamicResource ManageModTabHeader}" Height="30" Click="ShowManagePage" Width="117" BorderThickness="0" Background="#202228" Foreground="White"/>
+                <Button x:Name="MultiplayerButton" Margin="30,0,0,0" Content="{DynamicResource MultiplayerTabHeader}" Height="30" Click="ShowMultiplayerPage" Width="108" BorderThickness="0" Background="#202228" Foreground="White"/>
+                <Button x:Name="StoreButton" Margin="30,0,0,0" Content="{DynamicResource StoreTabHeader}" Height="30" Click="ShowStorePage" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
+                <Button x:Name="BackupsButton" Margin="30,0,0,0" Content="{DynamicResource BackupsTabHeader}" Height="30" Click="ShowBackupsPage" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
+                <Button x:Name="AdvancedButton" Margin="30,0,0,0" Content="{DynamicResource AdvancedTabHeader}" Height="30" Click="ShowAdvancedPage" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
+                <Button Margin="30,0,0,0" Content="{DynamicResource ExitTabHeader}" Height="30" Click="Exit" Width="100" BorderThickness="0" Background="#202228" Foreground="White"/>
             </StackPanel>
             <Frame x:Name="PageView" NavigationUIVisibility="Hidden" Background="#1b2838" Margin="-15,0,0,0" Nav:DisableNavigation.Disable="True"/>
         </StackPanel>
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Width="900" Height="600">
             <Grid x:Name="NotificationBox" Height="50" Width="200" HorizontalAlignment="Right" Visibility="Hidden" Margin="0">
                 <Rectangle Fill="Black" Margin="-1,0,0,-26"/>
-                <TextBlock Text=" Notification" FontWeight="Bold" TextAlignment="Left" Background="LightGray" Margin="0,1,1,33"/>
+                <TextBlock Text="{DynamicResource NotificationTitleText}" FontWeight="Bold" TextAlignment="Left" Background="LightGray" Margin="0,1,1,33"/>
                 <Rectangle Fill="Green" Height="600" VerticalAlignment="Top" Margin="0,18,1,-25"/>
                 <TextBlock x:Name="NotificationMessage" Text="Message" Margin="10,22,10,-25" TextWrapping="WrapWithOverflow" FontWeight="Bold" TextAlignment="Left" Foreground="White"/>
-                <TextBlock TextAlignment="Left" Margin="75,3,1,33" FontSize="9" Foreground="Blue" HorizontalAlignment="Center" VerticalAlignment="Top">
-                    <Underline>Click To Hide Notification</Underline>
-                </TextBlock>
-                <Button Margin="0,0,0,-25" Opacity="0" Click="ClearNotification"/>
+                <TextBlock Text="{DynamicResource NotificationHideText}" TextAlignment="Left" Margin="75,3,1,33" FontSize="9" Foreground="Blue" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <Button Margin="0,0,0,-25" Opacity="0" Click="ClearNotification"/>
             </Grid>
         </StackPanel>
     </DockPanel>

@@ -49,13 +49,20 @@ namespace SmModManager.Graphics
 
         public void Notification(string Message, float WindowHeight = 50, float WindowWidth = 200)
         {
-            var sb = FindResource("MessagePopup") as Storyboard;
-            sb.Stop();
-            sb.Begin();
-            NotificationBox.Width = Math.Clamp(WindowWidth, 200, 600);
-            NotificationBox.Height = Math.Clamp(WindowHeight, 50, 600);
-            NotificationMessage.Text = Message;
-            NotificationBox.Visibility = Visibility.Visible;
+            try
+            {
+                var sb = FindResource("MessagePopup") as Storyboard;
+                sb.Stop();
+                sb.Begin();
+                NotificationBox.Width = Math.Clamp(WindowWidth, 200, 600);
+                NotificationBox.Height = Math.Clamp(WindowHeight, 50, 600);
+                NotificationMessage.Text = Message;
+                NotificationBox.Visibility = Visibility.Visible;
+            }
+            catch
+            {
+                // nothing
+            }
         }
 
         public void ClearNotification(object sender, EventArgs e)

@@ -74,7 +74,8 @@ namespace SmModManager
             {
                 // throw new Exception("There was an error accessing the folder");
                 // File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory!, "configuration.smmm"), "intentional error");
-                Settings = Configuration.Load();
+                // Settings = Configuration.Load();
+                Settings = new Configuration();
                 if (!Directory.Exists(Constants.UsersDataPath))
                     MessageBox.Show("WARNING: Scrap Mechanic save file missing! Please launch the game once before using this app!", "SmModManager");
                 if (string.IsNullOrEmpty(Settings.GameDataPath) || string.IsNullOrEmpty(Settings.WorkshopPath) || string.IsNullOrEmpty(Settings.UserDataPath))
