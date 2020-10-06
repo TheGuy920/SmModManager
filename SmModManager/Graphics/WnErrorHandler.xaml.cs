@@ -7,7 +7,7 @@ using SmModManager.Core;
 namespace SmModManager.Graphics
 {
 
-    public partial class WnException
+    public partial class WnErrorHandler
     {
 
         public static string BackBlazeFolder = Path.Combine(Constants.Resources, "Api", "BackBlaze", "report");
@@ -18,7 +18,7 @@ namespace SmModManager.Graphics
         public string LastText;
         public int limit = 450;
 
-        public WnException(Exception error)
+        public WnErrorHandler(Exception error)
         {
             Error = error;
             InitializeComponent();

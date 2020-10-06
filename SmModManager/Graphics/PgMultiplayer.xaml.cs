@@ -72,9 +72,9 @@ namespace SmModManager.Graphics
         {
             if (messageText.StartsWith("JoinUser: "))
             {
-                JoinFriend.GetJoinFriend.CloseWindow();
+                WnJoinFriend.GetWnJoinFriend.CloseWindow();
                 PgMultiplayer.GetPgMultiplayer.SteamUserId = messageText.Replace("JoinUser: ", "");
-                new JoinFriend().Show();
+                new WnJoinFriend().Show();
             }
             callback.Continue(true);
             return true;
@@ -143,7 +143,7 @@ namespace SmModManager.Graphics
             InitializeComponent();
             Setup();
             HomePageSite.Address = "https://steamcommunity.com/friends";
-            new JoinFriend();
+            new WnJoinFriend();
         }
 
         public void GotoAddress(string address)
@@ -196,7 +196,7 @@ namespace SmModManager.Graphics
 
         public void UpdateOnlineStatus(object sender, RoutedEventArgs args)
         {
-            App.PageJoinFriend.RefreshCurrentModsStatus();
+            App.PageWnJoinFriend.RefreshCurrentModsStatus();
         }
 
         public void UpdateStuff()

@@ -1,4 +1,4 @@
-﻿<Window x:Class="SmModManager.Graphics.JoinFriend"
+﻿<Window x:Class="SmModManager.Graphics.WnJoinFriend"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="JoinFriend" Height="80" Width="288" WindowStartupLocation="Manual"

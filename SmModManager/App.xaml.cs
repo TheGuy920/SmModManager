@@ -54,7 +54,7 @@ namespace SmModManager
         internal static PgHome PageHome { get; private set; }
         internal static PgBackups PageBackups { get; private set; }
         internal static PgManage PageManage { get; private set; }
-        internal static JoinFriend PageJoinFriend { get; private set; }
+        internal static WnJoinFriend PageWnJoinFriend { get; private set; }
         internal static PgMultiplayer PageMultiplayer { get; private set; }
 
         #endregion
@@ -131,7 +131,7 @@ namespace SmModManager
                 PageManage = new PgManage();
                 PageStore = new PgStore();
                 PageHome = new PgHome();
-                PageJoinFriend = new JoinFriend();
+                PageWnJoinFriend = new WnJoinFriend();
                 PageMultiplayer = new PgMultiplayer();
                 WindowManager = new WnManager();
                 WindowManager.Show();
@@ -152,9 +152,9 @@ namespace SmModManager
                     WindowManager?.Close();
                 }
                 catch { }
-                var ErrorWindow = new StartUpError();
+                var ErrorWindow = new WnStartupHandler();
                 ErrorWindow.Show();
-                StartUpError.StartUpErrorWindow(error);
+                WnStartupHandler.StartUpErrorWindow(error);
             }
         }
 
@@ -230,22 +230,6 @@ namespace SmModManager
             SurvivalFile = "";
         }
 
-        public void FindSurvivalFile(string StartDir)
-        {
-            foreach (var SubDirectory in Directory.GetDirectories(StartDir))
-            {
-                if (SurvivalFile != "")
-                    return;
-                if (SubDirectory.Split("\\")[^1] == "Survival")
-                {
-                    SurvivalFile = SubDirectory;
-                    return;
-                }
-                FindSurvivalFile(SubDirectory);
-            }
-            SurvivalFile = "";
-        }
-
         private void HandleException(object sender, DispatcherUnhandledExceptionEventArgs args)
         {
             args.Handled = true;
@@ -253,7 +237,7 @@ namespace SmModManager
             Crashes.TrackError(args.Exception);
             #endif
             if (!IsClosing)
-                new WnException(args.Exception).ShowDialog();
+                new WnErrorHandler(args.Exception).ShowDialog();
         }
 
         public void CleanFiles()

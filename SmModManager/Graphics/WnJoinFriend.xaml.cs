@@ -16,10 +16,10 @@ namespace SmModManager.Graphics
     /// <summary>
     ///     Interaction logic for JoinFriend.xaml
     /// </summary>
-    public partial class JoinFriend : Window
+    public partial class WnJoinFriend : Window
     {
 
-        public static JoinFriend GetJoinFriend;
+        public static WnJoinFriend GetWnJoinFriend;
         public static string PastebinData = Path.Combine(Constants.Resources, "Api", "Pastebin", "pastebin.txt");
         public static string SteamCmd = Path.Combine(Constants.Resources, "Api", "SteamCMD", "steamcmd.exe");
         public static string RunBackBlaze = Path.Combine(Constants.Resources, "Api", "BackBlaze", "b2.bat");
@@ -34,9 +34,9 @@ namespace SmModManager.Graphics
         public string BrowserHTML;
         public bool ThreadStatus;
 
-        public JoinFriend()
+        public WnJoinFriend()
         {
-            GetJoinFriend = this;
+            GetWnJoinFriend = this;
             InitializeComponent();
             WindowState = WindowState.Normal;
             var CursorPos = System.Windows.Forms.Cursor.Position;

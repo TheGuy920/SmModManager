@@ -13,23 +13,23 @@ namespace SmModManager.Graphics
     /// <summary>
     ///     Interaction logic for StartUpError.xaml
     /// </summary>
-    public partial class StartUpError : Window
+    public partial class WnStartupHandler : Window
     {
 
-        public static StartUpError GetStartUpError;
+        public static WnStartupHandler GetWnStartupHandler;
         public Exception exception;
 
-        public StartUpError()
+        public WnStartupHandler()
         {
-            GetStartUpError = this;
+            GetWnStartupHandler = this;
             InitializeComponent();
         }
 
         public static void StartUpErrorWindow(Exception error)
         {
-            GetStartUpError.ErrorReport.Text = error.Message;
-            GetStartUpError.exception = error;
-            GetStartUpError.GeneratePossibleSolutions();
+            GetWnStartupHandler.ErrorReport.Text = error.Message;
+            GetWnStartupHandler.exception = error;
+            GetWnStartupHandler.GeneratePossibleSolutions();
         }
 
         public void GeneratePossibleSolutions()

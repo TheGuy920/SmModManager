@@ -174,7 +174,7 @@ namespace SmModManager.Graphics
             Utilities.CurrentMods = tmpCurrentMods;
             Utilities.SaveDataToFile();
             RefreshCurrentModsList();
-            App.PageJoinFriend.UpdateCurrentMods(false);
+            App.PageWnJoinFriend.UpdateCurrentMods(false);
         }
 
         public void SurvivalFolderInject(string TempModId, string TempModId2)
@@ -507,7 +507,7 @@ namespace SmModManager.Graphics
             UpdateCurrentModSelection(null, null);
             CurrentModsListWebPage.Visibility = Visibility.Hidden;
             DeleteCurrentButton.Visibility = Visibility.Hidden;
-            App.PageJoinFriend.UpdateCurrentMods(false);
+            App.PageWnJoinFriend.UpdateCurrentMods(false);
         }
 
         public void OpenCurrentMod(object sender, MouseButtonEventArgs args)
