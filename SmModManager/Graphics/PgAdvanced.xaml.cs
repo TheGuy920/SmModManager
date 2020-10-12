@@ -52,7 +52,7 @@ namespace SmModManager.Graphics
                 UpdateBehaviorOptions.DontCheckForUpdates => 2,
                 _ => 0
             };
-            UpdateBehaviorBox.SelectedIndex = App.Settings.AppLanguage switch
+            AppLanguageBox.SelectedIndex = App.Settings.AppLanguage switch
             {
                 _ => 0
             };
@@ -87,7 +87,7 @@ namespace SmModManager.Graphics
             ReportBox.Height = Math.Clamp(App.WindowManager.ActualHeight - 220, 100, 9999);
         }
 
-        public void SubmitReport(object sender, RoutedEventArgs args)
+        private void SubmitReport(object sender, RoutedEventArgs args)
         {
             if (!IsReporting)
             {

@@ -5,8 +5,11 @@
     <!-- UNIVERSAL -->
     
     <system:String x:Key="ContinueText">Continue</system:String>
+    <system:String x:Key="CreateText">Create</system:String>
     <system:String x:Key="CancelText">Cancel</system:String>
     <system:String x:Key="BrowseText">Browse</system:String>
+    <system:String x:Key="DeleteText">Delete</system:String>
+    <system:String x:Key="RefreshText">Refresh</system:String>
     
     <!-- UNIVERSAL -->
     
@@ -50,6 +53,38 @@
     <system:String x:Key="UpdateOption3">Don't Check For Updates</system:String>
     
     <system:String x:Key="AppLanguageText">Application Language</system:String>
+    
+    <!-- FILE -->
+    
+    <!-- FILE: WnGameBackup.xaml -->
+    
+    <system:String x:Key="GameBackupOption1">Crafting Recipes</system:String>
+    <system:String x:Key="GameBackupOption2">Graphical User Interface</system:String>
+    <system:String x:Key="GameBackupOption3">Game Scripts</system:String>
+    
+    <!-- FILE -->
+    
+    <!-- FILE: PgBackups.xaml -->
+    
+    <system:String x:Key="RestoreText">Restore</system:String>
+    <system:String x:Key="ImportText">Import</system:String>
+    <system:String x:Key="ExportText">Export</system:String>
+    <system:String x:Key="BackupNameText">Backup Name</system:String>
+    <system:String x:Key="WorldNameText">World Name</system:String>
+    <system:String x:Key="CreatedOnText">Created On</system:String>
+    <system:String x:Key="OpenOldBackupsText">Open Old Backups Folder</system:String>
+    
+    <!-- FILE -->
+    
+    <!-- FILE: WnErrorHandler.xaml -->
+    
+    <system:String x:Key="HandlerText1">An error had occurred internally!</system:String>
+    <system:String x:Key="HandlerText2">Would you like to send an error report?</system:String>
+    <system:String x:Key="HandlerText3">Error Message:</system:String>
+    <system:String x:Key="HandlerText4">What did you do?</system:String>
+    
+    <system:String x:Key="DontReportText">Don't Report</system:String>
+    <system:String x:Key="SendReportText">Send Report</system:String>
     
     <!-- FILE -->
     

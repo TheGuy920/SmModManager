@@ -6,22 +6,22 @@
             <TabItem Header="World Backups" Background="#366e93" Foreground="White" BorderThickness="0" Width="150" Margin="-7,-6,0,0" Height="30" FontSize="16">
                 <DockPanel Background="#1b2838" Margin="-2,-4,-2,0">
                     <StackPanel Width="150" Margin="0,0,0,10">
-                        <Button Content="Create" Margin="10,10,10,0" Height="30" Click="CreateWorldBackup" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button Content="{StaticResource CreateText}" Margin="10,10,10,0" Height="30" Click="CreateWorldBackup" Background="Green" Foreground="White" BorderThickness="0"/>
                         <Separator Margin="10,10,10,0"/>
-                        <Button Content="Import" Margin="10,10,10,0" Height="30" Click="ImportWorld" Background="Green" Foreground="White" BorderThickness="0"/>
-                        <Button x:Name="ExportWorldButton" Content="Export" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ExportWorld" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button Content="{StaticResource ImportText}" Margin="10,10,10,0" Height="30" Click="ImportWorld" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button x:Name="ExportWorldButton" Content="{StaticResource ExportText}" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ExportWorld" Background="Green" Foreground="White" BorderThickness="0"/>
                         <Separator Margin="10,10,10,0"/>
-                        <Button x:Name="RestoreWorldButton" Content="Restore" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="RestoreWorld" Background="Green" Foreground="White" BorderThickness="0"/>
-                        <Button x:Name="DeleteWorldButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteWorld" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button x:Name="RestoreWorldButton" Content="{StaticResource RestoreText}" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="RestoreWorld" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button x:Name="DeleteWorldButton" Content="{StaticResource DeleteText}" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteWorld" Background="Green" Foreground="White" BorderThickness="0"/>
                         <Separator Margin="10,10,10,0"/>
-                        <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshWorlds" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button Content="{StaticResource RefreshText}" Margin="10,10,10,0" Height="30" Click="RefreshWorlds" Background="Green" Foreground="White" BorderThickness="0"/>
                     </StackPanel>
                     <ListView x:Name="WorldsList" Margin="0,10,10,10" SelectionChanged="UpdateWorldSelection" Background="#366e93" Foreground="Black" FontWeight="Heavy">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Path=Name}"/>
-                                <GridViewColumn Header="World Name" Width="200" DisplayMemberBinding="{Binding Path=WorldName}"/>
-                                <GridViewColumn Header="Time" Width="200" DisplayMemberBinding="{Binding Path=Time}"/>
+                                <GridViewColumn Header="{StaticResource BackupNameText}" Width="200" DisplayMemberBinding="{Binding Path=Name}"/>
+                                <GridViewColumn Header="{StaticResource WorldNameText}" Width="200" DisplayMemberBinding="{Binding Path=WorldName}"/>
+                                <GridViewColumn Header="{StaticResource CreatedOnText}" Width="200" DisplayMemberBinding="{Binding Path=Time}"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -30,27 +30,27 @@
             <TabItem Header="Game Backups" Background="#366e93" Foreground="White" BorderThickness="0" Width="150" Margin="-8,-6,0,0" Height="30" FontSize="16">
                 <DockPanel Background="#1b2838" Margin="-2,-4,-2,0">
                     <StackPanel Width="150" Margin="0,0,0,10">
-                        <Button Content="Create" Margin="10,10,10,0" Height="30" Click="CreateGameBackup" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button Content="{StaticResource CreateText}" Margin="10,10,10,0" Height="30" Click="CreateGameBackup" Background="Green" Foreground="White" BorderThickness="0"/>
                         <Separator Margin="10,10,10,0"/>
-                        <Button Content="Import" Margin="10,10,10,0" Height="30" Click="ImportGame" Background="Green" Foreground="White" BorderThickness="0"/>
-                        <Button x:Name="ExportGameButton" Content="Export" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ExportGame" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button Content="{StaticResource ImportText}" Margin="10,10,10,0" Height="30" Click="ImportGame" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button x:Name="ExportGameButton" Content="{StaticResource ExportText}" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="ExportGame" Background="Green" Foreground="White" BorderThickness="0"/>
                         <Separator Margin="10,10,10,0"/>
-                        <Button x:Name="RestoreGameButton" Content="Restore" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="RestoreGame" Background="Green" Foreground="White" BorderThickness="0"/>
-                        <Button x:Name="DeleteGameButton" Content="Delete" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteGame" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button x:Name="RestoreGameButton" Content="{StaticResource RestoreText}" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="RestoreGame" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button x:Name="DeleteGameButton" Content="{StaticResource DeleteText}" Margin="10,10,10,0" Height="30" IsEnabled="False" Click="DeleteGame" Background="Green" Foreground="White" BorderThickness="0"/>
                         <Separator Margin="10,10,10,0"/>
-                        <Button Content="Refresh" Margin="10,10,10,0" Height="30" Click="RefreshGames" Background="Green" Foreground="White" BorderThickness="0"/>
+                        <Button Content="{StaticResource RefreshText}" Margin="10,10,10,0" Height="30" Click="RefreshGames" Background="Green" Foreground="White" BorderThickness="0"/>
                     </StackPanel>
                     <ListView x:Name="GamesList" Margin="0,10,10,10" SelectionChanged="UpdateGameSelection" BorderThickness="1" Background="#366e93" Foreground="Black" FontWeight="Heavy">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Path=Name}"/>
-                                <GridViewColumn Header="Time" Width="200" DisplayMemberBinding="{Binding Path=Time}"/>
+                                <GridViewColumn Header="{StaticResource BackupNameText}" Width="200" DisplayMemberBinding="{Binding Path=Name}"/>
+                                <GridViewColumn Header="{StaticResource CreatedOnText}" Width="200" DisplayMemberBinding="{Binding Path=Time}"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
                 </DockPanel>
             </TabItem>
-            <TabItem x:Name="OpenFileExporer" Header="Open Old Backups Folder" Background="#366e93" Foreground="White" BorderThickness="0" Width="250" Margin="-8,-6,0,0" Height="30" FontSize="16">
+            <TabItem x:Name="OpenFileExporer" Header="{StaticResource OpenOldBackupsText}" Background="#366e93" Foreground="White" BorderThickness="0" Width="250" Margin="-8,-6,0,0" Height="30" FontSize="16">
                 <DockPanel Background="#1b2838" Margin="-2,-4,-2,0"/>
             </TabItem>
         </TabControl>
