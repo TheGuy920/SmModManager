@@ -11,7 +11,7 @@
                             <Button Content="&lt;" Margin="2,4,2,0" Height="20" Click="MoveBackward" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
                             <Button Content="&gt;" Margin="52,4,2,0" Height="20" Click="MoveForward" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
                             <TextBlock x:Name="CurrentUrl" Margin="107,4,57,56" FontSize="13" FontWeight="Bold" Foreground="White">https://steamcommunity.com/friends</TextBlock>
-                            <Button Content="Home" Margin="102,4,2,0" Height="20" Click="GoHome" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Right" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
+                            <Button Content="{StaticResource HomeButtonText}" Margin="102,4,2,0" Height="20" Click="GoHome" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Right" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
                             <wpf:ChromiumWebBrowser x:Name="HomePageSite" Address="" Margin="0,30,0,55" AddressChanged="AddressChangedUpdate"/>
                             <wpf:ChromiumWebBrowser x:Name="InvisiblePage" Address="" Margin="500,0,0,0"/>
                             <Button Content="Update Online Status" Height="50" Click="UpdateOnlineStatus" Background="Green" Foreground="White" VerticalAlignment="Bottom" BorderThickness="0" FontWeight="UltraBold" FontSize="25" Margin="0,30,0,0"/>

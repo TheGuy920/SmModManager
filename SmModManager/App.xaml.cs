@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
@@ -23,22 +25,13 @@ namespace SmModManager
     public partial class App
     {
 
+        #region Variables
+
         public static App GetApp;
         private string ScrapMechanicFile;
         private string SurvivalFile;
 
-        public App()
-        {
-            GetApp = this;
-            var settings = new CefSettings
-            {
-                CachePath = Path.Combine(Constants.CachePath, "UserDataCache")
-            };
-            settings.CefCommandLineArgs.Add("enable-media-stream");
-            Cef.Initialize(settings, true, browserProcessHandler: null);
-            IsClosing = false;
-            HasFormattedAllMods = false;
-        }
+        #endregion
 
         #region AppData
 
@@ -67,6 +60,21 @@ namespace SmModManager
 
         #endregion
 
+        #region Initialization
+
+        public App()
+        {
+            GetApp = this;
+            var settings = new CefSettings
+            {
+                CachePath = Path.Combine(Constants.CachePath, "UserDataCache")
+            };
+            settings.CefCommandLineArgs.Add("enable-media-stream");
+            Cef.Initialize(settings, true, browserProcessHandler: null);
+            IsClosing = false;
+            HasFormattedAllMods = false;
+        }
+        
         private void Initialize(object sender, StartupEventArgs args)
         {
             AppCenter.Start("c818850e-34d5-4155-850b-348c823bed24", typeof(Analytics), typeof(Crashes));
@@ -76,49 +84,11 @@ namespace SmModManager
                 // File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory!, "configuration.smmm"), "intentional error");
                 // Settings = Configuration.Load();
                 Settings = new Configuration();
+                SetAppCulture();
                 if (!Directory.Exists(Constants.UsersDataPath))
                     MessageBox.Show("WARNING: Scrap Mechanic save file missing! Please launch the game once before using this app!", "SmModManager");
-                if (string.IsNullOrEmpty(Settings.GameDataPath) || string.IsNullOrEmpty(Settings.WorkshopPath) || string.IsNullOrEmpty(Settings.UserDataPath))
-                {
-                    var steamPath = Utilities.GetSteamLocation();
-                    if (string.IsNullOrEmpty(steamPath))
-                        goto SkipToPrerequisites;
-                    if (Utilities.CheckSteamLocation(steamPath))
-                    {
-                        Settings.GameDataPath = Path.Combine(steamPath, "steamapps", "common", "Scrap Mechanic");
-                        Settings.WorkshopPath = Path.Combine(steamPath, "steamapps", "workshop", "content", Constants.GameId.ToString());
-                        Settings.UserDataPath = Directory.GetDirectories(Constants.UsersDataPath)[0];
-                        Settings.Save();
-                        goto SkipToStartup;
-                    }
-                    steamPath = Utilities.GetSteamAppsLocation(steamPath);
-                    if (string.IsNullOrEmpty(steamPath))
-                        goto SkipToPrerequisites;
-                    if (Utilities.CheckSteamLocation(steamPath))
-                    {
-                        Settings.GameDataPath = Path.Combine(steamPath, "steamapps", "common", "Scrap Mechanic");
-                        Settings.WorkshopPath = Path.Combine(steamPath, "steamapps", "workshop", "content", Constants.GameId.ToString());
-                        Settings.UserDataPath = Directory.GetDirectories(Constants.UsersDataPath)[0];
-                        Settings.Save();
-                        goto SkipToStartup;
-                    }
-                    SkipToPrerequisites:
-                    var dialog = new WnPrerequisites();
-                    if (dialog.ShowDialog() == true)
-                        goto SkipToStartup;
-                    Current.Shutdown();
-                    return;
-                }
-                if (Settings.UpdatePreference != UpdateBehaviorOptions.DontCheckForUpdates)
-                {
-                    if (Utilities.CheckForUpdates())
-                    {
-                        if (Settings.UpdatePreference == UpdateBehaviorOptions.RemindForUpdates)
-                            if (MessageBox.Show("An update is available! Would you like to install the new update?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
-                                goto SkipToStartup;
-                        Utilities.InstallUpdate();
-                    }
-                }
+                SetSteamStuff();
+                CheckForUpdates();
                 SkipToStartup:
                 if (!Directory.Exists(Constants.ArchivesPath))
                     Directory.CreateDirectory(Constants.ArchivesPath);
@@ -150,13 +120,85 @@ namespace SmModManager
                 {
                     WindowManager?.Close();
                 }
-                catch { }
+                catch
+                {
+                    // nothing
+                }
                 var ErrorWindow = new WnStartupHandler();
                 ErrorWindow.Show();
                 WnStartupHandler.StartUpErrorWindow(error);
             }
         }
 
+        #endregion
+
+        #region InitializationMethods
+        
+        private void SetAppCulture()
+        {
+            var culture = new CultureInfo(Settings.AppLanguage switch
+            {
+                _ => "en-US" // English
+            });
+            var dictionary = Current.Resources.MergedDictionaries.FirstOrDefault(rd => rd.Source.OriginalString.Contains(culture.ToString()));
+            if (dictionary != null)
+            {
+                Current.Resources.MergedDictionaries.Remove(dictionary);
+                Current.Resources.MergedDictionaries.Add(dictionary);
+            }
+            Thread.CurrentThread.CurrentCulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
+        }
+
+        private void CheckForUpdates()
+        {
+            if (Settings.UpdatePreference == UpdateBehaviorOptions.DontCheckForUpdates)
+                return;
+            if (!Utilities.CheckForUpdates())
+                return;
+            if (Settings.UpdatePreference == UpdateBehaviorOptions.RemindForUpdates)
+                if (MessageBox.Show("An update is available! Would you like to install the new update?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                    return;
+            Utilities.InstallUpdate();
+        }
+
+        private void SetSteamStuff()
+        {
+            if (!string.IsNullOrEmpty(Settings.GameDataPath) && !string.IsNullOrEmpty(Settings.WorkshopPath) && !string.IsNullOrEmpty(Settings.UserDataPath))
+                return;
+            var steamPath = Utilities.GetSteamLocation();
+            if (string.IsNullOrEmpty(steamPath))
+                goto SkipToPrerequisites;
+            if (Utilities.CheckSteamLocation(steamPath))
+            {
+                Settings.GameDataPath = Path.Combine(steamPath, "steamapps", "common", "Scrap Mechanic");
+                Settings.WorkshopPath = Path.Combine(steamPath, "steamapps", "workshop", "content", Constants.GameId.ToString());
+                Settings.UserDataPath = Directory.GetDirectories(Constants.UsersDataPath)[0];
+                Settings.Save();
+                return;
+            }
+            steamPath = Utilities.GetSteamAppsLocation(steamPath);
+            if (string.IsNullOrEmpty(steamPath))
+                goto SkipToPrerequisites;
+            if (Utilities.CheckSteamLocation(steamPath))
+            {
+                Settings.GameDataPath = Path.Combine(steamPath, "steamapps", "common", "Scrap Mechanic");
+                Settings.WorkshopPath = Path.Combine(steamPath, "steamapps", "workshop", "content", Constants.GameId.ToString());
+                Settings.UserDataPath = Directory.GetDirectories(Constants.UsersDataPath)[0];
+                Settings.Save();
+                return;
+            }
+            SkipToPrerequisites:
+            var dialog = new WnPrerequisites();
+            if (dialog.ShowDialog() == true)
+                return;
+            Current.Shutdown();
+        }
+        
+        #endregion
+
+        #region TheGuyStuff
+        
         private void FormatAllMods()
         {
             var StartDir = Settings.WorkshopPath;
@@ -324,6 +366,8 @@ namespace SmModManager
                 });
             }
         }
+
+        #endregion
 
     }
 

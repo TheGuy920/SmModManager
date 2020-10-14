@@ -28,10 +28,13 @@
     
     <!-- FILE -->
     
-    <!-- FILE: PgHome.xaml -->
+    <!-- FILE: PgHome.xaml + PgStore.xaml + PgMultiplayer.xaml -->
     
     <system:String x:Key="HomeButtonText">Home</system:String>
     <system:String x:Key="PlayGameButtonText">Play Game</system:String>
+    
+    <system:String x:Key="BackArrowText">&lt;</system:String>
+    <system:String x:Key="ForwardArrowText">&gt;</system:String>
     
     <!-- FILE -->
     
