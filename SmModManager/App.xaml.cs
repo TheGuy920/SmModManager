@@ -25,17 +25,17 @@ namespace SmModManager
     public partial class App
     {
 
+        #region AppData
+
+        internal static Configuration Settings { get; private set; }
+
+        #endregion
+
         #region Variables
 
         public static App GetApp;
         private string ScrapMechanicFile;
         private string SurvivalFile;
-
-        #endregion
-
-        #region AppData
-
-        internal static Configuration Settings { get; private set; }
 
         #endregion
 
@@ -46,7 +46,7 @@ namespace SmModManager
         public static bool HasFormattedAllMods { get; set; }
 
         #endregion
-        
+
         #region GraphicVariables
 
         internal static WnManager WindowManager { get; private set; }
@@ -74,9 +74,10 @@ namespace SmModManager
             IsClosing = false;
             HasFormattedAllMods = false;
         }
-        
+
         private void Initialize(object sender, StartupEventArgs args)
         {
+            Utilities.RestartAppIfNotAdmin(); // comment this if u want debug stuff
             AppCenter.Start("c818850e-34d5-4155-850b-348c823bed24", typeof(Analytics), typeof(Crashes));
             try
             {
@@ -89,7 +90,6 @@ namespace SmModManager
                     MessageBox.Show("WARNING: Scrap Mechanic save file missing! Please launch the game once before using this app!", "SmModManager");
                 SetSteamStuff();
                 CheckForUpdates();
-                SkipToStartup:
                 if (!Directory.Exists(Constants.ArchivesPath))
                     Directory.CreateDirectory(Constants.ArchivesPath);
                 if (!Directory.Exists(Constants.GameBackupsPath))
@@ -133,7 +133,7 @@ namespace SmModManager
         #endregion
 
         #region InitializationMethods
-        
+
         private void SetAppCulture()
         {
             var culture = new CultureInfo(Settings.AppLanguage switch
@@ -194,11 +194,11 @@ namespace SmModManager
                 return;
             Current.Shutdown();
         }
-        
+
         #endregion
 
         #region TheGuyStuff
-        
+
         private void FormatAllMods()
         {
             var StartDir = Settings.WorkshopPath;

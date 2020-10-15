@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Principal;
 using System.Threading;
 using System.Windows;
 using System.Windows.Documents;
@@ -77,6 +78,25 @@ namespace SmModManager.Core
             if (location.EndsWith(".dll", StringComparison.CurrentCultureIgnoreCase))
                 location = Path.Combine(Path.GetDirectoryName(location)!, Path.GetFileNameWithoutExtension(location) + ".exe");
             Process.Start(location, args ?? string.Empty);
+            Application.Current.Shutdown();
+        }
+
+        public static void RestartAppIfNotAdmin()
+        {
+            var windowsIdentity = WindowsIdentity.GetCurrent();
+            var windowsPrincipal = new WindowsPrincipal(windowsIdentity);
+            var isRunningAsAdmin = windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
+            if (isRunningAsAdmin)
+                return;
+            var location = Assembly.GetExecutingAssembly().Location;
+            if (location.EndsWith(".dll", StringComparison.CurrentCultureIgnoreCase))
+                location = Path.Combine(Path.GetDirectoryName(location)!, Path.GetFileNameWithoutExtension(location) + ".exe");
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = location,
+                UseShellExecute = true,
+                Verb = "runas"
+            });
             Application.Current.Shutdown();
         }
 
@@ -375,26 +395,16 @@ namespace SmModManager.Core
 
         public static void DirectoryCopyToList(string sourceDirName, bool copySubDirs)
         {
-            // Get the subdirectories for the specified directory.
             var dir = new DirectoryInfo(sourceDirName);
-
             if (!dir.Exists)
-                throw new DirectoryNotFoundException(
-                    "Source directory does not exist or could not be found: "
-                    + sourceDirName);
-
+                throw new DirectoryNotFoundException("Source directory does not exist or could not be found: " + sourceDirName);
             var dirs = dir.GetDirectories();
-            // If the destination directory doesn't exist, create it.
-
-            // Get the files in the directory and copy them to the new location.
             var files = dir.GetFiles();
             foreach (var file in files)
             {
                 var temppath = Path.Combine(sourceDirName, file.Name);
                 PathList.Add(temppath);
             }
-
-            // If copying subdirectories, copy them and their contents to new location.
             if (copySubDirs)
                 foreach (var subdir in dirs)
                 {

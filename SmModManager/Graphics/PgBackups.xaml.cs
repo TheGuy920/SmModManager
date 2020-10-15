@@ -74,7 +74,6 @@ namespace SmModManager.Graphics
         {
             WorldsList.Items.Clear();
             foreach (var path in Directory.GetFiles(Constants.WorldBackupsPath))
-            {
                 try
                 {
                     if (string.IsNullOrEmpty(path))
@@ -85,7 +84,6 @@ namespace SmModManager.Graphics
                 {
                     // nothing
                 }
-            }
         }
 
         private void UpdateWorldSelection(object sender, SelectionChangedEventArgs args)
@@ -132,10 +130,8 @@ namespace SmModManager.Graphics
             if (dialog.ShowDialog() != true)
                 return;
             if (File.Exists(dialog.FileName))
-            {
                 if (MessageBox.Show("A file with that name already exists!\nWould you like to overwrite it?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                     return;
-            }
             File.Copy(((BackupItemBinding)GamesList.SelectedItem).Path, dialog.FileName, true);
         }
 
@@ -147,7 +143,7 @@ namespace SmModManager.Graphics
             var temporaryPath = Path.Combine(Constants.GameBackupsPath, Path.GetFileNameWithoutExtension(binding.Path)!);
             File.WriteAllBytes(temporaryPath + ".tmp", BackupDescriptionModel.Load(binding.Path).Data);
             Directory.CreateDirectory(temporaryPath);
-            ZipFile.ExtractToDirectory(temporaryPath + ".tmp", temporaryPath);
+            ZipFile.ExtractToDirectory(temporaryPath + ".tmp", temporaryPath, true);
             Utilities.CopyDirectory(temporaryPath, Path.Combine(App.Settings.GameDataPath, "Survival"));
         }
 
@@ -171,7 +167,6 @@ namespace SmModManager.Graphics
         {
             GamesList.Items.Clear();
             foreach (var path in Directory.GetFiles(Constants.GameBackupsPath))
-            {
                 try
                 {
                     if (string.IsNullOrEmpty(path))
@@ -182,7 +177,6 @@ namespace SmModManager.Graphics
                 {
                     // nothing
                 }
-            }
         }
 
         private void UpdateGameSelection(object sender, SelectionChangedEventArgs args)

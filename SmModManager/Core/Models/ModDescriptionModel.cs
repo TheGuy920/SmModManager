@@ -9,11 +9,11 @@ namespace SmModManager.Core.Models
     {
 
         [JsonProperty("version")] public string Version { get; set; }
-        
+
         [JsonProperty("localId")] public string Id { get; set; }
 
         [JsonProperty("type")] public string Type { get; set; }
-        
+
         [JsonProperty("name")] public string Name { get; set; }
 
         [JsonProperty("description")] public string Description { get; set; }

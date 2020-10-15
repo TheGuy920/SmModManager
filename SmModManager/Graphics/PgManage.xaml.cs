@@ -177,7 +177,7 @@ namespace SmModManager.Graphics
             App.PageJoinFriend.UpdateCurrentMods(false);
         }
 
-        public void SurvivalFolderInject(string TempModId, string TempModId2)
+        private void SurvivalFolderInject(string TempModId, string TempModId2)
         {
             if (Directory.Exists(Path.Combine(App.Settings.WorkshopPath, TempModId2)))
                 Utilities.CopyDirectory(Path.Combine(App.Settings.WorkshopPath, TempModId2), App.Settings.GameDataPath);
@@ -227,13 +227,37 @@ namespace SmModManager.Graphics
                 CompatibleModsList.Items.Clear();
             foreach (var path in Directory.GetDirectories(App.Settings.WorkshopPath))
                 if (Utilities.IsCompatibleMod(path) && !CompatibleModsList.Items.Contains(ModItemBinding.Create(path)))
-                    CompatibleModsList.Items.Add(ModItemBinding.Create(path));
+                    try
+                    {
+                        CompatibleModsList.Items.Add(ModItemBinding.Create(path));
+                    }
+                    catch
+                    {
+                        // nothing
+                    }
+
             foreach (var path in Directory.GetDirectories(Path.Combine(App.Settings.UserDataPath, "Mods")))
                 if (Utilities.IsCompatibleMod(path) && !CompatibleModsList.Items.Contains(ModItemBinding.Create(path)))
-                    CompatibleModsList.Items.Add(ModItemBinding.Create(path));
+                    try
+                    {
+                        CompatibleModsList.Items.Add(ModItemBinding.Create(path));
+                    }
+                    catch
+                    {
+                        // nothing
+                    }
+
             foreach (var path in Directory.GetDirectories(Path.Combine(Constants.ArchivesPath)))
                 if (Utilities.IsCompatibleMod(path) && !CompatibleModsList.Items.Contains(ModItemBinding.Create(path)))
-                    CompatibleModsList.Items.Add(ModItemBinding.Create(path));
+                    try
+                    {
+                        CompatibleModsList.Items.Add(ModItemBinding.Create(path));
+                    }
+                    catch
+                    {
+                        // nothing
+                    }
+
             Utilities.CompatibleMods.Clear();
             foreach (var mod in CompatibleModsList.Items)
             {
@@ -402,7 +426,7 @@ namespace SmModManager.Graphics
             var binding = (ModItemBinding)AvailableModsList.SelectedItem;
             try
             {
-                if (binding.Path == "" || binding.Path == null)
+                if (string.IsNullOrEmpty(binding.Path))
                     throw new Exception("Path is empty");
                 Directory.Delete(binding.Path, true);
             }
