@@ -12,7 +12,7 @@
         </DataTemplate>
     </Page.Resources>
     <DockPanel Background="#366e93">
-        <TabControl Background="#1b2838" BorderThickness="0">
+        <TabControl Background="#1b2838" BorderThickness="0" SelectionChanged="UpdateTabSelection">
             <TabItem Header="Compatible Mods" Background="#366e93" Foreground="White" x:Name="CompatibleModsTab" BorderThickness="0" Width="150" Margin="-7,-7,0,0" Height="30" FontSize="16">
                 <DockPanel Background="#1b2838" Margin="-2,-5,-2,0">
                     <Grid>

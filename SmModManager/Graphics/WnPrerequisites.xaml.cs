@@ -30,7 +30,7 @@ namespace SmModManager.Graphics
         {
             if (string.IsNullOrEmpty(GameDataPathBox.Text) || string.IsNullOrEmpty(UserDataPathBox.Text))
             {
-                MessageBox.Show("Make sure all the inputs are filled!", "SmModManager");
+                MessageBox.Show((string)System.Windows.Application.Current.FindResource("makesureinputsfilled"), "SmModManager");
                 return;
             }
             App.Settings.GameDataPath = GameDataPathBox.Text;
@@ -48,7 +48,7 @@ namespace SmModManager.Graphics
             {
                 if (!File.Exists(Path.Combine(dialog.SelectedPath, "Release", "ScrapMechanic.exe")))
                 {
-                    MessageBox.Show("The selected path doesn't contain the game's executable!", "SmModManager");
+                    MessageBox.Show((string)System.Windows.Application.Current.FindResource("selectedpathmissinggamefiles"), "SmModManager");
                     return;
                 }
                 GameDataPathBox.Text = dialog.SelectedPath;
@@ -62,7 +62,7 @@ namespace SmModManager.Graphics
             {
                 if (!Directory.Exists(Path.Combine(dialog.SelectedPath, "2122179067")))
                 {
-                    MessageBox.Show("The selected path doesn't contain the workshop files!", "SmModManager");
+                    MessageBox.Show((string)System.Windows.Application.Current.FindResource("selectedpathmissingworkshopfiles"), "SmModManager");
                     return;
                 }
                 WorkshopPathBox.Text = dialog.SelectedPath;

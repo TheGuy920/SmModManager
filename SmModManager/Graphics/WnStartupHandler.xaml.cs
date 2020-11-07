@@ -43,8 +43,8 @@ namespace SmModManager.Graphics
             }
             catch (IOException e)
             {
-                PossibleSolutions.Items.Add(ErrorDataBinding.Create("Problem: " + e.Message.Remove(e.Message.IndexOf("\'")) + e.Message.Substring(e.Message.LastIndexOf("\'") + 2) + "\nSolution: Kill all SmModManager.exe processes and restart", "KillAllAndRestart"));
-                PossibleSolutions.Items.Add(ErrorDataBinding.Create("Problem: " + e.Message.Remove(e.Message.IndexOf("\'")) + e.Message.Substring(e.Message.LastIndexOf("\'") + 2) + "\nSolution: Delete corrupt file/folder and restart", "DeleteCoruptObject"));
+                PossibleSolutions.Items.Add(ErrorDataBinding.Create(Application.Current.FindResource("problem") + " " + e.Message.Remove(e.Message.IndexOf("\'")) + e.Message.Substring(e.Message.LastIndexOf("\'") + 2) + "\n" + Application.Current.FindResource("problemkillall"), "KillAllAndRestart"));
+                PossibleSolutions.Items.Add(ErrorDataBinding.Create(Application.Current.FindResource("problem") + " " + e.Message.Remove(e.Message.IndexOf("\'")) + e.Message.Substring(e.Message.LastIndexOf("\'") + 2) + "\n" + Application.Current.FindResource("problemdelete"), "DeleteCoruptObject"));
             }
             /*
             catch (FileLoadException e)
@@ -71,17 +71,17 @@ namespace SmModManager.Graphics
 
         public void DeleteCoruptObject()
         {
-            MessageBox.Show("it works! DELETE CORRUPTED OBJECT");
+            //MessageBox.Show("it works! DELETE CORRUPTED OBJECT");
         }
 
         public void DeleteCoruptFile()
         {
-            MessageBox.Show("it works! DELETE CORRUPTED FILE");
+            //MessageBox.Show("it works! DELETE CORRUPTED FILE");
         }
 
         public void DeleteCoruptFolder()
         {
-            MessageBox.Show("it works! DELETE CORRUPTED FOLDER");
+            //MessageBox.Show("it works! DELETE CORRUPTED FOLDER");
         }
 
         private void TakeAction(object sender, RoutedEventArgs e)

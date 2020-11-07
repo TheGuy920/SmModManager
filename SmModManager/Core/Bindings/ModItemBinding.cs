@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Media.Imaging;
 using SmModManager.Core.Models;
@@ -60,10 +61,11 @@ namespace SmModManager.Core.Bindings
                 var site = description.Location;
                 binding.ModIdLocation = site + description.WorkshopId;
                 Url = site;
-            }
+            } 
             if (description.WorkshopId != 0 && description.Location == null)
             {
                 binding.Url = Url + description.WorkshopId;
+                binding.ModId = (int)description.WorkshopId;
             }
             else if (description.WorkshopId != 0)
             {
@@ -71,8 +73,49 @@ namespace SmModManager.Core.Bindings
                 var subStrStartIndex = numbers.IndexOf(Url[0]);
                 Url = Url.Remove(0, subStrStartIndex + 1);
                 binding.Url = Url;
+                binding.ModId = (int)description.WorkshopId;
             }
-            binding.ModId = (int)description.WorkshopId;
+            else
+            {
+                var numbers = "0123456789";
+                var subStrStartIndex = numbers.IndexOf(Url[0]);
+                Url = Url.Remove(0, subStrStartIndex + 1);
+                binding.Url = Url;
+                var folderName = path.Split("\\")[^1];
+                var newName = "";
+                foreach(var character in folderName) 
+                {
+                    if (numbers.Contains(character))
+                        newName += character;
+                }
+                if (newName.Length < 5)
+                {
+                    var rnd = new Random();
+                    newName += rnd.Next(999999, 999999999).ToString();
+                }
+                if (newName != folderName)
+                {
+                    try
+                    {
+                        Directory.Move(path, System.IO.Path.Combine(path.Replace(folderName, ""), newName));
+                    }
+                    catch
+                    {
+                        var rnd = new Random();
+                        newName = newName.Substring(2);
+                        newName += rnd.Next(9, 99).ToString();
+                        Directory.Move(path, System.IO.Path.Combine(path.Replace(folderName, ""), newName));
+                    }
+                }
+                if (newName.Length > 9)
+                {
+                    newName = newName.Substring(1);
+                    Directory.Move(path, System.IO.Path.Combine(path.Replace(folderName, ""), newName));
+                }
+                binding.ModId = int.Parse(newName);
+            }
+            if (binding.Url.Contains("smmods.com"))
+                binding.Url = binding.Url.Split("/version/")[0];
             return binding;
         }
 

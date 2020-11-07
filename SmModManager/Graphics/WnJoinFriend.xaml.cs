@@ -1,14 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Windows;
+using System.Windows.Forms;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using CefSharp;
 using Nancy.Json;
 using SmModManager.Core;
+using SmModManager.Core.Bindings;
 using SmModManager.Core.Models;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Data;
+using System.Windows.Markup;
+using System.Linq;
+using System.Windows.Media.Animation;
+using System.Drawing;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using Newtonsoft.Json;
 
 namespace SmModManager.Graphics
 {
@@ -33,22 +50,37 @@ namespace SmModManager.Graphics
         public static List<int> QueueMods = new List<int>();
         public string BrowserHTML;
         public bool ThreadStatus;
-
+        public static bool IsWindowOpen<T>(string name = "") where T : Window
+        {
+            return string.IsNullOrEmpty(name)
+               ? System.Windows.Application.Current.Windows.OfType<T>().Any()
+               : System.Windows.Application.Current.Windows.OfType<T>().Any(w => w.Name.Equals(name));
+        }
         public WnJoinFriend()
         {
+            var CursorPos = System.Windows.Forms.Cursor.Position;
             GetWnJoinFriend = this;
             InitializeComponent();
-            WindowState = WindowState.Normal;
-            var CursorPos = System.Windows.Forms.Cursor.Position;
-            Top = CursorPos.Y - 80;
-            Left = CursorPos.X - 140;
-            var thread = new Thread(BringWindowIntoView)
+            try { IsWindowOpen<WnJoinFriend>("Join Friend"); }
+            catch 
             {
-                IsBackground = true
-            };
-            thread.Start();
+                WindowState = WindowState.Normal;
+                var thread = new Thread(BringWindowIntoView)
+                {
+                    IsBackground = true,
+                    Priority = ThreadPriority.Highest
+                };
+                thread.Start();
+                JoinGame();
+            }
         }
-
+        private void WindowClosing(object sender, CancelEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                PgMultiplayer.GetPgMultiplayer.InvokeSetOverlay();
+            });
+        }
         public void CloseWindow()
         {
             Dispatcher.Invoke(() =>
@@ -59,19 +91,17 @@ namespace SmModManager.Graphics
 
         public void BringWindowIntoView()
         {
-            var boolean = false;
             try
             {
-                while (!boolean)
+                while (true)
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        boolean = IsActive;
                         BringIntoView();
                         Focus();
                         Activate();
                     });
-                    Thread.Sleep(50);
+                    Thread.Sleep(100);
                 }
             }
             catch { }
@@ -84,7 +114,7 @@ namespace SmModManager.Graphics
             else
                 Dispatcher.Invoke(() =>
                 {
-                    WnManager.GetWnManager.SendNotification("Please wait for your status update to finish!");
+                    WnManager.GetWnManager.SendNotification((string)System.Windows.Application.Current.FindResource("waitforupdatetofinish"));
                 });
         }
 
@@ -92,7 +122,8 @@ namespace SmModManager.Graphics
         {
             var thread = new Thread(StartThreading)
             {
-                IsBackground = true
+                IsBackground = true,
+                Priority = ThreadPriority.Highest
             };
             if (App.UserSteamId != null && !ShowEvenIfFail)
                 thread.Start();
@@ -110,48 +141,48 @@ namespace SmModManager.Graphics
             ThreadStatus = true;
             if (SteamId != null)
             {
+                Debug.WriteLine(QueueMods.Count);
                 var StatusQueueId = QueueMods.Count + 1;
                 foreach (var item in QueueMods)
                     if (item >= StatusQueueId)
                         StatusQueueId = item + 1;
                 if (QueueMods.Count > 2)
+                {
+                    Debug.WriteLine("Queue Greater than 2");
                     QueueMods.RemoveAt(1);
+                }
                 else
+                {
                     QueueMods.Add(StatusQueueId);
+                }
                 while (QueueMods.IndexOf(StatusQueueId) != 0)
+                {
+                    Thread.Sleep(250);
                     if (QueueMods.IndexOf(StatusQueueId) < 0)
+                    {
+                        Debug.WriteLine("Queue Removed");
                         return;
-                Thread.Sleep(250);
-                var IsUsable = false;
+                    }
+                }
                 if (File.Exists(Path.Combine(BackBlazeFolder, SteamId) + ".txt"))
-                    while (!IsUsable)
-                        try
-                        {
-                            File.Delete(Path.Combine(BackBlazeFolder, SteamId) + ".txt");
-                            IsUsable = true;
-                        }
-                        catch
-                        {
-                            Thread.Sleep(250);
-                            IsUsable = false;
-                        }
+                    while (IsFileLocked(new FileInfo(Path.Combine(BackBlazeFolder, SteamId + ".txt")))) { Thread.Sleep(200); }
+                File.Delete(Path.Combine(BackBlazeFolder, SteamId) + ".txt");
                 var Contents = new FileDetailsModel();
                 if (File.Exists(Path.Combine(BackBlazeFolder, "FileDetails.json")))
                 {
-                    try { Contents = FileDetailsModel.Load(Path.Combine(BackBlazeFolder, "FileDetails.json")); }
-                    catch { }
-                    var IsNotBeingUsed = false;
-                    while (!IsNotBeingUsed)
-                        try
-                        {
-                            File.Delete(Path.Combine(BackBlazeFolder, "FileDetails.json"));
-                            IsNotBeingUsed = true;
-                        }
-                        catch
-                        {
-                            IsNotBeingUsed = false;
-                            Thread.Sleep(250);
-                        }
+                    while (IsFileLocked(new FileInfo(Path.Combine(BackBlazeFolder, "FileDetails.json")))) { Thread.Sleep(200); }
+                    try
+                    {
+                        Contents = FileDetailsModel.Load(Path.Combine(BackBlazeFolder, "FileDetails.json"));
+                    }
+                    catch
+                    {
+                        var details2 = File.ReadAllText(Path.Combine(BackBlazeFolder, "FileDetails.json")).Replace("URL", "//URL");
+                        File.Delete(Path.Combine(BackBlazeFolder, "FileDetails.json"));
+                        File.WriteAllText(Path.Combine(BackBlazeFolder, "FileDetails.json"), details2);
+                        Contents = FileDetailsModel.Load(Path.Combine(BackBlazeFolder, "FileDetails.json"));
+                    }
+                    File.Delete(Path.Combine(BackBlazeFolder, "FileDetails.json"));
                 }
                 var DeleteFile = "";
                 if (Contents != null)
@@ -165,18 +196,7 @@ namespace SmModManager.Graphics
                     CreateNoWindow = true
                 };
                 Process.Start(p2Info);
-                var UploadCompleted = false;
-                while (!UploadCompleted)
-                    try
-                    {
-                        File.ReadAllText(Path.Combine(BackBlazeFolder, "FileDetails.json"));
-                        UploadCompleted = true;
-                    }
-                    catch
-                    {
-                        UploadCompleted = false;
-                        Thread.Sleep(250);
-                    }
+                while (IsFileLocked(new FileInfo(Path.Combine(BackBlazeFolder, "FileDetails.json")))) { Thread.Sleep(200); }
                 var details = File.ReadAllText(Path.Combine(BackBlazeFolder, "FileDetails.json")).Replace("URL", "//URL");
                 File.Delete(Path.Combine(BackBlazeFolder, "FileDetails.json"));
                 File.WriteAllText(Path.Combine(BackBlazeFolder, "FileDetails.json"), details);
@@ -187,21 +207,25 @@ namespace SmModManager.Graphics
                     try
                     {
                         htmlSite = client.DownloadString(URL);
-                        if (ModInfo != htmlSite.Replace("<html><head></head><body><pre style=\"word-wrap: break-word; white-space: pre-wrap;\">", "").Replace("</pre></body></html>", ""))
-                            Dispatcher.Invoke(() =>
-                            {
-                                WnManager.GetWnManager.SendNotification("Online Status Failed To Update!\nPlease make sure your computers time is correctly synced");
-                            });
-                        else
-                            Dispatcher.Invoke(() =>
-                            {
-                                WnManager.GetWnManager.SendNotification("Online Status Successfully Updated!");
-                            });
                     }
                     catch
                     {
                         htmlSite = "404";
+                        Dispatcher.Invoke(() =>
+                        {
+                            WnManager.GetWnManager.SendNotification((string)System.Windows.Application.Current.FindResource("unabletoverifyupdate"));
+                        });
                     }
+                    if (ModInfo != htmlSite.Replace("<html><head></head><body><pre style=\"word-wrap: break-word; white-space: pre-wrap;\">", "").Replace("</pre></body></html>", ""))
+                        Dispatcher.Invoke(() =>
+                        {
+                            WnManager.GetWnManager.SendNotification((string)System.Windows.Application.Current.FindResource("synctime"));
+                        });
+                    else
+                        Dispatcher.Invoke(() =>
+                        {
+                            WnManager.GetWnManager.SendNotification((string)System.Windows.Application.Current.FindResource("onlinestatusupdated"));
+                        });
                 }
                 if (QueueMods.Count > 0)
                     QueueMods.RemoveAt(0);
@@ -210,10 +234,32 @@ namespace SmModManager.Graphics
             {
                 Dispatcher.Invoke(() =>
                 {
-                    WnManager.GetWnManager.SendNotification("Please Sign In to enable multiplayer compatibility");
+                    WnManager.GetWnManager.SendNotification((string)System.Windows.Application.Current.FindResource("pleasesignin"));
                 });
             }
             ThreadStatus = false;
+        }
+
+        protected virtual bool IsFileLocked(FileInfo file)
+        {
+            try
+            {
+                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+
+            //file is not locked
+            return false;
         }
 
         public string FormatCurrentMods()
@@ -221,23 +267,41 @@ namespace SmModManager.Graphics
             var ModList = "";
             foreach (var mod in Utilities.CurrentMods)
             {
-                var numbers = "0123456789";
-                var subStrStartIndex = numbers.IndexOf(mod[0]);
-                var numberList = "";
-                for (var newIndex = 1; newIndex <= subStrStartIndex; newIndex++)
-                    numberList += mod[newIndex].ToString();
-                var URL = mod.Substring(subStrStartIndex + 1);
-                var oldSub = subStrStartIndex + 1;
-                subStrStartIndex = int.Parse(numberList) + int.Parse(mod[0].ToString()) + 1;
-                URL = URL.Remove(subStrStartIndex - oldSub);
-                var ModId = mod.Substring(subStrStartIndex);
-                ModList += URL + "," + ModId + ";";
+                if (!mod.Contains("Cache\\TEMP")) {
+                    var numbers = "0123456789";
+                    var subStrStartIndex = numbers.IndexOf(mod[0]);
+                    var numberList = "";
+                    for (var newIndex = 1; newIndex <= subStrStartIndex; newIndex++)
+                        numberList += mod[newIndex].ToString();
+                    var URL = mod.Substring(subStrStartIndex + 1);
+                    var oldSub = subStrStartIndex + 1;
+                    subStrStartIndex = int.Parse(numberList) + int.Parse(mod[0].ToString()) + 1;
+                    URL = URL.Remove(subStrStartIndex - oldSub);
+                    var ModId = mod.Substring(subStrStartIndex);
+                    ModList += URL + "," + ModId + ";";
+                }
+                else
+                {
+                    var binding = ModItemBinding.Create(mod);
+                    var URL = binding.Url;
+                    var ModId = mod.Split("\\")[^1];
+                    ModList += URL + "," + ModId + ";";
+                }
             }
             return "[" + ModList + "]";
         }
-
-        public void JoinGame(object sender, RoutedEventArgs args)
+        public string htmlSite = "";
+        public void JoinGame()
         {
+            Width = 550;
+            Height = 625;
+            SizeToContent = SizeToContent.WidthAndHeight;
+            Top = (Screen.PrimaryScreen.Bounds.Height - 625) / 2;
+            Left = (Screen.PrimaryScreen.Bounds.Width - 550) / 2;
+            PreLoadBox.Visibility = Visibility.Hidden;
+            StatusBox.Visibility = Visibility.Visible;
+            StatusTextBox.Text = (string)System.Windows.Application.Current.FindResource("loadinguserinformation");
+
             if (Directory.Exists(TmpModFolder))
                 Directory.Delete(TmpModFolder, true);
             Directory.CreateDirectory(TmpModFolder);
@@ -245,9 +309,8 @@ namespace SmModManager.Graphics
             {
                 PgMultiplayer.GetPgMultiplayer.HomePageSite.Load("");
             });
-            Debug.WriteLine(PgMultiplayer.GetPgMultiplayer.SteamUserId);
+
             var URL = "https://f002.backblazeb2.com/file/SmPlayerList/" + PgMultiplayer.GetPgMultiplayer.SteamUserId + ".txt";
-            var htmlSite = "";
             using (var client = new WebClient())
             {
                 try
@@ -267,79 +330,393 @@ namespace SmModManager.Graphics
             {
                 Dispatcher.Invoke(() =>
                 {
-                    WnManager.GetWnManager.SendNotification("Online Status Not Found :(");
+                    WnManager.GetWnManager.SendNotification((string)System.Windows.Application.Current.FindResource("onlinestatusnotfound"));
                 });
                 Close();
                 return;
             }
-            foreach (var item in htmlSite.Replace("<html><head></head><body><pre style=\"word-wrap: break-word; white-space: pre-wrap;\">", "").Replace("</pre></body></html>", "").Replace("[", "").Replace("]", "").Split(";"))
-                try
+            new Thread(StartUserDataCollection).Start();
+            PgMultiplayer.GetPgMultiplayer.InvokeSetOverlay(true);
+        }
+
+        public void StartUserDataCollection()
+        {
+            var UserHtml = "";
+            using (var client = new WebClient())
+            {
+                var source = "";
+                Dispatcher.Invoke(() =>
                 {
-                    URL = item.Split(",")[0];
-                    var ItemId = item.Split(",")[1];
-                    var isWorkshop = false;
-                    if (URL.Contains("smmods.com"))
+                    PgMultiplayer.GetPgMultiplayer.GotoAddress("https://steamcommunity.com/profiles/" + PgMultiplayer.GetPgMultiplayer.SteamUserId);
+                });
+                var boolean = true;
+                while (boolean)
+                {
+                    Dispatcher.Invoke(() =>
                     {
-                        URL += "/download";
-                    }
-                    else if (URL.Contains("scrapmechanicmods.com"))
+                        boolean = PgMultiplayer.GetPgMultiplayer.GetAddress().Contains("friends") || !PgMultiplayer.GetPgMultiplayer.WebPageLoadFinished;
+                    });
+                }
+                Dispatcher.Invoke(async () =>
+                {
+                    source = await PgMultiplayer.GetPgMultiplayer.HomePageSite.GetSourceAsync();
+                });
+                while (source == "") { }
+                UserHtml = source;
+                Debug.WriteLine("https://steamcommunity.com/profiles/" + PgMultiplayer.GetPgMultiplayer.SteamUserId);
+                var ImageUrl = "";
+                var ImageUrl2 = "";
+                if (UserHtml.Contains("profile_avatar_frame"))
+                {
+                    ImageUrl2 = UserHtml.Split("class=\"playerAvatarAutoSizeInner\"")[1].Split("</div>")[0].Split("img src=\"")[1].Split("\">")[0];
+                    ImageUrl = UserHtml.Split("class=\"playerAvatarAutoSizeInner\"")[1].Split("</div>")[1].Split("img src=\"")[1].Split("\">")[0];
+                }
+                else
+                {
+                    ImageUrl = UserHtml.Split("class=\"playerAvatarAutoSizeInner\"")[1].Split("img src=\"")[1].Split("\">")[0];
+                }
+                Dispatcher.Invoke(() =>
+                {
+                    UserName.Text = UserHtml.Split("actual_persona_name\">")[1].Split("</span>")[0];
+                });
+                var text = (UserHtml.Split("responsive_status_info")[1].Split("responsive_count_link_area")[0]).Replace(">", "").Replace("<", "").Replace("</", "").Replace("div", "").Replace("span", "").Replace("class", "").Replace("\"", "");
+                if (text.Contains("profile_ban_status"))
+                    text = text.Split("profile_ban_status")[0];
+                text = text.Replace("profile_in_game", " ");
+                text = text.Replace("=", " ");
+                text = text.Replace("header", " ");
+                text = text.Replace("name", " ");
+                text = text.Replace("_", " ");
+                text = text.Replace("\\", " ");
+                text = text.Replace("/", " ");
+                text = text.Replace("	", " ");
+                text = text.Replace("persona online", " ");
+                text = text.Replace("in-game", " ");
+                text = text.Replace("persona", " ");
+                text = text.Replace(Environment.NewLine, " ");
+                text = text.Replace("\n", " ");
+                text = text.Replace("offline", " ");
+                while (text.Contains("  "))
+                {
+                    text = text.Replace("  ", " ");
+                }
+                while (text[0] == ' ')
+                {
+                    text = text.Substring(1);
+                }
+                text = text.Replace("btn green white innerfade btn small thin", "");
+                text = text.Replace("joingame a href steam:", "");
+                text = text.Replace("joingame", "");
+                text = text.Replace("steam:", "");
+                text = text.Replace("Join Game", "");
+                text = text.Replace(" a ", "");
+                text = text.Replace("Currently In-Game ", "Currently In-Game" + Environment.NewLine);
+                text = text.Replace("Currently Offline ", "Currently Offline" + Environment.NewLine);
+                Dispatcher.Invoke(() =>
+                {
+                    UserStatus.Text = text;
+                    try { BorderImage.Source = new BitmapImage(new Uri(ImageUrl2, UriKind.Absolute)); } catch { }
+                    Image.Source = new BitmapImage(new Uri(ImageUrl, UriKind.Absolute));
+                });
+            }
+            var URL = "https://f002.backblazeb2.com/file/SmPlayerList/" + PgMultiplayer.GetPgMultiplayer.SteamUserId + ".txt";
+            var UserModList = htmlSite.Replace("<html><head></head><body><pre style=\"word-wrap: break-word; white-space: pre-wrap;\">", "").Replace("</pre></body></html>", "").Replace("[", "").Replace("]", "").Split(";");
+            var index = 0;
+            foreach (var item in UserModList)
+            {
+                if (index != UserModList.Length - 1)
+                {
+                    try
                     {
-                        URL = URL.Replace("scrapmechanicmods.com/m=", "scrapmechanicmods.com/fmdl=");
-                    }
-                    else if (URL == "ws")
-                    {
-                        URL = "https://steamcommunity.com/workshop/filedetails/?id=" + ItemId;
-                        isWorkshop = true;
-                    }
-                    if (!isWorkshop)
-                    {
-                        using var client = new WebClient();
-                        if (!Directory.Exists(Path.Combine(TmpModFolder, ItemId)))
+                        var ModName = "Unknown";
+                        var PageUrl = "";
+                        var ItemId = item.Split(",")[1];
+                        if (item.Split(",")[0] == "ws")
                         {
-                            Directory.CreateDirectory(Path.Combine(TmpModFolder, ItemId));
+                            PageUrl = "https://steamcommunity.com/workshop/filedetails/?id=" + ItemId;
                         }
                         else
                         {
-                            Directory.Delete(Path.Combine(TmpModFolder, ItemId), true);
-                            Directory.CreateDirectory(Path.Combine(TmpModFolder, ItemId));
+                            PageUrl = item.Split(",")[0];
                         }
-                        client.DownloadFile(URL, Path.Combine(TmpModFolder, ItemId, ItemId + ".zip"));
-                        ZipFile.ExtractToDirectory(Path.Combine(TmpModFolder, ItemId, ItemId + ".zip"), Path.Combine(TmpModFolder, ItemId), true);
-                        File.Delete(Path.Combine(TmpModFolder, ItemId, ItemId + ".zip"));
+                        Debug.WriteLine(PageUrl);
+                        using (var client = new WebClient())
+                        {
+                            var html = "";
+                            try { html = client.DownloadString(PageUrl); } catch { html = "404"; }
+                            if (html != "404")
+                            {
+                                try
+                                {
+                                    if (PageUrl.Contains("smmods.com"))
+                                    {
+                                        ModName = html.Split("card-title\">")[1].Split("<")[0];
+                                    }
+                                    else if (PageUrl.Contains("scrapmechanicmods.com"))
+                                    {
+                                        ModName = html.Split("class=\"page-header\">")[1].Split("<")[0].Replace("\"", "");
+                                    }
+                                    else if (PageUrl.Contains("https://steamcommunity.com/workshop/filedetails/?id="))
+                                    {
+                                        ModName = html.Split("workshopItemTitle\">")[1].Split("<")[0];
+                                    }
+                                    ModName = ModName.Replace("&amp;", "&");
+                                }
+                                catch { html = "404"; ModName = (string)System.Windows.Application.Current.FindResource("404cannotfindmod"); }
+                            }
+                            else
+                            {
+                                ModName = (string)System.Windows.Application.Current.FindResource("404cannotfindmod");
+                            }
+                        }
+                        Dispatcher.Invoke(() =>
+                        {
+                            var binding = ModListItemBinding.Create(ModName, PageUrl);
+                            binding.IsVisible = false;
+                            ModList.Items.Add(binding);
+                        });
                     }
-                    else
+                    catch
                     {
-                        URL = PassComplexData(uint.Parse(ItemId));
-                        using var client = new WebClient();
-                        if (!Directory.Exists(Path.Combine(TmpModFolder, ItemId)))
-                        {
-                            Directory.CreateDirectory(Path.Combine(TmpModFolder, ItemId));
-                        }
-                        else
-                        {
-                            Directory.Delete(Path.Combine(TmpModFolder, ItemId), true);
-                            Directory.CreateDirectory(Path.Combine(TmpModFolder, ItemId));
-                        }
-                        client.DownloadFile(URL, Path.Combine(TmpModFolder, ItemId, ItemId + ".zip"));
-                        ZipFile.ExtractToDirectory(Path.Combine(TmpModFolder, ItemId, ItemId + ".zip"), Path.Combine(TmpModFolder, ItemId), true);
-                        File.Delete(Path.Combine(TmpModFolder, ItemId, ItemId + ".zip"));
+                        // some error?
                     }
                 }
-                catch
-                {
-                    // last item causes error
-                }
+                index++;
+            }
             Dispatcher.Invoke(() =>
             {
-                var CurrentMods = File.ReadAllText(Path.Combine(Constants.AppUserData, "CurrentMods.smmm"));
-                File.WriteAllText(Path.Combine(Constants.AppUserData, "InstallOnBoot.smmm"), CurrentMods);
-                PgManage.GetPgManage.InvokeRemoveAllCurrentMods(null, args);
-                args.Source = "DontShowMessage";
-                var Mods = new List<string>();
-                foreach (var item in Directory.GetDirectories(TmpModFolder))
-                    Mods.Add(item);
-                InjectModsInsideTMP(Mods);
+                PreLoadBox.Visibility = Visibility.Visible;
+                StatusBox.Visibility = Visibility.Hidden;
             });
+        }
+
+        public void StartDownload(object sender, RoutedEventArgs args)
+        {
+            DownloadButton.IsEnabled = false;
+            new Thread(ThreadDownload).Start();
+        }
+        public void ThreadDownload()
+        {
+            var URL = "https://f002.backblazeb2.com/file/SmPlayerList/" + PgMultiplayer.GetPgMultiplayer.SteamUserId + ".txt";
+            var index = 0;
+            var UserModList = htmlSite.Replace("<html><head></head><body><pre style=\"word-wrap: break-word; white-space: pre-wrap;\">", "").Replace("</pre></body></html>", "").Replace("[", "").Replace("]", "").Split(";");
+            foreach (var item in UserModList)
+            {
+                if (index != UserModList.Length - 1)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        var binding = (ModListItemBinding)ModList.Items[index];
+                        binding.IsLoading = true;
+                        binding.IsVisible = true;
+                    });
+                    try
+                    {
+                        URL = item.Split(",")[0];
+                        var ItemId = item.Split(",")[1];
+                        var isWorkshop = false;
+                        bool DoesntHaveMod = true;
+                        if (URL == "ws")
+                        {
+                            if (Utilities.CompatibleMods.Contains("12ws" + ItemId))
+                            {
+                                DoesntHaveMod = false;
+                                Utilities.CopyDirectory(Path.Combine(App.Settings.WorkshopPath, ItemId), Path.Combine(TmpModFolder, ItemId));
+                            }
+                        }
+                        else
+                        {
+                            if (Utilities.CompatibleMods.Contains(URL))
+                            {
+                                DoesntHaveMod = false;
+                                Utilities.CopyDirectory(Path.Combine(Constants.ArchivesPath, ItemId), Path.Combine(TmpModFolder, ItemId));
+                            }
+                        }
+                        bool isValid = true;
+                        var ModName = "";
+                        Dispatcher.Invoke(() =>
+                        {
+                            var binding = (ModListItemBinding)ModList.Items[index];
+                            isValid = binding.Name != "404, Could not find mod!";
+                            ModName = binding.Name;
+                        });
+                        if (!isValid)
+                            throw new Exception("InValid Mod");
+                        var prevURL = URL;
+                        if (URL.Contains("smmods.com"))
+                        {
+                            var tmpURL = URL;
+                            var version = "";
+                            if (URL.Contains("/version/"))
+                            {
+                                tmpURL = URL.Split("/version/")[0];
+                                version = URL.Split("/version/")[1].Replace("/", "");
+                            }
+                            var modID = tmpURL.Split("/")[^1];
+                            //fuck you tubo
+                            URL = "https://smmods.com/api/v2/mods/" + modID;
+                            using var client = new WebClient();
+                            var html = client.DownloadString(URL);
+                            var Modver = "";
+                            if (version != "")
+                            {
+                                Modver = version;
+                            }
+                            else
+                            {
+                                Modver = html.Split("current_version")[1].Split("id\":\"")[1].Split("\",\"name\"")[0];
+                            }
+                            prevURL += "/version/" + Modver;
+                            URL += "/version/" + Modver + "/download";
+                        }
+                        else if (URL.Contains("scrapmechanicmods.com"))
+                        {
+                            URL = URL.Replace("scrapmechanicmods.com/m=", "scrapmechanicmods.com/fmdl=");
+                        }
+                        else if (URL == "ws")
+                        {
+                            URL = "https://steamcommunity.com/workshop/filedetails/?id=" + ItemId;
+                            isWorkshop = true;
+                        }
+                        if (DoesntHaveMod)
+                        {
+                            if (!isWorkshop)
+                            {
+                                using var client = new WebClient();
+                                if (!Directory.Exists(Path.Combine(TmpModFolder, ItemId)))
+                                {
+                                    Directory.CreateDirectory(Path.Combine(TmpModFolder, ItemId));
+                                }
+                                else
+                                {
+                                    Directory.Delete(Path.Combine(TmpModFolder, ItemId), true);
+                                    Directory.CreateDirectory(Path.Combine(TmpModFolder, ItemId));
+                                }
+                                client.DownloadFile(URL, Path.Combine(TmpModFolder, ItemId, ItemId + ".zip"));
+                                ZipFile.ExtractToDirectory(Path.Combine(TmpModFolder, ItemId, ItemId + ".zip"), Path.Combine(TmpModFolder, ItemId), true);
+                                File.Delete(Path.Combine(TmpModFolder, ItemId, ItemId + ".zip"));
+                                var _data = new List<ModDescriptionModel>
+                                {
+                                    new ModDescriptionModel
+                                    {
+                                        Name = ModName,
+                                        Description = "Description Here",
+                                        Type = "Blocks and Parts",
+                                        Location = prevURL.Length.ToString().Length + prevURL.Length.ToString() + prevURL
+                                    }
+                                };
+                                var json = JsonConvert.SerializeObject(_data);
+                                File.WriteAllText(Path.Combine(TmpModFolder, ItemId, "description.json"), json.Replace("[", "").Replace("]", ""));
+                                File.Copy(Path.Combine(Constants.Resources, "Assets", "empty.png"), Path.Combine(TmpModFolder, ItemId, "preview.png"));
+                                Utilities.CopyDirectory(Path.Combine(TmpModFolder, ItemId), Path.Combine(Constants.ArchivesPath, ItemId));
+                            }
+                            else
+                            {
+                                var DownloadUrl = "https://steamworkshopdownloader.io/extension/embedded/" + ItemId;
+                                Dispatcher.Invoke(() =>
+                                {
+                                    PgMultiplayer.GetPgMultiplayer.GotoAddress(DownloadUrl);
+                                });
+                                var HasCompletedDownload = false;
+                                App.Settings.NewFileName = ItemId + ".zip";
+                                while (!HasCompletedDownload) { HasCompletedDownload = App.Settings.LatestDownloadComplete; }
+                                App.Settings.LatestDownloadComplete = false;
+                                ZipFile.ExtractToDirectory(Path.Combine(Constants.CachePath, ItemId + ".zip"), Path.Combine(TmpModFolder, ItemId), true);
+                                File.Delete(Path.Combine(Constants.CachePath, ItemId + ".zip"));
+                                Utilities.CopyDirectory(Path.Combine(TmpModFolder, ItemId), Path.Combine(App.Settings.WorkshopPath, ItemId));
+                                Dispatcher.Invoke(() =>
+                                {
+                                    App.GetApp.ForceFormatAllMods();
+                                    PgManage.GetPgManage.InvokeRefreshAll();
+                                });
+                            }
+                        }
+                        else
+                        {
+                            var count = Utilities.CompatibleMods.IndexOf(ItemId);
+                        }
+                        Dispatcher.Invoke(() =>
+                        {
+                            var binding = (ModListItemBinding)ModList.Items[index];
+                            binding.IsLoading = false;
+                            binding.CurrentImage = 1;
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine(e);
+                        Dispatcher.Invoke(() =>
+                        {
+                            var binding = (ModListItemBinding)ModList.Items[index];
+                            binding.IsLoading = false;
+                            binding.CurrentImage = 2;
+                        });
+                    }
+                }
+                index++;
+            }
+            Dispatcher.Invoke(() =>
+            {
+                DownloadButton.Content = "Install";
+                DownloadButton.Click -= StartDownload;
+                DownloadButton.Click += StartInstall;
+                DownloadButton.IsEnabled = true;
+            });
+        }
+        public RoutedEventArgs tmpArgs;
+        public void StartInstall(object sender, RoutedEventArgs args)
+        {
+            DownloadButton.IsEnabled = false;
+            ScrollView.Visibility = Visibility.Collapsed;
+            LoadingGrid.Visibility = Visibility.Visible;
+            IsLoadingInstall = true;
+            tmpArgs = args;
+            new Thread(LoadingGridImage).Start();
+            new Thread(InstallThread).Start();
+        }
+        public bool IsLoadingInstall = false;
+        public void LoadingGridImage()
+        {
+            var deg = "";
+            while (IsLoadingInstall)
+            {
+                if (deg.Length > 4)
+                    deg = "";
+                Dispatcher.Invoke(() =>
+                {
+                    InstallingText.Text = "Loading" + deg;
+                });
+                deg += ".";
+                Thread.Sleep(350);
+            }
+        }
+        public void InstallThread()
+        {
+            var CurrentMods = File.ReadAllText(Path.Combine(Constants.AppUserData, "CurrentMods.smmm"));
+            PgManage.GetPgManage.InvokeRemoveAllCurrentMods(null, tmpArgs);
+            var boolean = true;
+            while (boolean)
+            {
+                boolean = PgManage.GetPgManage.IsInvokingRemove;
+            }
+            Debug.WriteLine("Done");
+            tmpArgs = null;
+            App.GetApp.FormatAllMods_StartDir = TmpModFolder;
+            App.GetApp.FormatAllMods();
+            App.GetApp.FormatAllMods_StartDir = Constants.ArchivesPath;
+            App.GetApp.FormatAllMods();
+            Dispatcher.Invoke(() =>
+            {
+                WnManager.GetWnManager.ShowMultiplayerPage(null, null);
+            });
+            var Mods = new List<string>();
+            foreach (var item in Directory.GetDirectories(TmpModFolder))
+                Mods.Add(item);
+            InjectModsInsideTMP(Mods);
+        }
+
+        public void LaunchGame(object sender, RoutedEventArgs args)
+        {
             var SteamId = PgMultiplayer.GetPgMultiplayer.SteamUserId;
             var startInfo = new ProcessStartInfo
             {
@@ -352,6 +729,7 @@ namespace SmModManager.Graphics
             {
                 WnManager.GetWnManager.CallMinimizeWindow();
             });
+            bringToFront("Scrap Mechanic - Steam");
             Close();
         }
 
@@ -359,36 +737,97 @@ namespace SmModManager.Graphics
         {
             if (!Directory.Exists(Constants.ModInstallBackupsPath))
                 Directory.CreateDirectory(Constants.ModInstallBackupsPath);
-            _ = !CreateBackUpFile(BackUpModlist);
+            Dispatcher.Invoke(() =>
+            {
+                Utilities.RemoveMods(false);
+            });
+            var BackupCompleted = !Utilities.CreateBackUpFile(BackUpModlist, false, TmpModFolder);
             var tmpCurrentMods = new List<string>();
             foreach (var ModId in BackUpModlist)
             {
                 var ModLocation = ModId;
                 if (Directory.Exists(Constants.ModInstallBackupsPath))
                 {
+                    var ErrorCount = 0;
+                ReTry:
                     var newModId = ModLocation.Split(@"\")[^1];
-                    var folder = App.Settings.GameDataPath;
-                    if (Directory.Exists(Path.Combine(ModLocation, "Scrap Mechanic")))
-                        folder.Replace("Scrap Mechanic", "");
-                    Debug.WriteLine(Utilities.GetSubFilesOnly(ModLocation, folder, ModLocation, new List<string>()));
-                    Debug.WriteLine(Path.Combine(Constants.ModInstallBackupsPath, "10" + newModId + ".smmm"));
-                    File.WriteAllLines(Path.Combine(Constants.ModInstallBackupsPath, "10" + newModId + ".smmm"), Utilities.GetSubFilesOnly(ModLocation, folder, ModLocation, new List<string>()));
+                    try
+                    {
+                        var folder = App.Settings.GameDataPath;
+                        if (Directory.Exists(Path.Combine(ModLocation, "Scrap Mechanic")))
+                            folder.Replace("Scrap Mechanic", "");
+                        if (!Directory.Exists(ModLocation) && ErrorCount > 0)
+                            return;
+                        File.WriteAllLines(Path.Combine(Constants.ModInstallBackupsPath, "10" + newModId + ".smmm"), Utilities.GetSubFilesOnly(ModLocation, folder, ModLocation, new List<string>()));
+                    }
+                    catch (Exception e)
+                    {
+                        ErrorCount++;
+                        if (ErrorCount < 5)
+                        {
+                            Dispatcher.Invoke(() =>
+                            {
+                                Utilities.RemoveMods(false);
+                                App.GetApp.CleanFiles();
+                                Utilities.ArchivedMods.Clear();
+                                Utilities.CompatibleMods.Clear();
+                                Utilities.CurrentMods.Clear();
+                                PgManage.GetPgManage.RefreshAll();
+                            });
+                            goto ReTry;
+                        }
+                        throw new Exception((string)System.Windows.Application.Current.FindResource("filesarecorrupt"), e);
+                    }
                 }
                 if (!tmpCurrentMods.Contains(ModId))
                     tmpCurrentMods.Add(ModId);
-                SurvivalFolderInject(Path.Combine(ModLocation, "Survival"), Path.Combine(ModLocation, "Scrap Mechanic"));
+                FolderInject(Path.Combine(ModLocation, "Scrap Mechanic"));
             }
-            Utilities.CurrentMods = tmpCurrentMods;
-            PgManage.GetPgManage.InvokeRefreshCurrentModsList();
-            WnManager.GetWnManager.SendNotification("Successfully installed required mods! Joining game now!");
+            if (!BackupCompleted)
+                tmpCurrentMods.Clear();
+            Dispatcher.Invoke(() =>
+            {
+                IsLoadingInstall = false;
+                RotateTransform rotateTransform = new RotateTransform(0);
+                InstallingText.Text = (string)System.Windows.Application.Current.FindResource("Completed");
+                DownloadButton.Content = (string)System.Windows.Application.Current.FindResource("JoinGame");
+                DownloadButton.Click += LaunchGame;
+                DownloadButton.Click -= StartInstall;
+                DownloadButton.IsEnabled = true;
+                Utilities.CurrentMods = tmpCurrentMods;
+                Utilities.SaveDataToFile();
+                PgManage.GetPgManage.RefreshCurrentModsList();
+                App.PageJoinFriend.UpdateCurrentMods(false);
+                PgManage.GetPgManage.InvokeRefreshCurrentModsList();
+                WnManager.GetWnManager.SendNotification((string)System.Windows.Application.Current.FindResource("successfullyinstalledrequiredmods"));
+            });
         }
 
-        public void SurvivalFolderInject(string TempModId, string TempModId2)
+        [DllImport("USER32.DLL", CharSet = CharSet.Unicode)]
+        public static extern IntPtr FindWindow(String lpClassName, String lpWindowName);
+
+        [DllImport("USER32.DLL")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        public static void bringToFront(string title)
         {
-            if (Directory.Exists(Path.Combine(TmpModFolder, TempModId2)))
-                Utilities.CopyDirectory(Path.Combine(TmpModFolder, TempModId2), App.Settings.GameDataPath);
-            else if (Directory.Exists(Path.Combine(TmpModFolder, TempModId)))
-                Utilities.CopyDirectory(Path.Combine(TmpModFolder, TempModId), Path.Combine(App.Settings.GameDataPath, "Survival"));
+            // Get a handle to the Calculator application.
+            IntPtr handle = FindWindow(null, title);
+
+            // Verify that Calculator is a running process.
+            if (handle == IntPtr.Zero)
+            {
+                return;
+            }
+
+            // Make Calculator the foreground application
+            SetForegroundWindow(handle);
+        }
+
+        public void FolderInject(string TempModId)
+        {
+            if (Directory.Exists(Path.Combine(TmpModFolder, TempModId)))
+                Utilities.CopyDirectory(Path.Combine(TmpModFolder, TempModId), App.Settings.GameDataPath);
         }
 
         public static bool CreateBackUpFile(List<string> ModIdList)
@@ -426,7 +865,6 @@ namespace SmModManager.Graphics
                                 partFull = partFull.Substring(partFull.IndexOf("Survival"));
                             if (Directory != DirectoryList[0])
                             {
-                                //Debug.WriteLine(partFull);
                                 if (!System.IO.Directory.Exists(Path.Combine(Constants.ModInstallBackupsPath, partFull)) && !partFull.Contains("."))
                                 {
                                     partFull = partFull.Replace(@"Scrap Mechanic\", @"");
@@ -462,6 +900,7 @@ namespace SmModManager.Graphics
 
         public string PassComplexData(uint FileId)
         {
+            /*
             string ResponseString;
             HttpWebResponse response;
             try
@@ -499,8 +938,62 @@ namespace SmModManager.Graphics
                     ResponseString = "Some error occured: " + ex.Status;
                 }
             }
+            Debug.WriteLine(ResponseString);
             var uuid = ResponseString.Split("\"")[3];
-            return "https://api.steamworkshopdownloader.io/api/download/transmit?uuid=" + uuid;
+            */
+            //return "https://api.steamworkshopdownloader.io/api/download/transmit?uuid=" + uuid;
+            return "";
+            
+        }
+        public void OpenBrowser(object sender, RoutedEventArgs args)
+        {
+            var button = (System.Windows.Controls.Button)sender;
+            var link = ((TextBlock)button.Content).Text.Replace("System.Windows.Controls.Button: ", "");
+            Utilities.OpenBrowserUrl(link);
+        }
+
+        public static T FindChild<T>(DependencyObject parent, string childName)
+        where T : DependencyObject
+        {
+            // Confirm parent and childName are valid. 
+            if (parent == null) return null;
+
+            T foundChild = null;
+
+            int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < childrenCount; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                // If the child is not of the request child type child
+                T childType = child as T;
+                if (childType == null)
+                {
+                    // recursively drill down the tree
+                    foundChild = FindChild<T>(child, childName);
+
+                    // If the child is found, break so we do not overwrite the found child. 
+                    if (foundChild != null) break;
+                }
+                else if (!string.IsNullOrEmpty(childName))
+                {
+                    var frameworkElement = child as FrameworkElement;
+                    // If the child's name is set for search
+                    if (frameworkElement != null && frameworkElement.Name == childName)
+                    {
+                        // if the child's name is of the request name
+                        foundChild = (T)child;
+                        break;
+                    }
+                }
+                else
+                {
+                    // child element found.
+                    foundChild = (T)child;
+                    break;
+                }
+            }
+
+            return foundChild;
         }
 
     }
@@ -530,5 +1023,4 @@ namespace SmModManager.Graphics
         public string value { get; set; }
 
     }
-
 }

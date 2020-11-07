@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Numerics;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -17,16 +17,21 @@ namespace SmModManager.Graphics
 
         public static WnManager GetWnManager;
         public static Vector2 PreviousPosition;
-        private readonly Thread FixedUpdateThread;
         public bool UpdateTopMenuBool = true;
+        public bool CanNavigate = true;
+        public bool CanExit = true;
 
         public WnManager()
         {
+            Debug.WriteLine(App.Settings.StartUpX);
+            Debug.WriteLine(App.Settings.StartUpY);
+            Width = App.Settings.StartUpX;
+            Height = App.Settings.StartUpY;
+            Top = (Screen.PrimaryScreen.Bounds.Height - Height) / 2;
+            Left = (Screen.PrimaryScreen.Bounds.Width - Width) / 2;
+            this.WindowState = App.Settings.StartupMode;
             InitializeComponent();
             GetWnManager = this;
-            FixedUpdateThread = new Thread(Updater);
-            FixedUpdateThread.IsBackground = true;
-            FixedUpdateThread.Start();
             IsWindowOpen = true;
         }
 
@@ -51,11 +56,13 @@ namespace SmModManager.Graphics
         {
             try
             {
+                var messageExtend = Math.Clamp((Message.Length / 25) - 1, 0, 99999);
+                int lines = Message.Split(Environment.NewLine).Length-1 + messageExtend;
                 var sb = FindResource("MessagePopup") as Storyboard;
                 sb.Stop();
                 sb.Begin();
                 NotificationBox.Width = Math.Clamp(WindowWidth, 200, 600);
-                NotificationBox.Height = Math.Clamp(WindowHeight, 50, 600);
+                NotificationBox.Height = Math.Clamp(WindowHeight, 50, 600) + (lines*10);
                 NotificationMessage.Text = Message;
                 NotificationBox.Visibility = Visibility.Visible;
             }
@@ -64,11 +71,17 @@ namespace SmModManager.Graphics
                 // nothing
             }
         }
-
         public void ClearNotification(object sender, EventArgs e)
         {
             var sb = FindResource("MessagePopup") as Storyboard;
-            sb.Seek(new TimeSpan(50000000));
+            var time = (long)sb.GetCurrentTime().TotalMilliseconds;
+            var NewTime = Math.Abs(time - 1000) + 1000;
+            var percent = ((float)NewTime / 1000) - 1;
+            long val = 50000000 + (int)(10000000 * percent);
+            if (time < 1000)
+                sb.Seek(new TimeSpan(val));
+            else if (time < 3000)
+                sb.Seek(new TimeSpan(50000000));
         }
 
         public void SetInVisible(object sender, EventArgs e)
@@ -77,25 +90,13 @@ namespace SmModManager.Graphics
             UpdateTopMenuBool = true;
         }
 
-        public void Updater()
-        {
-            //call methods to be updated every 20 ms
-            try
-            {
-                while (IsWindowOpen)
-                {
-                    Thread.Sleep(20);
-                    Dispatcher.Invoke(() =>
-                    {
-                        RunVoidList();
-                    });
-                }
-            }
-            catch { }
-        }
 
-        public void RunVoidList()
+        public void RunVoidList(object sender, SizeChangedEventArgs e)
         {
+            if(Width < 700)
+                Width = 700;
+            if (Height < 500)
+                Height = 500;
             PgManage.GetPgManage.UpdatePreviewImages();
             UpdateTopMenu();
             PgStore.getPgStore.UpdateUrl();
@@ -126,6 +127,8 @@ namespace SmModManager.Graphics
             AdvancedButton.FontWeight = FontWeights.Normal;
             StoreButton.FontWeight = FontWeights.Normal;
             HomeButton.FontWeight = FontWeights.Normal;
+            CommunityButton.FontWeight = FontWeights.Normal;
+            CollectionsButton.FontWeight = FontWeights.Normal;
 
             ManageButton.FontSize = 12;
             MultiplayerButton.FontSize = 12;
@@ -133,59 +136,107 @@ namespace SmModManager.Graphics
             AdvancedButton.FontSize = 12;
             StoreButton.FontSize = 12;
             HomeButton.FontSize = 12;
+            CommunityButton.FontSize = 12;
+            CollectionsButton.FontSize = 12;
         }
 
         public void ShowManagePage(object sender, RoutedEventArgs args)
         {
-            ClearButtonFontWeight();
-            PageView.Navigate(App.PageManage);
-            ManageButton.FontWeight = FontWeights.Bold;
-            ManageButton.FontSize = 15;
+            if (CanNavigate)
+            {
+                ClearButtonFontWeight();
+                PageView.Navigate(App.PageManage);
+                ManageButton.FontWeight = FontWeights.Bold;
+                ManageButton.FontSize = 15;
+            }
         }
 
-        private void ShowMultiplayerPage(object sender, RoutedEventArgs args)
+        public void ShowMultiplayerPage(object sender, RoutedEventArgs args)
         {
-            ClearButtonFontWeight();
-            PageView.Navigate(App.PageMultiplayer);
-            MultiplayerButton.FontWeight = FontWeights.Bold;
-            MultiplayerButton.FontSize = 15;
+            if (CanNavigate)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    ClearButtonFontWeight();
+                    PageView.Navigate(App.PageMultiplayer);
+                    MultiplayerButton.FontWeight = FontWeights.Bold;
+                    MultiplayerButton.FontSize = 15;
+                });
+            }
         }
 
         private void ShowBackupsPage(object sender, RoutedEventArgs args)
         {
-            ClearButtonFontWeight();
-            PageView.Navigate(App.PageBackups);
-            BackupsButton.FontWeight = FontWeights.Bold;
-            BackupsButton.FontSize = 15;
+            if (CanNavigate)
+            {
+                ClearButtonFontWeight();
+                PageView.Navigate(App.PageBackups);
+                BackupsButton.FontWeight = FontWeights.Bold;
+                BackupsButton.FontSize = 15;
+            }
         }
 
         public void ShowHomePage(object sender, RoutedEventArgs args)
         {
-            ClearButtonFontWeight();
-            PageView.Navigate(App.PageHome);
-            HomeButton.FontWeight = FontWeights.Bold;
-            HomeButton.FontSize = 15;
+            if (CanNavigate)
+            {
+                ClearButtonFontWeight();
+                PageView.Navigate(App.PageHome);
+                HomeButton.FontWeight = FontWeights.Bold;
+                HomeButton.FontSize = 15;
+            }
         }
 
         private void ShowStorePage(object sender, RoutedEventArgs args)
         {
-            ClearButtonFontWeight();
-            PageView.Navigate(App.PageStore);
-            StoreButton.FontWeight = FontWeights.Bold;
-            StoreButton.FontSize = 15;
+            if (CanNavigate)
+            {
+                ClearButtonFontWeight();
+                PageView.Navigate(App.PageStore);
+                StoreButton.FontWeight = FontWeights.Bold;
+                StoreButton.FontSize = 15;
+            }
         }
-
+        
         private void ShowAdvancedPage(object sender, RoutedEventArgs args)
         {
-            ClearButtonFontWeight();
-            PageView.Navigate(App.PageAdvanced);
-            AdvancedButton.FontWeight = FontWeights.Bold;
-            AdvancedButton.FontSize = 15;
+            if (CanNavigate)
+            {
+                ClearButtonFontWeight();
+                PageView.Navigate(App.PageAdvanced);
+                AdvancedButton.FontWeight = FontWeights.Bold;
+                AdvancedButton.FontSize = 15;
+            }
+        }
+        private void ShowCommunityPage(object sender, RoutedEventArgs args)
+        {
+            if (CanNavigate)
+            {
+                ClearButtonFontWeight();
+                PageView.Navigate(App.CommunityPage);
+                CommunityButton.FontWeight = FontWeights.Bold;
+                CommunityButton.FontSize = 15;
+            }
         }
 
+        public void ShowCollectionsPage(object sender, RoutedEventArgs args)
+        {
+            if (CanNavigate)
+            {
+            }
+        }
         private void Exit(object sender, RoutedEventArgs args)
         {
-            Application.Current.Shutdown();
+            if (CanNavigate || CanExit)
+            {
+                Application.Current.Shutdown();
+            }
+        }
+        public void ShowFormatLoading()
+        {
+            ClearButtonFontWeight();
+            App.FormatLoadingPage.UpdateStatus();
+            PageView.Navigate(App.FormatLoadingPage);
         }
 
         public void MinimizeWindow()

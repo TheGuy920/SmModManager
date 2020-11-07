@@ -20,10 +20,12 @@
     <system:String x:Key="MultiplayerTabHeader">MULTIPLAYER</system:String>
     <system:String x:Key="StoreTabHeader">STORE</system:String>
     <system:String x:Key="BackupsTabHeader">BACKUPS</system:String>
+    <system:String x:Key="CollectionsTabHeader">COLLECTIONS</system:String>
+    <system:String x:Key="CommunityTabHeader">COMMUNITY</system:String>
     <system:String x:Key="AdvancedTabHeader">ADVANCED</system:String>
     <system:String x:Key="ExitTabHeader">EXIT</system:String>
 
-    <system:String x:Key="NotificationTitleText">Notification</system:String>
+    <system:String x:Key="NotificationTitleText">‏‏‎ Notification</system:String>
     <system:String x:Key="NotificationHideText">Click To Hide Notification</system:String>
 
     <!-- FILE -->
@@ -56,6 +58,11 @@
     <system:String x:Key="UpdateOption3">Don't Check For Updates</system:String>
 
     <system:String x:Key="AppLanguageText">Application Language</system:String>
+
+    <system:String x:Key="AppStartupSize">Application Startup Size | 0 - 0 is default |</system:String>
+    <system:String x:Key="StartUpMode">Startup Mode:</system:String>
+    <system:String x:Key="XRes">Width:</system:String>
+    <system:String x:Key="YRes">Height:</system:String>
 
     <!-- FILE -->
 
@@ -90,5 +97,31 @@
     <system:String x:Key="SendReportText">Send Report</system:String>
 
     <!-- FILE -->
+
+    <!-- Other -->
+    
+    <!-- Complete --><system:String x:Key="StartupErrorMessage">Oh No! It looks like there was an issue launching the Mod Manager!</system:String>
+    <!-- Complete --><system:String x:Key="StartupErrorReport">Error Report:</system:String>
+    <!-- Complete --><system:String x:Key="StartupErrorPossibilities">Possible Solutions:</system:String>
+    <!-- Complete --><system:String x:Key="StartupErrorDecision">Take Action</system:String>
+    <!-- Complete --><system:String x:Key="problemkillall">Solution: Kill all SmModManager.exe processes and restart</system:String>
+    <!-- Complete --><system:String x:Key="problemdelete">Solution: Delete corrupt file/folder and restart</system:String>
+    <!-- Complete --><system:String x:Key="makesureinputsfilled">Make sure all the inputs are filled!</system:String>
+    <!-- Complete --><system:String x:Key="selectedpathmissinggamefiles">The selected path doesn't contain the game's executable!</system:String>
+    <!-- Complete --><system:String x:Key="selectedpathmissingworkshopfiles">The selected path doesn't contain the workshop files!</system:String>
+    <!-- Complete --><system:String x:Key="corruptfiles">It apears some files are corrupt we are attemping to repair them please restart the app</system:String> 
+    <!-- Complete --><system:String x:Key="JoinGame">JoinGame</system:String>
+    <!-- Complete --><system:String x:Key="Completed">Completed</system:String> 
+    <!-- Complete --><system:String x:Key="successfullyinstalledrequiredmods">Successfully installed required mods! Joining game now!</system:String>
+    <system:String x:Key="404cannotfindmod">404, Could not find mod!</system:String>
+    <system:String x:Key="onlinenotfound">Online Status Not Found :(</system:String>
+    <system:String x:Key="loadinguserinformation">Loading User Information...</system:String>
+    <system:String x:Key="signinformultiplayer">Please Sign In to enable multiplayer compatibility</system:String>
+    <system:String x:Key="onlinestatusupdated">Online Status Successfully Updated!</system:String>
+    <system:String x:Key="failedtoupdatetime">Online Status Failed To Update!\nPlease make sure your computers time is correctly synced</system:String>
+    <system:String x:Key="failedtoupdatefailed">Online Status Failed To Update!\nFailed to confirm successful upload</system:String>
+    <system:String x:Key="waitforupdatetofinish">Please wait for your status update to finish!</system:String>
+    <system:String x:Key="searchfilter">Search Filter</system:String>
+    <system:String x:Key="problem">Problem: </system:String>
 
 </ResourceDictionary>

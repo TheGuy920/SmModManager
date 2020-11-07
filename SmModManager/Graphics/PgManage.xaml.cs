@@ -12,6 +12,7 @@ using CefSharp;
 using SmModManager.Core;
 using SmModManager.Core.Bindings;
 using SmModManager.Core.Handlers;
+using SmModManager.Core.Models;
 using Image = System.Drawing.Image;
 
 namespace SmModManager.Graphics
@@ -29,6 +30,7 @@ namespace SmModManager.Graphics
         public object previousItemC;
         public object previousItemCC;
         public double previousWidth;
+        public bool IsInvokingRemove;
 
         public PgManage()
         {
@@ -84,6 +86,7 @@ namespace SmModManager.Graphics
             var tmpCurrentMods = new List<string>();
             foreach (var ModId in BackUpModlist)
             {
+                Debug.WriteLine(ModId);
                 var numbers = "0123456789";
                 var subStrStartIndex = numbers.IndexOf(ModId[0]);
                 var numberList = "";
@@ -94,6 +97,8 @@ namespace SmModManager.Graphics
                 if (ModId[2] + ModId[3].ToString() == "ws")
                 {
                     ModLocation = Path.Combine(App.Settings.WorkshopPath, ModLocation);
+                    if(!Directory.Exists(ModLocation))
+                        ModLocation = Path.Combine(Constants.ArchivesPath, ModLocation);
                 }
                 else
                 {
@@ -130,7 +135,7 @@ namespace SmModManager.Graphics
                             RefreshAll();
                             goto ReTry;
                         }
-                        throw new Exception("It apears some files are corrupt we are attemping to repair them please restart the app", e);
+                        throw new Exception("It appears some files are corrupt we are attempting to repair them please restart the app", e);
                     }
                 }
                 if (CompatibleMods.Contains(ModId) && BackupCompleted && !ArchivedMods.Contains(ModId))
@@ -225,46 +230,31 @@ namespace SmModManager.Graphics
         {
             if (CompatibleModsList.Items.Count > 0)
                 CompatibleModsList.Items.Clear();
-            foreach (var path in Directory.GetDirectories(App.Settings.WorkshopPath))
-                if (Utilities.IsCompatibleMod(path) && !CompatibleModsList.Items.Contains(ModItemBinding.Create(path)))
-                    try
-                    {
-                        CompatibleModsList.Items.Add(ModItemBinding.Create(path));
-                    }
-                    catch
-                    {
-                        // nothing
-                    }
-
-            foreach (var path in Directory.GetDirectories(Path.Combine(App.Settings.UserDataPath, "Mods")))
-                if (Utilities.IsCompatibleMod(path) && !CompatibleModsList.Items.Contains(ModItemBinding.Create(path)))
-                    try
-                    {
-                        CompatibleModsList.Items.Add(ModItemBinding.Create(path));
-                    }
-                    catch
-                    {
-                        // nothing
-                    }
-
-            foreach (var path in Directory.GetDirectories(Path.Combine(Constants.ArchivesPath)))
-                if (Utilities.IsCompatibleMod(path) && !CompatibleModsList.Items.Contains(ModItemBinding.Create(path)))
-                    try
-                    {
-                        CompatibleModsList.Items.Add(ModItemBinding.Create(path));
-                    }
-                    catch
-                    {
-                        // nothing
-                    }
-
             Utilities.CompatibleMods.Clear();
+            var tmpList = new List<string>();
+            foreach (var path in Directory.GetDirectories(App.Settings.WorkshopPath))
+                if (Utilities.IsCompatibleMod(path) && !CompatibleModsList.Items.Contains(ModItemBinding.Create(path)) && !tmpList.Contains(ModItemBinding.Create(path).ModId.ToString()))
+                    try { CompatibleModsList.Items.Add(ModItemBinding.Create(path)); tmpList.Add(ModItemBinding.Create(path).ModId.ToString()); } catch { /* nothing*/ }
+            foreach (var path in Directory.GetDirectories(Path.Combine(App.Settings.UserDataPath, "Mods")))
+                if (Utilities.IsCompatibleMod(path) && !CompatibleModsList.Items.Contains(ModItemBinding.Create(path)) && !tmpList.Contains(ModItemBinding.Create(path).ModId.ToString()))
+                    try { CompatibleModsList.Items.Add(ModItemBinding.Create(path)); tmpList.Add(ModItemBinding.Create(path).ModId.ToString()); } catch { /* nothing*/ }
+            foreach (var path in Directory.GetDirectories(Path.Combine(Constants.ArchivesPath)))
+                if (Utilities.IsCompatibleMod(path) && !CompatibleModsList.Items.Contains(ModItemBinding.Create(path)) && !tmpList.Contains(ModItemBinding.Create(path).ModId.ToString()))
+                    try { CompatibleModsList.Items.Add(ModItemBinding.Create(path)); tmpList.Add(ModItemBinding.Create(path).ModId.ToString()); } catch { /* nothing*/ }
+            
             foreach (var mod in CompatibleModsList.Items)
             {
                 var ModId = (ModItemBinding)mod;
-                Utilities.CompatibleMods.Add(ModId.ModIdLocation);
+                if(!Utilities.CompatibleMods.Contains(ModId.ModIdLocation))
+                    Utilities.CompatibleMods.Add(ModId.ModIdLocation);
             }
             Utilities.SaveDataToFile();
+            try
+            {
+                CompatibleModsList.SelectedItem = CompatibleModsList.Items[0];
+            }
+            catch
+            {  }
         }
 
         private void OpenCompatibleMod(object sender, MouseButtonEventArgs args)
@@ -278,13 +268,15 @@ namespace SmModManager.Graphics
 
         private void UpdateCompatibleSelection(object sender, SelectionChangedEventArgs args)
         {
+            UpdateUrl();
             var binding = (ModItemBinding)CompatibleModsList.SelectedItem;
             if (binding != null)
             {
                 if (binding.Url != null)
                 {
-                    CompatibleModsListWebPage.Address = binding.Url;
                     CompatibleModsListManualView.Visibility = Visibility.Hidden;
+                    Compatible_CurrentUrl.Text = binding.Url;
+                    CompatibleModsListWebPage.Address =  binding.Url;
                 }
                 else
                 {
@@ -295,9 +287,13 @@ namespace SmModManager.Graphics
             }
         }
 
+        public void UpdateTabSelection(object sender, SelectionChangedEventArgs e)
+        {
+            if (App.WindowManager != null) { App.WindowManager.RunVoidList(null, null); }
+        }
+
         public void UpdatePreviewImages()
         {
-            UpdateUrl();
             var binding = (ModItemBinding)AvailableModsList.SelectedItem;
             if (previousWidth != App.WindowManager.ActualWidth || previousHeight != App.WindowManager.ActualHeight)
             {
@@ -445,6 +441,11 @@ namespace SmModManager.Graphics
                 if (Utilities.IsMod(path))
                     try { AvailableModsList.Items.Add(ModItemBinding.Create(path)); }
                     catch { }
+            try
+            {
+                AvailableModsList.SelectedItem = AvailableModsList.Items[0];
+            }
+            catch { }
         }
 
         private void OpenAvailableMod(object sender, MouseButtonEventArgs args)
@@ -458,13 +459,15 @@ namespace SmModManager.Graphics
 
         private void UpdateAvailableModSelection(object sender, SelectionChangedEventArgs args)
         {
+            UpdateUrl();
             var binding = (ModItemBinding)AvailableModsList.SelectedItem;
             if (binding != null)
             {
                 if (binding.Url != null)
                 {
-                    AvailableModsListWebPage.Address = binding.Url;
                     AvailableModsListManualView.Visibility = Visibility.Hidden;
+                    Available_CurrentUrl.Text = binding.Url;
+                    AvailableModsListWebPage.Address = binding.Url;
                 }
                 else
                 {
@@ -478,13 +481,15 @@ namespace SmModManager.Graphics
 
         public void UpdateCurrentModSelection(object sender, SelectionChangedEventArgs args)
         {
+            UpdateUrl();
             var binding = (ModItemBinding)CurrentModsList.SelectedItem;
             if (binding != null)
             {
                 if (binding.Url != null)
                 {
-                    CurrentModsListWebPage.Address = binding.Url;
                     CurrentModsListManualView.Visibility = Visibility.Hidden;
+                    Current_CurrentUrl.Text = binding.Url;
+                    CurrentModsListWebPage.Address = binding.Url;
                 }
                 else
                 {
@@ -506,6 +511,7 @@ namespace SmModManager.Graphics
         {
             Dispatcher.Invoke(() =>
             {
+                IsInvokingRemove = true;
                 args.Source = "DontShowMessage";
                 RemoveAllCurrentMods(sender, args);
             });
@@ -513,6 +519,7 @@ namespace SmModManager.Graphics
 
         public void RemoveAllCurrentMods(object sender, RoutedEventArgs args)
         {
+            //...
             try
             {
                 if ((string)args.Source == "DontShowMessage")
@@ -532,6 +539,7 @@ namespace SmModManager.Graphics
             CurrentModsListWebPage.Visibility = Visibility.Hidden;
             DeleteCurrentButton.Visibility = Visibility.Hidden;
             App.PageJoinFriend.UpdateCurrentMods(false);
+            IsInvokingRemove = false;
         }
 
         public void OpenCurrentMod(object sender, MouseButtonEventArgs args)
@@ -566,9 +574,17 @@ namespace SmModManager.Graphics
                 RefreshCurrentModsList();
             });
         }
+        public void InvokeRefreshAll()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                RefreshAll();
+            });
+        }
 
         public void RefreshCurrentModsList()
         {
+            Dispatcher.Invoke(()=> { 
             CurrentModsList.Items.Clear();
             if (Directory.Exists(Constants.ModInstallBackupsPath))
                 foreach (var file in Directory.GetFiles(Constants.ModInstallBackupsPath))
@@ -579,7 +595,6 @@ namespace SmModManager.Graphics
                     {
                         ModId = ModId.Substring(2);
                         ModId = ModId.Replace(".smmm", "");
-                        Debug.WriteLine(ModId);
                         if (Directory.Exists(Path.Combine(Constants.ArchivesPath, ModId)))
                         {
                             if (Utilities.IsMod(Path.Combine(Constants.ArchivesPath, ModId)))
@@ -602,6 +617,12 @@ namespace SmModManager.Graphics
                 CurrentModsListWebPage.Visibility = Visibility.Visible;
                 DeleteCurrentButton.Visibility = Visibility.Visible;
             }
+            });
+            try
+            {
+                CurrentModsList.SelectedItem = CurrentModsList.Items[0];
+            }
+            catch { }
         }
 
         private void UnarchiveMod(object sender, RoutedEventArgs args)
@@ -632,7 +653,10 @@ namespace SmModManager.Graphics
             {
                 if (binding.Path == "" || binding.Path == null)
                     throw new Exception("Path is empty");
-                Directory.Delete(Path.Combine(Constants.ArchivesPath, binding.ModId.ToString()), true);
+                if (Directory.Exists(Path.Combine(Constants.ArchivesPath, binding.ModId.ToString())))
+                    Directory.Delete(Path.Combine(Constants.ArchivesPath, binding.ModId.ToString()), true);
+                else
+                    throw new Exception("Cannot find path to Arhived Mod");
             }
             catch { WnManager.GetWnManager.SendNotification("Possible error while deleting archived mod\nMaybe it is being used by another process?"); }
             RefreshArchivedMods(null, null);
@@ -641,6 +665,11 @@ namespace SmModManager.Graphics
         public void RefreshArchivedMods(object sender, RoutedEventArgs args)
         {
             ArchivedModsList.Items.Clear();
+            if (!Directory.Exists(Constants.ArchivesPath))
+            {
+                Directory.CreateDirectory(Constants.ArchivesPath);
+                return;
+            }
             foreach (var path in Directory.GetDirectories(Constants.ArchivesPath))
                 if (Utilities.IsMod(path))
                     try
@@ -653,20 +682,28 @@ namespace SmModManager.Graphics
             foreach (var mod in ArchivedModsList.Items)
             {
                 var ModId = (ModItemBinding)mod;
-                Utilities.ArchivedMods.Add(ModId.ModIdLocation);
+                if (!Utilities.ArchivedMods.Contains(ModId.ModIdLocation))
+                    Utilities.ArchivedMods.Add(ModId.ModIdLocation);
             }
             Utilities.SaveDataToFile();
+            try
+            {
+                ArchivedModsList.SelectedItem = ArchivedModsList.Items[0];
+            }
+            catch { }
         }
 
         private void UpdateArchivedSelection(object sender, SelectionChangedEventArgs args)
         {
+            UpdateUrl();
             var binding = (ModItemBinding)ArchivedModsList.SelectedItem;
             if (binding != null)
             {
                 if (binding.Url != null)
                 {
-                    ArchivedModsListWebPage.Address = binding.Url;
                     ArchivedModsListManualView.Visibility = Visibility.Hidden;
+                    Archived_CurrentUrl.Text = binding.Url;
+                    ArchivedModsListWebPage.Address = binding.Url;
                 }
                 else
                 {
@@ -712,34 +749,38 @@ namespace SmModManager.Graphics
 
         public void GoHome(object sender, RoutedEventArgs args)
         {
-            if (CompatibleModsTab.IsSelected)
+            try
             {
-                var binding = (ModItemBinding)CompatibleModsList.SelectedItem;
-                CompatibleModsListWebPage.Address = binding.Url;
+                if (CompatibleModsTab.IsSelected)
+                {
+                    var binding = (ModItemBinding)CompatibleModsList.SelectedItem;
+                    CompatibleModsListWebPage.Load(binding.Url);
+                }
+                if (AvailableModsTab.IsSelected)
+                {
+                    var binding = (ModItemBinding)AvailableModsList.SelectedItem;
+                    AvailableModsListWebPage.Load(binding.Url);
+                }
+                if (ArchivedModsTab.IsSelected)
+                {
+                    var binding = (ModItemBinding)ArchivedModsList.SelectedItem;
+                    ArchivedModsListWebPage.Load(binding.Url);
+                }
+                if (CurrentModsTab.IsSelected)
+                {
+                    var binding = (ModItemBinding)CurrentModsList.SelectedItem;
+                    CurrentModsListWebPage.Load(binding.Url);
+                }
             }
-            if (AvailableModsTab.IsSelected)
-            {
-                var binding = (ModItemBinding)AvailableModsList.SelectedItem;
-                AvailableModsListWebPage.Address = binding.Url;
-            }
-            if (ArchivedModsTab.IsSelected)
-            {
-                var binding = (ModItemBinding)ArchivedModsList.SelectedItem;
-                ArchivedModsListWebPage.Address = binding.Url;
-            }
-            if (CurrentModsTab.IsSelected)
-            {
-                var binding = (ModItemBinding)CurrentModsList.SelectedItem;
-                CurrentModsListWebPage.Address = binding.Url;
-            }
+            catch { }
         }
 
         public void RemoveText(object sender, EventArgs e)
         {
             var myTxtbx = (TextBox)sender;
-            if (myTxtbx.Text == "Search Filter")
+            if (myTxtbx.Text == (string)System.Windows.Application.Current.FindResource("searchfilter"))
             {
-                myTxtbx.Text = "";
+                myTxtbx.Text = (string)System.Windows.Application.Current.FindResource("searchfilter");
                 myTxtbx.Foreground = Brushes.Black;
             }
         }
@@ -749,40 +790,36 @@ namespace SmModManager.Graphics
             var myTxtbx = (TextBox)sender;
             if (string.IsNullOrWhiteSpace(myTxtbx.Text))
             {
-                myTxtbx.Text = "Search Filter";
+                myTxtbx.Text = "";
                 myTxtbx.Foreground = Brushes.Gray;
             }
         }
 
         public void UpdateUrl()
         {
-            if (CompatibleModsTab.IsSelected && (Compatible_CurrentUrl.Text != CompatibleModsListWebPage.Address || CompatibleModsList.Items.Count <= 0))
+            if (CompatibleModsTab.IsSelected)
             {
-                Compatible_CurrentUrl.Text = CompatibleModsListWebPage.Address;
                 if (CompatibleModsList.Items.Count <= 0)
                     CompatibleModsListScroll.Visibility = Visibility.Hidden;
                 else
                     CompatibleModsListScroll.Visibility = Visibility.Visible;
             }
-            if (AvailableModsTab.IsSelected && (Available_CurrentUrl.Text != AvailableModsListWebPage.Address || AvailableModsList.Items.Count <= 0))
+            if (AvailableModsTab.IsSelected)
             {
-                Available_CurrentUrl.Text = AvailableModsListWebPage.Address;
                 if (AvailableModsList.Items.Count <= 0)
                     AvailableModsListScroll.Visibility = Visibility.Hidden;
                 else
                     AvailableModsListScroll.Visibility = Visibility.Visible;
             }
-            if (ArchivedModsTab.IsSelected && (Archived_CurrentUrl.Text != ArchivedModsListWebPage.Address || ArchivedModsList.Items.Count <= 0))
+            if (ArchivedModsTab.IsSelected)
             {
-                Archived_CurrentUrl.Text = ArchivedModsListWebPage.Address;
                 if (ArchivedModsList.Items.Count <= 0)
                     ArchivedModsListScroll.Visibility = Visibility.Hidden;
                 else
                     ArchivedModsListScroll.Visibility = Visibility.Visible;
             }
-            if (CurrentModsTab.IsSelected && (Current_CurrentUrl.Text != CurrentModsListWebPage.Address || CurrentModsList.Items.Count <= 0))
+            if (CurrentModsTab.IsSelected)
             {
-                Current_CurrentUrl.Text = CurrentModsListWebPage.Address;
                 if (CurrentModsList.Items.Count <= 0)
                     CurrentModsListScroll.Visibility = Visibility.Hidden;
                 else
@@ -795,16 +832,20 @@ namespace SmModManager.Graphics
             var TextBoxItem = (TextBox)sender;
             if (CompatibleModsTab != null)
                 if (CompatibleModsTab.IsSelected)
-                    Sort(CompatibleModsList, TextBoxItem.Text);
+                    if (TextBoxItem.Text.Length > 0)
+                        Sort(CompatibleModsList, TextBoxItem.Text);
             if (AvailableModsTab != null)
                 if (AvailableModsTab.IsSelected)
-                    Sort(AvailableModsList, TextBoxItem.Text);
+                    if (TextBoxItem.Text.Length > 0)
+                        Sort(AvailableModsList, TextBoxItem.Text);
             if (ArchivedModsTab != null)
                 if (ArchivedModsTab.IsSelected)
-                    Sort(ArchivedModsList, TextBoxItem.Text);
+                    if (TextBoxItem.Text.Length > 0)
+                        Sort(ArchivedModsList, TextBoxItem.Text);
             if (CurrentModsTab != null)
                 if (CurrentModsTab.IsSelected)
-                    Sort(CurrentModsList, TextBoxItem.Text);
+                    if(TextBoxItem.Text.Length > 0)
+                        Sort(CurrentModsList, TextBoxItem.Text);
         }
 
         public void Sort(ListBox list, string values)
@@ -846,13 +887,13 @@ namespace SmModManager.Graphics
                 list.Items.Clear();
                 foreach (var item in newList)
                     list.Items.Add(item);
+                list.SelectedItem = list.Items[0];
             }
             else
             {
                 RefreshAll();
             }
         }
-
     }
 
 }

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>SmModManager.App</StartupObject>
     <Authors>dentolos19, TheGuy920</Authors>
@@ -12,8 +12,8 @@
     <Product>Scrap Mechanic Mod Manager</Product>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Properties\AssemblyKey.snk</AssemblyOriginatorKeyFile>
-    <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
-    <Version>7.97</Version>
+    <ApplicationIcon>a1f1b067d6595d3ff0a0d0acc917cd7157b2a5dc.ico</ApplicationIcon>
+    <Version>8.08</Version>
     <Platforms>x64</Platforms>
     <DelaySign>false</DelaySign>
     <IsPackable>false</IsPackable>
@@ -33,7 +33,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Assets\complete.png" />
+    <None Remove="Resources\Assets\empty.png" />
+    <None Remove="Resources\Assets\failed.png" />
     <None Remove="Resources\Assets\Icon.png" />
+    <None Remove="Resources\Assets\loading.png" />
     <None Remove="Resources\Documents\Changelog.txt" />
     <None Remove="Resources\Documents\Credits.txt" />
   </ItemGroup>
@@ -59,7 +63,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\Assets\complete.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Assets\empty.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Assets\failed.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Resources\Assets\Icon.png" />
+    <Content Include="Resources\Assets\loading.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -87,16 +103,13 @@
     <None Update="Resources\Api\SteamCMD\steamcmd.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Assets\empty.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Assets\SiteManager.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Resources\Assets\PastebinGet.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Assets\PastebinShare.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Assets\SiteManager.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

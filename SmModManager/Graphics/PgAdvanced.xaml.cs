@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using CefSharp;
 using Ookii.Dialogs.Wpf;
 using SmModManager.Core;
 using SmModManager.Core.Enums;
+using SmModManager.Core.Handlers;
 
 namespace SmModManager.Graphics
 {
@@ -56,6 +59,21 @@ namespace SmModManager.Graphics
             {
                 _ => 0
             };
+            Tutorial.MenuHandler = new MenuHandler();
+            switch (App.Settings.StartupMode)
+            {
+                case WindowState.Minimized:
+                    StartUpMode.SelectedIndex = 0;
+                    break;
+                case WindowState.Normal:
+                    StartUpMode.SelectedIndex = 1;
+                    break;
+                case WindowState.Maximized:
+                    StartUpMode.SelectedIndex = 2;
+                    break;
+            }
+            XWidth.Text = App.Settings.StartUpX.ToString();
+            YHeight.Text = App.Settings.StartUpY.ToString();
         }
 
         private void ResetSettings(object sender, RoutedEventArgs args)
@@ -205,7 +223,66 @@ namespace SmModManager.Graphics
                 item.Foreground = Brushes.White;
             }
         }
+        public void MoveForward(object sender, RoutedEventArgs args)
+        {
+            if (Tutorial.CanGoForward)
+                Tutorial.Forward();
+        }
 
+        public void MoveBackward(object sender, RoutedEventArgs args)
+        {
+            if (Tutorial.CanGoBack)
+                Tutorial.Back();
+        }
+
+        public void GoHome(object sender, RoutedEventArgs args)
+        {
+            Tutorial.Address = "https://smmodmanager.com/tutorial/";
+        }
+
+        public void UpdateUrl(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (CurrentUrl.Text != Tutorial.Address)
+                CurrentUrl.Text = Tutorial.Address;
+        }
+
+        private void StartUp_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var number = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            if (XWidth.Text.Length > 0)
+                if (!number.Contains(XWidth.Text[^1]) || XWidth.Text.Length > 4)
+                {
+                    XWidth.Text = XWidth.Text[0..(XWidth.Text.Length - 1)];
+                    XWidth.CaretIndex = Math.Clamp(XWidth.Text.Length, 0, 4);
+                }
+                else
+                    App.Settings.StartUpX = int.Parse(XWidth.Text);
+            if (YHeight.Text.Length > 0)
+                if (!number.Contains(YHeight.Text[^1]) || YHeight.Text.Length > 4)
+                {
+                    YHeight.Text = YHeight.Text[0..(YHeight.Text.Length - 1)];
+                    YHeight.CaretIndex = Math.Clamp(YHeight.Text.Length, 0, 4);
+                }
+                else
+                    App.Settings.StartUpY = int.Parse(YHeight.Text);
+        }
+
+        private void StartUpMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (StartUpMode.SelectedIndex)
+            {
+                case 0:
+                    App.Settings.StartupMode = WindowState.Minimized;
+                    break;
+                case 1:
+                    App.Settings.StartupMode = WindowState.Normal;
+                    break;
+                case 2:
+                    App.Settings.StartupMode = WindowState.Maximized;
+                    break;
+            }
+            App.Settings.Save();
+        }
     }
 
 }

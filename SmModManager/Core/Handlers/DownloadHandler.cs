@@ -5,7 +5,9 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Windows.Threading;
 using CefSharp;
+using SmModManager.Graphics;
 
 namespace SmModManager.Core.Handlers
 {
@@ -17,10 +19,20 @@ namespace SmModManager.Core.Handlers
         {
             OnBeforeDownloadFired?.Invoke(this, downloadItem);
             Debug.WriteLine("Download Triggered: " + downloadItem);
+            if (App.Settings.NewFileName != null)
+            {
+                downloadItem.SuggestedFileName = App.Settings.NewFileName;
+            }
+            else
+                Dispatcher.CurrentDispatcher.Invoke(() =>
+                {
+                    App.PageStore.PgDownloading();
+                });
             if (!callback.IsDisposed)
                 using (callback)
                 {
                     downloadItem.FullPath = Path.Combine(Constants.CachePath, downloadItem.SuggestedFileName);
+                    Debug.WriteLine("Download Full Path: " + downloadItem.FullPath);
                     callback.Continue(downloadItem.FullPath, false);
                 }
         }
@@ -28,8 +40,17 @@ namespace SmModManager.Core.Handlers
         public void OnDownloadUpdated(IWebBrowser chromiumWebBrowser, IBrowser browser, DownloadItem downloadItem, IDownloadItemCallback callback)
         {
             OnDownloadUpdatedFired?.Invoke(this, downloadItem);
-            if (downloadItem.IsComplete)
+            if (downloadItem.IsComplete && App.Settings.NewFileName == null)
+            {
                 App.GetApp.NewModAdded(chromiumWebBrowser);
+            }
+            else if (downloadItem.IsComplete)
+            {
+                App.Settings.LatestDownloadComplete = true;
+                App.Settings.NewFileName = null;
+                App.Settings.Save();
+            }
+                
         }
 
         public event EventHandler<DownloadItem> OnBeforeDownloadFired;

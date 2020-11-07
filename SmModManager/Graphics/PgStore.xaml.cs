@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -31,6 +32,28 @@ namespace SmModManager.Graphics
             WorkShop.MenuHandler = new MenuHandler();
             SmModManager_1.MenuHandler = new MenuHandler();
             SmModManager_2.MenuHandler = new MenuHandler();
+            LoadingPage0.Visibility = Visibility.Collapsed;
+            LoadingPage1.Visibility = Visibility.Collapsed;
+            LoadingPage2.Visibility = Visibility.Collapsed;
+        }
+
+        public void PgDownloading()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                LoadingPage0.Visibility = Visibility.Visible;
+                LoadingPage1.Visibility = Visibility.Visible;
+                LoadingPage2.Visibility = Visibility.Visible;
+            });
+        }
+        public void PgDownloadComplete()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                LoadingPage0.Visibility = Visibility.Collapsed;
+                LoadingPage1.Visibility = Visibility.Collapsed;
+                LoadingPage2.Visibility = Visibility.Collapsed;
+            });
         }
 
         public void MoveForward(object sender, RoutedEventArgs args)
@@ -94,6 +117,7 @@ namespace SmModManager.Graphics
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (App.WindowManager != null) { App.WindowManager.RunVoidList(null, null); }
         }
 
     }

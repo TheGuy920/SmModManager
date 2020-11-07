@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading;
 using System.Windows;
@@ -23,7 +24,7 @@ namespace SmModManager.Core
         public static List<string> CurrentMods = new List<string>();
         public static List<string> ArchivedMods = new List<string>();
         public static List<string> CompatibleMods = new List<string>();
-        public static string AppVersion = "7.97";
+        public static string AppVersion = "8.08";
         public static List<string> PathList = new List<string>();
 
         public static void SaveDataToFile()
@@ -112,190 +113,212 @@ namespace SmModManager.Core
             return IsMod(path) && (Directory.Exists(Path.Combine(path, "Survival")) || Directory.Exists(Path.Combine(path, "Scrap Mechanic")));
         }
 
-        public static bool CreateBackUpFile(List<string> ModIdList, bool showMessage)
+        public static bool CreateBackUpFile(List<string> ModIdList, bool showMessage, string SourceFolder = "")
         {
-            var PathList = new List<string>();
-            var InjectFailed = false;
-            var NewFolderPath = App.Settings.GameDataPath;
-            if (!Directory.Exists(Constants.ModInstallBackupsPath))
-                Directory.CreateDirectory(Constants.ModInstallBackupsPath);
-            if (!Directory.Exists(Constants.ModInstallBackupsPath))
+            try
             {
-                InjectFailed = true;
-                MessageBox.Show("Fatal Error", "SmModManager", MessageBoxButton.OK);
-                return InjectFailed;
-            }
-            var HasClickedOverWrite = showMessage;
-            foreach (var tmpModId in ModIdList)
-            {
-                var ModId = tmpModId;
-                ModId = ModId.Replace(App.Settings.WorkshopPath, "");
-                ModId = ModId.Replace(Constants.ArchivesPath, "");
-                ModId = ModId.Replace(@"\", "");
-                var numbers = "0123456789";
-                var subStrStartIndex = numbers.IndexOf(ModId[0]);
-                var numberList = "";
-                for (var newIndex = 1; newIndex <= subStrStartIndex; newIndex++)
-                    numberList += ModId[newIndex].ToString();
-                subStrStartIndex = int.Parse(numberList) + int.Parse(ModId[0].ToString()) + 1;
-                ModId = ModId.Substring(subStrStartIndex);
-                if (Directory.Exists(Path.Combine(Constants.ArchivesPath, ModId)))
+                var PathList = new List<string>();
+                var InjectFailed = false;
+                var NewFolderPath = App.Settings.GameDataPath;
+                if (!Directory.Exists(Constants.ModInstallBackupsPath))
+                    Directory.CreateDirectory(Constants.ModInstallBackupsPath);
+                if (!Directory.Exists(Constants.ModInstallBackupsPath))
                 {
-                    PathList = GetSurvivalFolder(Path.Combine(Constants.ArchivesPath, ModId), true);
-                    File.AppendAllText(Path.Combine(Constants.ModInstallBackupsPath, "Log.txt"), Path.Combine(Constants.ArchivesPath, ModId));
+                    InjectFailed = true;
+                    MessageBox.Show("Fatal Error", "SmModManager", MessageBoxButton.OK);
+                    return InjectFailed;
                 }
-                else if (Directory.Exists(Path.Combine(App.Settings.WorkshopPath, ModId)))
+                var HasClickedOverWrite = !showMessage;
+                foreach (var tmpModId in ModIdList)
                 {
-                    File.AppendAllText(Path.Combine(Constants.ModInstallBackupsPath, "Log.txt"), Path.Combine(App.Settings.WorkshopPath, ModId));
-                    PathList = GetSurvivalFolder(Path.Combine(App.Settings.WorkshopPath, ModId), true);
-                }
-                foreach (var tempString in PathList)
-                {
-                    bool archivebool;
-                    if (tempString.Contains("Archives"))
-                        archivebool = true;
-                    else
-                        archivebool = false;
-                    if (tempString.Contains("Survival") || tempString.Contains("Scrap Mechanic"))
+                    var ModId = tmpModId;
+                    ModId = ModId.Replace(App.Settings.WorkshopPath, "");
+                    ModId = ModId.Replace(Constants.ArchivesPath, "");
+                    if (SourceFolder != "")
                     {
-                        var temp2 = tempString.Replace(Path.Combine(App.Settings.WorkshopPath, ModId), "");
-                        temp2 = temp2.Replace(Path.Combine(Constants.ArchivesPath, ModId), "");
-                        var DirectoryList = temp2.Split('\\');
-                        var partFull = "";
-                        foreach (var Directory in DirectoryList)
-                            if (archivebool)
+                        ModId = ModId.Replace(SourceFolder, "").Replace("\\", "");
+                        PathList = GetSurvivalFolder(Path.Combine(SourceFolder, ModId), true);
+                        File.AppendAllText(Path.Combine(Constants.ModInstallBackupsPath, "Log.txt"), Path.Combine(SourceFolder, ModId));
+                        HasClickedOverWrite = true;
+                    }
+                    else
+                    {
+                        ModId = ModId.Replace(@"\", "");
+                        var numbers = "0123456789";
+                        var subStrStartIndex = numbers.IndexOf(ModId[0]);
+                        var numberList = "";
+                        for (var newIndex = 1; newIndex <= subStrStartIndex; newIndex++)
+                            numberList += ModId[newIndex].ToString();
+                        subStrStartIndex = int.Parse(numberList) + int.Parse(ModId[0].ToString()) + 1;
+                        ModId = ModId.Substring(subStrStartIndex);
+                        Debug.WriteLine(ModId);
+                        if (Directory.Exists(Path.Combine(Constants.ArchivesPath, ModId)))
+                        {
+                            File.AppendAllText(Path.Combine(Constants.ModInstallBackupsPath, "Log.txt"), Path.Combine(Constants.ArchivesPath, ModId));
+                            PathList = GetSurvivalFolder(Path.Combine(Constants.ArchivesPath, ModId), true);
+                        }
+                        else if (Directory.Exists(Path.Combine(App.Settings.WorkshopPath, ModId)))
+                        {
+                            File.AppendAllText(Path.Combine(Constants.ModInstallBackupsPath, "Log.txt"), Path.Combine(App.Settings.WorkshopPath, ModId));
+                            PathList = GetSurvivalFolder(Path.Combine(App.Settings.WorkshopPath, ModId), true);
+                        }
+                    }
+                    foreach (var tempString in PathList)
+                    {
+                        bool archivebool;
+                        if (tempString.Contains("Archives"))
+                            archivebool = true;
+                        else
+                            archivebool = false;
+                        if (tempString.Contains("Survival") || tempString.Contains("Scrap Mechanic"))
+                        {
+                            var temp2 = tempString.Replace(Path.Combine(App.Settings.WorkshopPath, ModId), "");
+                            temp2 = temp2.Replace(Path.Combine(Constants.ArchivesPath, ModId), "");
+                            temp2 = temp2.Replace(Path.Combine(SourceFolder, ModId), "");
+                            var DirectoryList = temp2.Split('\\');
+                            var partFull = "";
+                            foreach (var Directory in DirectoryList)
                             {
-                                if (partFull.Length > 0)
-                                    partFull = partFull + @"\" + Directory;
+                                if (archivebool)
+                                {
+                                    if (partFull.Length > 0)
+                                        partFull = partFull + @"\" + Directory;
+                                    else
+                                        partFull = Directory;
+                                    partFull = partFull.Replace(Constants.ArchivesPath, "");
+                                    if (partFull.Contains("Scrap Mechanic"))
+                                        partFull = partFull.Substring(partFull.IndexOf("Scrap Mechanic"));
+                                    else if (partFull.Contains("Survival"))
+                                        partFull = partFull.Substring(partFull.IndexOf("Survival"));
+                                    if (Directory != DirectoryList[0])
+                                    {
+                                        if (!System.IO.Directory.Exists(Path.Combine(Constants.ModInstallBackupsPath, partFull)) && !partFull.Contains("."))
+                                        {
+                                            partFull = partFull.Replace(@"Scrap Mechanic\", @"");
+                                            if (System.IO.Directory.Exists(NewFolderPath + partFull))
+                                                System.IO.Directory.CreateDirectory(Path.Combine(Constants.ModInstallBackupsPath, partFull));
+                                        }
+                                        else
+                                        {
+                                            if (partFull.Contains("."))
+                                            {
+                                                var substr = partFull.Replace(@"Scrap Mechanic\", "");
+                                                var file = substr.Split('\\')[^1];
+                                                var Overwrite = false;
+                                                if (File.Exists(Path.Combine(Constants.ModInstallBackupsPath, substr)))
+                                                {
+                                                    var IsInTestMode = false;
+                                                    if (partFull.Contains(".json") && IsInTestMode)
+                                                    {
+                                                    }
+                                                    else
+                                                    {
+                                                        if (HasClickedOverWrite == false)
+                                                        {
+                                                            if (MessageBox.Show("WARNING: These mods conflict with each other, would you like to install them anyway?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                                                            {
+                                                                InjectFailed = true;
+                                                                File.AppendAllText(Path.Combine(Constants.ModInstallBackupsPath, "Log.txt"), "Warning: These Mods Conflict With Each Other, Injection Failed");
+                                                                RemoveMods(false);
+                                                                MessageBox.Show("Warning: These Mods Conflict With Each Other, Injection Failed", "SmModManager", MessageBoxButton.OK);
+                                                                return InjectFailed;
+                                                            }
+                                                            HasClickedOverWrite = true;
+                                                            Overwrite = true;
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    Overwrite = true;
+                                                }
+                                                if (Overwrite || HasClickedOverWrite)
+                                                {
+                                                    if (!System.IO.Directory.Exists(Path.Combine(Constants.ModInstallBackupsPath, substr.Replace(file, ""))))
+                                                        System.IO.Directory.CreateDirectory(Path.Combine(Constants.ModInstallBackupsPath, substr.Replace(file, "")));
+                                                    try
+                                                    {
+                                                        File.Copy(Path.Combine(NewFolderPath, substr), Path.Combine(Constants.ModInstallBackupsPath, substr), false);
+                                                    }
+                                                    catch { }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                                 else
-                                    partFull = Directory;
-                                partFull = partFull.Replace(Constants.ArchivesPath, "");
-                                if (partFull.Contains("Scrap Mechanic"))
-                                    partFull = partFull.Substring(partFull.IndexOf("Scrap Mechanic"));
-                                else if (partFull.Contains("Survival"))
-                                    partFull = partFull.Substring(partFull.IndexOf("Survival"));
-                                if (Directory != DirectoryList[0])
                                 {
-                                    if (!System.IO.Directory.Exists(Path.Combine(Constants.ModInstallBackupsPath, partFull)) && !partFull.Contains("."))
+                                    if (partFull.Length > 0)
+                                        partFull = partFull + @"\" + Directory;
+                                    else if (Directory != DirectoryList[0])
+                                        partFull = Directory;
+                                    if (Directory != DirectoryList[0])
                                     {
-                                        partFull = partFull.Replace(@"Scrap Mechanic\", @"");
-                                        if (System.IO.Directory.Exists(NewFolderPath + partFull))
-                                            System.IO.Directory.CreateDirectory(Path.Combine(Constants.ModInstallBackupsPath, partFull));
-                                    }
-                                    else
-                                    {
-                                        if (partFull.Contains("."))
+                                        if (!System.IO.Directory.Exists(Path.Combine(Constants.ModInstallBackupsPath, partFull)) && !partFull.Contains("."))
                                         {
-                                            var substr = partFull.Replace(@"Scrap Mechanic\", "");
-                                            var file = substr.Split('\\')[^1];
-                                            var Overwrite = false;
-                                            if (File.Exists(Path.Combine(Constants.ModInstallBackupsPath, substr)))
+                                            partFull = partFull.Replace(@"Scrap Mechanic\", @"");
+                                            if (System.IO.Directory.Exists(NewFolderPath + partFull))
+                                                System.IO.Directory.CreateDirectory(Path.Combine(Constants.ModInstallBackupsPath, partFull));
+                                        }
+                                        else
+                                        {
+                                            if (partFull.Contains("."))
                                             {
-                                                var IsInTestMode = false;
-                                                if (partFull.Contains(".json") && IsInTestMode)
+                                                var substr = partFull.Replace(@"Scrap Mechanic\", "");
+                                                var file = substr.Split('\\')[^1];
+                                                var Overwrite = false;
+                                                if (File.Exists(Path.Combine(Constants.ModInstallBackupsPath, substr)))
                                                 {
+                                                    var IsInTestMode = false;
+                                                    if (partFull.Contains(".json") && IsInTestMode)
+                                                    {
+                                                    }
+                                                    else
+                                                    {
+                                                        if (HasClickedOverWrite == false)
+                                                        {
+                                                            if (MessageBox.Show("WARNING: These mods conflict with each other, would you like to install them anyway?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                                                            {
+                                                                InjectFailed = true;
+                                                                File.AppendAllText(Path.Combine(Constants.ModInstallBackupsPath, "Log.txt"), "Warning: These Mods Conflict With Each Other, Injection Failed");
+                                                                RemoveMods(false);
+                                                                MessageBox.Show("Warning: These Mods Conflict With Each Other, Injection Failed", "SmModManager", MessageBoxButton.OK);
+                                                                return InjectFailed;
+                                                            }
+                                                            HasClickedOverWrite = true;
+                                                            Overwrite = true;
+                                                        }
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                    if (HasClickedOverWrite == false)
-                                                    {
-                                                        if (MessageBox.Show("WARNING: These mods conflict with each other, would you like to install them anyway?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
-                                                        {
-                                                            InjectFailed = true;
-                                                            File.AppendAllText(Path.Combine(Constants.ModInstallBackupsPath, "Log.txt"), "Warning: These Mods Conflict With Each Other, Injection Failed");
-                                                            RemoveMods(false);
-                                                            MessageBox.Show("Warning: These Mods Conflict With Each Other, Injection Failed", "SmModManager", MessageBoxButton.OK);
-                                                            return InjectFailed;
-                                                        }
-                                                        HasClickedOverWrite = true;
-                                                        Overwrite = true;
-                                                    }
+                                                    Overwrite = true;
                                                 }
-                                            }
-                                            else
-                                            {
-                                                Overwrite = true;
-                                            }
-                                            if (Overwrite || HasClickedOverWrite)
-                                            {
-                                                if (!System.IO.Directory.Exists(Path.Combine(Constants.ModInstallBackupsPath, substr.Replace(file, ""))))
-                                                    System.IO.Directory.CreateDirectory(Path.Combine(Constants.ModInstallBackupsPath, substr.Replace(file, "")));
-                                                try
+                                                if (Overwrite || HasClickedOverWrite)
                                                 {
-                                                    File.Copy(Path.Combine(NewFolderPath, substr), Path.Combine(Constants.ModInstallBackupsPath, substr), false);
+                                                    if (!System.IO.Directory.Exists(Path.Combine(Constants.ModInstallBackupsPath, substr.Replace(file, ""))))
+                                                        System.IO.Directory.CreateDirectory(Path.Combine(Constants.ModInstallBackupsPath, substr.Replace(file, "")));
+                                                    try
+                                                    {
+                                                        File.Copy(Path.Combine(NewFolderPath, substr), Path.Combine(Constants.ModInstallBackupsPath, substr), false);
+                                                    }
+                                                    catch { }
                                                 }
-                                                catch { }
                                             }
                                         }
                                     }
                                 }
                             }
-                            else
-                            {
-                                if (partFull.Length > 0)
-                                    partFull = partFull + @"\" + Directory;
-                                else if (Directory != DirectoryList[0])
-                                    partFull = Directory;
-                                if (Directory != DirectoryList[0])
-                                {
-                                    if (!System.IO.Directory.Exists(Path.Combine(Constants.ModInstallBackupsPath, partFull)) && !partFull.Contains("."))
-                                    {
-                                        partFull = partFull.Replace(@"Scrap Mechanic\", @"");
-                                        if (System.IO.Directory.Exists(NewFolderPath + partFull))
-                                            System.IO.Directory.CreateDirectory(Path.Combine(Constants.ModInstallBackupsPath, partFull));
-                                    }
-                                    else
-                                    {
-                                        if (partFull.Contains("."))
-                                        {
-                                            var substr = partFull.Replace(@"Scrap Mechanic\", "");
-                                            var file = substr.Split('\\')[^1];
-                                            var Overwrite = false;
-                                            if (File.Exists(Path.Combine(Constants.ModInstallBackupsPath, substr)))
-                                            {
-                                                var IsInTestMode = false;
-                                                if (partFull.Contains(".json") && IsInTestMode)
-                                                {
-                                                }
-                                                else
-                                                {
-                                                    if (HasClickedOverWrite == false)
-                                                    {
-                                                        if (MessageBox.Show("WARNING: These mods conflict with each other, would you like to install them anyway?", "SmModManager", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
-                                                        {
-                                                            InjectFailed = true;
-                                                            File.AppendAllText(Path.Combine(Constants.ModInstallBackupsPath, "Log.txt"), "Warning: These Mods Conflict With Each Other, Injection Failed");
-                                                            RemoveMods(false);
-                                                            MessageBox.Show("Warning: These Mods Conflict With Each Other, Injection Failed", "SmModManager", MessageBoxButton.OK);
-                                                            return InjectFailed;
-                                                        }
-                                                        HasClickedOverWrite = true;
-                                                        Overwrite = true;
-                                                    }
-                                                }
-                                            }
-                                            else
-                                            {
-                                                Overwrite = true;
-                                            }
-                                            if (Overwrite || HasClickedOverWrite)
-                                            {
-                                                if (!System.IO.Directory.Exists(Path.Combine(Constants.ModInstallBackupsPath, substr.Replace(file, ""))))
-                                                    System.IO.Directory.CreateDirectory(Path.Combine(Constants.ModInstallBackupsPath, substr.Replace(file, "")));
-                                                try
-                                                {
-                                                    File.Copy(Path.Combine(NewFolderPath, substr), Path.Combine(Constants.ModInstallBackupsPath, substr), false);
-                                                }
-                                                catch { }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                        }
                     }
                 }
+                return InjectFailed;
+            } 
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                return true;
             }
-            return InjectFailed;
         }
 
         public static List<string> GetSubFilesOnly(string MasterDir, string ScrapFolder, string sourceDirName, List<string> FilePaths)
@@ -330,22 +353,25 @@ namespace SmModManager.Core
         {
             if (Directory.Exists(Constants.ModInstallBackupsPath))
                 foreach (var file in Directory.GetFiles(Constants.ModInstallBackupsPath))
-                foreach (var line in File.ReadAllLines(file))
                 {
-                    if (File.Exists(line))
-                        File.Delete(line);
-                    var topDir = "";
-                    foreach (var Directory in line.Split(@"\"))
-                    {
-                        topDir = Path.Combine(topDir, Directory);
-                        try
+                    if (file.EndsWith(".smmm"))
+                        foreach (var line in File.ReadAllLines(file))
                         {
-                            if (!topDir.Contains(".") && System.IO.Directory.Exists(topDir))
-                                if (System.IO.Directory.GetFiles(topDir).Length == 0 && System.IO.Directory.GetDirectories(topDir).Length == 0)
-                                    System.IO.Directory.Delete(topDir);
+                            if (File.Exists(line))
+                                File.Delete(line);
+                            var topDir = "";
+                            foreach (var Directory in line.Split(@"\"))
+                            {
+                                topDir = Path.Combine(topDir, Directory);
+                                try
+                                {
+                                    if (!topDir.Contains(".") && System.IO.Directory.Exists(topDir))
+                                        if (System.IO.Directory.GetFiles(topDir).Length == 0 && System.IO.Directory.GetDirectories(topDir).Length == 0)
+                                            System.IO.Directory.Delete(topDir);
+                                }
+                                catch (Exception e) { Debug.WriteLine(e); }
+                            }
                         }
-                        catch { }
-                    }
                 }
             foreach (var item in CurrentMods)
             {
@@ -354,7 +380,14 @@ namespace SmModManager.Core
                 var numberList = "";
                 for (var newIndex = 1; newIndex <= subStrStartIndex; newIndex++)
                     numberList += item[newIndex].ToString();
-                subStrStartIndex = int.Parse(numberList) + int.Parse(item[0].ToString()) + 1;
+                try
+                {
+                    subStrStartIndex = int.Parse(numberList) + int.Parse(item[0].ToString()) + 1;
+                }
+                catch
+                {
+                    subStrStartIndex = item.IndexOf("TEMP\\") + 5;
+                }
                 var ModLocation = "10" + item.Substring(subStrStartIndex);
                 if (Directory.Exists(Constants.ModInstallBackupsPath) && File.Exists(Path.Combine(Constants.ModInstallBackupsPath, ModLocation) + ".smmm"))
                     File.Delete(Path.Combine(Constants.ModInstallBackupsPath, ModLocation) + ".smmm");
@@ -363,7 +396,7 @@ namespace SmModManager.Core
             if (ShowMessage)
             {
                 var message = "";
-                if (App.UserSteamId != null)
+                if (App.UserSteamId == null)
                     message = "\nPlease Sign in to enable the multiplayer feature";
                 WnManager.GetWnManager.SendNotification("Sucessfully Removed All Mods" + message);
             }
@@ -588,7 +621,21 @@ namespace SmModManager.Core
             var random = new Random();
             return new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", length).Select(index => index[random.Next(index.Length)]).ToArray());
         }
+        public static void SetFolderPermission(string folderPath)
+        {
+            var directoryInfo = new DirectoryInfo(folderPath);
+            var directorySecurity = directoryInfo.GetAccessControl();
+            var currentUserIdentity = WindowsIdentity.GetCurrent();
+            var fileSystemRule = new FileSystemAccessRule(currentUserIdentity.Name,
+                                                          FileSystemRights.FullControl,
+                                                          InheritanceFlags.ObjectInherit |
+                                                          InheritanceFlags.ContainerInherit,
+                                                          PropagationFlags.None,
+                                                          AccessControlType.Allow);
 
+            directorySecurity.AddAccessRule(fileSystemRule);
+            directoryInfo.SetAccessControl(directorySecurity);
+        }
     }
 
 }
