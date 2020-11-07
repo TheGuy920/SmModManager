@@ -5,13 +5,6 @@
         xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         Title="Scrap Mechanic Mod Manager" WindowStartupLocation="Manual" ResizeMode="CanResizeWithGrip" Closing="AppClosing" SizeChanged="RunVoidList">
     <Window.Resources>
-        <Storyboard x:Key="MessagePopup" RepeatBehavior="1x" AutoReverse="True" Completed="SetInVisible">
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="NotificationBox" Storyboard.TargetProperty="Margin" BeginTime="00:00:00">
-                <SplineThicknessKeyFrame KeyTime="00:00:00" Value="0,0,-200,0"/>
-                <SplineThicknessKeyFrame KeyTime="00:00:01" Value="0,0,0,0"/>
-            </ThicknessAnimationUsingKeyFrames>
-            <DoubleAnimation Storyboard.TargetName="NotificationBox" Storyboard.TargetProperty="Opacity" From="1" To="1" Duration="0:0:3" BeginTime="0:0:0"/>
-        </Storyboard>
     </Window.Resources>
     <DockPanel Background="#1b2838">
         <StackPanel Orientation="Vertical" Margin="0,0,-601,0">

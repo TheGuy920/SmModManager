@@ -17,9 +17,9 @@ namespace SmModManager.Graphics
 
         public static WnManager GetWnManager;
         public static Vector2 PreviousPosition;
-        public bool UpdateTopMenuBool = true;
-        public bool CanNavigate = true;
         public bool CanExit = true;
+        public bool CanNavigate = true;
+        public bool UpdateTopMenuBool = true;
 
         public WnManager()
         {
@@ -29,7 +29,7 @@ namespace SmModManager.Graphics
             Height = App.Settings.StartUpY;
             Top = (Screen.PrimaryScreen.Bounds.Height - Height) / 2;
             Left = (Screen.PrimaryScreen.Bounds.Width - Width) / 2;
-            this.WindowState = App.Settings.StartupMode;
+            WindowState = App.Settings.StartupMode;
             InitializeComponent();
             GetWnManager = this;
             IsWindowOpen = true;
@@ -46,23 +46,20 @@ namespace SmModManager.Graphics
 
         public void SendNotification(string message)
         {
-            Dispatcher.Invoke(() =>
-            {
-                Notification(message);
-            });
+            Dispatcher.Invoke(() => { Notification(message); });
         }
 
         public void Notification(string Message, float WindowHeight = 50, float WindowWidth = 200)
         {
             try
             {
-                var messageExtend = Math.Clamp((Message.Length / 25) - 1, 0, 99999);
-                int lines = Message.Split(Environment.NewLine).Length-1 + messageExtend;
+                var messageExtend = Math.Clamp(Message.Length / 25 - 1, 0, 99999);
+                var lines = Message.Split(Environment.NewLine).Length - 1 + messageExtend;
                 var sb = FindResource("MessagePopup") as Storyboard;
                 sb.Stop();
                 sb.Begin();
                 NotificationBox.Width = Math.Clamp(WindowWidth, 200, 600);
-                NotificationBox.Height = Math.Clamp(WindowHeight, 50, 600) + (lines*10);
+                NotificationBox.Height = Math.Clamp(WindowHeight, 50, 600) + lines * 10;
                 NotificationMessage.Text = Message;
                 NotificationBox.Visibility = Visibility.Visible;
             }
@@ -71,12 +68,13 @@ namespace SmModManager.Graphics
                 // nothing
             }
         }
+
         public void ClearNotification(object sender, EventArgs e)
         {
             var sb = FindResource("MessagePopup") as Storyboard;
             var time = (long)sb.GetCurrentTime().TotalMilliseconds;
             var NewTime = Math.Abs(time - 1000) + 1000;
-            var percent = ((float)NewTime / 1000) - 1;
+            var percent = (float)NewTime / 1000 - 1;
             long val = 50000000 + (int)(10000000 * percent);
             if (time < 1000)
                 sb.Seek(new TimeSpan(val));
@@ -93,7 +91,7 @@ namespace SmModManager.Graphics
 
         public void RunVoidList(object sender, SizeChangedEventArgs e)
         {
-            if(Width < 700)
+            if (Width < 700)
                 Width = 700;
             if (Height < 500)
                 Height = 500;
@@ -154,7 +152,6 @@ namespace SmModManager.Graphics
         public void ShowMultiplayerPage(object sender, RoutedEventArgs args)
         {
             if (CanNavigate)
-            {
                 Dispatcher.Invoke(() =>
                 {
                     ClearButtonFontWeight();
@@ -162,7 +159,6 @@ namespace SmModManager.Graphics
                     MultiplayerButton.FontWeight = FontWeights.Bold;
                     MultiplayerButton.FontSize = 15;
                 });
-            }
         }
 
         private void ShowBackupsPage(object sender, RoutedEventArgs args)
@@ -197,7 +193,7 @@ namespace SmModManager.Graphics
                 StoreButton.FontSize = 15;
             }
         }
-        
+
         private void ShowAdvancedPage(object sender, RoutedEventArgs args)
         {
             if (CanNavigate)
@@ -208,6 +204,7 @@ namespace SmModManager.Graphics
                 AdvancedButton.FontSize = 15;
             }
         }
+
         private void ShowCommunityPage(object sender, RoutedEventArgs args)
         {
             if (CanNavigate)
@@ -225,13 +222,13 @@ namespace SmModManager.Graphics
             {
             }
         }
+
         private void Exit(object sender, RoutedEventArgs args)
         {
             if (CanNavigate || CanExit)
-            {
                 Application.Current.Shutdown();
-            }
         }
+
         public void ShowFormatLoading()
         {
             ClearButtonFontWeight();
@@ -246,10 +243,7 @@ namespace SmModManager.Graphics
 
         public void CallMinimizeWindow()
         {
-            Dispatcher.Invoke(() =>
-            {
-                MinimizeWindow();
-            });
+            Dispatcher.Invoke(() => { MinimizeWindow(); });
         }
 
     }

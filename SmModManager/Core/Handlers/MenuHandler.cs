@@ -49,10 +49,7 @@ namespace SmModManager.Core.Handlers
         void IContextMenuHandler.OnContextMenuDismissed(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame)
         {
             var webBrowser = (ChromiumWebBrowser)chromiumWebBrowser;
-            webBrowser.Dispatcher.Invoke(() =>
-            {
-                webBrowser.ContextMenu = null;
-            });
+            webBrowser.Dispatcher.Invoke(() => { webBrowser.ContextMenu = null; });
         }
 
         bool IContextMenuHandler.RunContextMenu(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model, IRunContextMenuCallback callback)

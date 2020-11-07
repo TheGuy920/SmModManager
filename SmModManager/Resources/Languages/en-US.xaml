@@ -99,7 +99,7 @@
     <!-- FILE -->
 
     <!-- Other -->
-    
+
     <!-- Complete --><system:String x:Key="StartupErrorMessage">Oh No! It looks like there was an issue launching the Mod Manager!</system:String>
     <!-- Complete --><system:String x:Key="StartupErrorReport">Error Report:</system:String>
     <!-- Complete --><system:String x:Key="StartupErrorPossibilities">Possible Solutions:</system:String>
@@ -109,9 +109,9 @@
     <!-- Complete --><system:String x:Key="makesureinputsfilled">Make sure all the inputs are filled!</system:String>
     <!-- Complete --><system:String x:Key="selectedpathmissinggamefiles">The selected path doesn't contain the game's executable!</system:String>
     <!-- Complete --><system:String x:Key="selectedpathmissingworkshopfiles">The selected path doesn't contain the workshop files!</system:String>
-    <!-- Complete --><system:String x:Key="corruptfiles">It apears some files are corrupt we are attemping to repair them please restart the app</system:String> 
+    <!-- Complete --><system:String x:Key="corruptfiles">It apears some files are corrupt we are attemping to repair them please restart the app</system:String>
     <!-- Complete --><system:String x:Key="JoinGame">JoinGame</system:String>
-    <!-- Complete --><system:String x:Key="Completed">Completed</system:String> 
+    <!-- Complete --><system:String x:Key="Completed">Completed</system:String>
     <!-- Complete --><system:String x:Key="successfullyinstalledrequiredmods">Successfully installed required mods! Joining game now!</system:String>
     <system:String x:Key="404cannotfindmod">404, Could not find mod!</system:String>
     <system:String x:Key="onlinenotfound">Online Status Not Found :(</system:String>

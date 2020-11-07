@@ -26,14 +26,21 @@ namespace SmModManager.Graphics
 
         private void CreateWorldBackup(object sender, RoutedEventArgs args)
         {
-            var dialog = new WnWorldBackup { Owner = App.WindowManager };
+            var dialog = new WnWorldBackup
+            {
+                Owner = App.WindowManager
+            };
             if (dialog.ShowDialog() == true)
                 RefreshWorlds(null, null);
         }
 
         private void ImportWorld(object sender, RoutedEventArgs args)
         {
-            var dialog = new OpenFileDialog { Filter = "Scrap Mechanic Mod Manager|*.smmm", Multiselect = true };
+            var dialog = new OpenFileDialog
+            {
+                Filter = "Scrap Mechanic Mod Manager|*.smmm",
+                Multiselect = true
+            };
             if (dialog.ShowDialog() == false)
                 return;
             foreach (var path in dialog.FileNames)
@@ -48,7 +55,10 @@ namespace SmModManager.Graphics
 
         private void ExportWorld(object sender, RoutedEventArgs args)
         {
-            var dialog = new SaveFileDialog { Filter = "Scrap Mechanic Mod Manager|*.smmm" };
+            var dialog = new SaveFileDialog
+            {
+                Filter = "Scrap Mechanic Mod Manager|*.smmm"
+            };
             if (dialog.ShowDialog() == true)
                 File.Copy(((BackupItemBinding)WorldsList.SelectedItem).Path, dialog.FileName);
         }
@@ -104,14 +114,21 @@ namespace SmModManager.Graphics
 
         private void CreateGameBackup(object sender, RoutedEventArgs args)
         {
-            var dialog = new WnGameBackup { Owner = App.WindowManager };
+            var dialog = new WnGameBackup
+            {
+                Owner = App.WindowManager
+            };
             if (dialog.ShowDialog() == true)
                 RefreshGames(null, null);
         }
 
         private void ImportGame(object sender, RoutedEventArgs args)
         {
-            var dialog = new OpenFileDialog { Filter = "Scrap Mechanic Mod Manager|*.smmm", Multiselect = true };
+            var dialog = new OpenFileDialog
+            {
+                Filter = "Scrap Mechanic Mod Manager|*.smmm",
+                Multiselect = true
+            };
             if (dialog.ShowDialog() == false)
                 return;
             foreach (var path in dialog.FileNames)
@@ -126,7 +143,10 @@ namespace SmModManager.Graphics
 
         private void ExportGame(object sender, RoutedEventArgs args)
         {
-            var dialog = new SaveFileDialog { Filter = "Scrap Mechanic Mod Manager|*.smmm" };
+            var dialog = new SaveFileDialog
+            {
+                Filter = "Scrap Mechanic Mod Manager|*.smmm"
+            };
             if (dialog.ShowDialog() != true)
                 return;
             if (File.Exists(dialog.FileName))
@@ -213,7 +233,10 @@ namespace SmModManager.Graphics
                 item.IsSelected = true;
                 item = (TabItem)args.RemovedItems[0];
                 item.IsSelected = true;
-                var thread = new Thread(OpenOldBackups) { IsBackground = true };
+                var thread = new Thread(OpenOldBackups)
+                {
+                    IsBackground = true
+                };
                 if (Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "backups")))
                     thread.Start();
                 else

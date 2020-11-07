@@ -1,18 +1,15 @@
-﻿using System;
-using System.ComponentModel;
-using System.IO;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Media.Imaging;
-using SmModManager.Core.Models;
-using SmModManager.Graphics;
+﻿using System.ComponentModel;
 
 namespace SmModManager.Core.Bindings
 {
 
     public class ModListItemBinding : INotifyPropertyChanged
     {
+
+        private int _currentImage;
         private bool _isSpinning;
+
+        private bool _isVisible;
 
         public bool IsLoading
         {
@@ -24,8 +21,6 @@ namespace SmModManager.Core.Bindings
             }
         }
 
-        private bool _isVisible;
-
         public bool IsVisible
         {
             get => _isVisible;
@@ -35,8 +30,6 @@ namespace SmModManager.Core.Bindings
                 OnPropertyChanged(nameof(IsVisible));
             }
         }
-
-        private int _currentImage;
 
         public int CurrentImage
         {
@@ -48,19 +41,18 @@ namespace SmModManager.Core.Bindings
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-
-        protected virtual void OnPropertyChanged(
-          string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         public string Name { get; private set; }
 
         public string Id { get; private set; }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+
+        protected virtual void OnPropertyChanged(
+            string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
 
         public static ModListItemBinding Create(string name, string id)
@@ -72,5 +64,7 @@ namespace SmModManager.Core.Bindings
             };
             return binding;
         }
+
     }
+
 }

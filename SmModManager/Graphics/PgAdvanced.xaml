@@ -49,9 +49,9 @@
                                 <TextBlock Text="{DynamicResource AppStartupSize}" Foreground="White"/>
                                 <StackPanel Margin="10,10,10,0" Orientation="Horizontal">
                                     <TextBlock Foreground="White" Text="{DynamicResource XRes}"/>
-                                    <TextBox Width="100" Margin="10,0" InputScope="NumberFullWidth" x:Name="XWidth" TextChanged="StartUp_TextChanged"></TextBox>
+                                    <TextBox Width="100" Margin="10,0" InputScope="NumberFullWidth" x:Name="XWidth" TextChanged="StartUp_TextChanged"/>
                                     <TextBlock Foreground="White" Text="{DynamicResource YRes}"/>
-                                    <TextBox Width="100" Margin="10,0" InputScope="NumberFullWidth" x:Name="YHeight" TextChanged="StartUp_TextChanged"></TextBox>
+                                    <TextBox Width="100" Margin="10,0" InputScope="NumberFullWidth" x:Name="YHeight" TextChanged="StartUp_TextChanged"/>
                                     <TextBlock Foreground="White" Text="{DynamicResource StartUpMode}"/>
                                     <ComboBox x:Name="StartUpMode" Width="180" Margin="10,0" SelectionChanged="StartUpMode_SelectionChanged">
                                         <ComboBoxItem Content="Minimized"/>

@@ -16,6 +16,8 @@ namespace SmModManager.Graphics
         public static PgHome GetPgHome;
         public Thread CheckLoggedIn;
         public bool IsLogedIn;
+        public bool isMenuShown;
+        public string ModManagerGroupChat = "steam://friends/joinchat/103582791468534120";
         public bool ThreadCanRun = true;
 
         public PgHome()
@@ -28,6 +30,7 @@ namespace SmModManager.Graphics
             };
             SetUp();
         }
+
         private void PlayGame(object sender, RoutedEventArgs args)
         {
             var startArgs = "";
@@ -88,27 +91,24 @@ namespace SmModManager.Graphics
                         if (App.HasFormattedAllMods)
                         {
                             if (count == 0)
-                            {
                                 if (!App.Settings.HasTakenTutorial)
-                                {
-                                    Dispatcher.Invoke(() =>
-                                    {
-                                        WnManager.GetWnManager.Notification("Looks like your new!\nHead over to Advanced section and check out the tutorial!");
-                                    });
-                                }
-                            }
+                                    Dispatcher.Invoke(() => { WnManager.GetWnManager.Notification("Looks like your new!\nHead over to Advanced section and check out the tutorial!"); });
                             count++;
                         }
                         else if (count == 12)
+                        {
                             Dispatcher.Invoke(() =>
                             {
                                 WnManager.GetWnManager.Notification("Sign-in is NOT required\nbut it is recomended");
                                 count = 13;
                             });
+                        }
                     Thread.Sleep(500);
                 }
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         public void MoveForward(object sender, RoutedEventArgs args)
@@ -127,18 +127,14 @@ namespace SmModManager.Graphics
         {
             HomePageSite.Address = "https://steamcommunity.com/app/387990";
         }
-        public bool isMenuShown = false;
+
         public void ShowMenu(object sender, RoutedEventArgs args)
         {
             isMenuShown = !isMenuShown;
             if (isMenuShown)
-            {
                 GridMenu.Visibility = Visibility.Visible;
-            }
             else
-            {
                 GridMenu.Visibility = Visibility.Hidden;
-            }
         }
 
         public void UpdateUrl()
@@ -146,6 +142,7 @@ namespace SmModManager.Graphics
             if (CurrentUrl.Text != HomePageSite.Address)
                 CurrentUrl.Text = HomePageSite.Address;
         }
+
         public void VerifyFiles(object sender, RoutedEventArgs args)
         {
             if (MessageBox.Show("Are you sure that you want to Verify you game files?\nThis will revert your game files back to their original state!", "Verify Files", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
@@ -158,10 +155,12 @@ namespace SmModManager.Graphics
             Process.Start(startInfo);
             ShowMenu(null, null);
         }
+
         public void ToggleVer(object sender, RoutedEventArgs args)
         {
             App.Settings.VerMode = !App.Settings.VerMode;
         }
+
         public void ToggleWindowMode(object sender, RoutedEventArgs args)
         {
             App.Settings.WindowMode = !App.Settings.WindowMode;
@@ -171,6 +170,7 @@ namespace SmModManager.Graphics
             else
                 RunWindowedImage.Visibility = Visibility.Hidden;
         }
+
         public void ToggleDevMode(object sender, RoutedEventArgs args)
         {
             App.Settings.DevMode = !App.Settings.DevMode;
@@ -180,11 +180,13 @@ namespace SmModManager.Graphics
             else
                 DevModeImage.Visibility = Visibility.Hidden;
         }
-        public string ModManagerGroupChat = "steam://friends/joinchat/103582791468534120";
+
         private void JoinGroup(object sender, RoutedEventArgs args)
         {
             HomePageSite.Address = "https://s.team/chat/edHZfF8D";
             ShowMenu(null, null);
         }
+
     }
+
 }

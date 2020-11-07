@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Media.Imaging;
 using SmModManager.Core.Models;
@@ -61,7 +60,7 @@ namespace SmModManager.Core.Bindings
                 var site = description.Location;
                 binding.ModIdLocation = site + description.WorkshopId;
                 Url = site;
-            } 
+            }
             if (description.WorkshopId != 0 && description.Location == null)
             {
                 binding.Url = Url + description.WorkshopId;
@@ -83,18 +82,15 @@ namespace SmModManager.Core.Bindings
                 binding.Url = Url;
                 var folderName = path.Split("\\")[^1];
                 var newName = "";
-                foreach(var character in folderName) 
-                {
+                foreach (var character in folderName)
                     if (numbers.Contains(character))
                         newName += character;
-                }
                 if (newName.Length < 5)
                 {
                     var rnd = new Random();
                     newName += rnd.Next(999999, 999999999).ToString();
                 }
                 if (newName != folderName)
-                {
                     try
                     {
                         Directory.Move(path, System.IO.Path.Combine(path.Replace(folderName, ""), newName));
@@ -106,7 +102,6 @@ namespace SmModManager.Core.Bindings
                         newName += rnd.Next(9, 99).ToString();
                         Directory.Move(path, System.IO.Path.Combine(path.Replace(folderName, ""), newName));
                     }
-                }
                 if (newName.Length > 9)
                 {
                     newName = newName.Substring(1);

@@ -178,7 +178,6 @@ namespace SmModManager.Core
                             var DirectoryList = temp2.Split('\\');
                             var partFull = "";
                             foreach (var Directory in DirectoryList)
-                            {
                                 if (archivebool)
                                 {
                                     if (partFull.Length > 0)
@@ -240,7 +239,9 @@ namespace SmModManager.Core
                                                     {
                                                         File.Copy(Path.Combine(NewFolderPath, substr), Path.Combine(Constants.ModInstallBackupsPath, substr), false);
                                                     }
-                                                    catch { }
+                                                    catch
+                                                    {
+                                                    }
                                                 }
                                             }
                                         }
@@ -302,18 +303,19 @@ namespace SmModManager.Core
                                                     {
                                                         File.Copy(Path.Combine(NewFolderPath, substr), Path.Combine(Constants.ModInstallBackupsPath, substr), false);
                                                     }
-                                                    catch { }
+                                                    catch
+                                                    {
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
-                            }
                         }
                     }
                 }
                 return InjectFailed;
-            } 
+            }
             catch (Exception e)
             {
                 Debug.WriteLine(e);
@@ -353,7 +355,6 @@ namespace SmModManager.Core
         {
             if (Directory.Exists(Constants.ModInstallBackupsPath))
                 foreach (var file in Directory.GetFiles(Constants.ModInstallBackupsPath))
-                {
                     if (file.EndsWith(".smmm"))
                         foreach (var line in File.ReadAllLines(file))
                         {
@@ -369,10 +370,12 @@ namespace SmModManager.Core
                                         if (System.IO.Directory.GetFiles(topDir).Length == 0 && System.IO.Directory.GetDirectories(topDir).Length == 0)
                                             System.IO.Directory.Delete(topDir);
                                 }
-                                catch (Exception e) { Debug.WriteLine(e); }
+                                catch (Exception e)
+                                {
+                                    Debug.WriteLine(e);
+                                }
                             }
                         }
-                }
             foreach (var item in CurrentMods)
             {
                 var numbers = "0123456789";
@@ -621,21 +624,23 @@ namespace SmModManager.Core
             var random = new Random();
             return new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", length).Select(index => index[random.Next(index.Length)]).ToArray());
         }
+
         public static void SetFolderPermission(string folderPath)
         {
             var directoryInfo = new DirectoryInfo(folderPath);
             var directorySecurity = directoryInfo.GetAccessControl();
             var currentUserIdentity = WindowsIdentity.GetCurrent();
             var fileSystemRule = new FileSystemAccessRule(currentUserIdentity.Name,
-                                                          FileSystemRights.FullControl,
-                                                          InheritanceFlags.ObjectInherit |
-                                                          InheritanceFlags.ContainerInherit,
-                                                          PropagationFlags.None,
-                                                          AccessControlType.Allow);
+                FileSystemRights.FullControl,
+                InheritanceFlags.ObjectInherit |
+                InheritanceFlags.ContainerInherit,
+                PropagationFlags.None,
+                AccessControlType.Allow);
 
             directorySecurity.AddAccessRule(fileSystemRule);
             directoryInfo.SetAccessControl(directorySecurity);
         }
+
     }
 
 }

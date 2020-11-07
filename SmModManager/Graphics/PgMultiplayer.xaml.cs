@@ -76,7 +76,13 @@ namespace SmModManager.Graphics
                 WnJoinFriend.GetWnJoinFriend.CloseWindow();
                 Debug.WriteLine(messageText.Replace("JoinUser: ", ""));
                 PgMultiplayer.GetPgMultiplayer.SteamUserId = messageText.Replace("JoinUser: ", "");
-                try { new WnJoinFriend().Show(); } catch { }
+                try
+                {
+                    new WnJoinFriend().Show();
+                }
+                catch
+                {
+                }
             }
             callback.Continue(true);
             return true;
@@ -136,10 +142,10 @@ namespace SmModManager.Graphics
     {
 
         public static PgMultiplayer GetPgMultiplayer;
+        public bool IsOverlay;
         public JavascriptManager jsmanager;
         public string SteamUserId = "";
-        public bool WebPageLoadFinished = false;
-        public bool IsOverlay = false;
+        public bool WebPageLoadFinished;
 
         public PgMultiplayer()
         {
@@ -149,11 +155,11 @@ namespace SmModManager.Graphics
             HomePageSite.Address = "https://steamcommunity.com/friends";
             new WnJoinFriend();
         }
+
         public void InvokeSetOverlay(bool set = false)
         {
-            
             IsOverlay = set;
-            if(IsOverlay)
+            if (IsOverlay)
                 Dispatcher.Invoke(() =>
                 {
                     CoverContent.Visibility = Visibility.Visible;
@@ -169,20 +175,16 @@ namespace SmModManager.Graphics
                     GoHome(null, null);
                 });
         }
+
         public void GotoAddress(string address)
         {
-            Dispatcher.Invoke(() =>
-            {
-                HomePageSite.Load(address);
-            });
+            Dispatcher.Invoke(() => { HomePageSite.Load(address); });
         }
+
         public string GetAddress()
         {
             var str = "";
-            Dispatcher.Invoke(() =>
-            {
-                str = HomePageSite.Address;
-            });
+            Dispatcher.Invoke(() => { str = HomePageSite.Address; });
             return str;
         }
 
@@ -192,7 +194,10 @@ namespace SmModManager.Graphics
             HomePageSite.DownloadHandler = new DownloadHandler();
             InvisiblePage.DownloadHandler = new DownloadHandler();
             HomePageSite.MenuHandler = new MenuHandler();
-            var requestContextSettings = new RequestContextSettings { CachePath = Path.Combine(Constants.CachePath, "UserDataCache") };
+            var requestContextSettings = new RequestContextSettings
+            {
+                CachePath = Path.Combine(Constants.CachePath, "UserDataCache")
+            };
             requestContextSettings.PersistSessionCookies = true;
             requestContextSettings.PersistUserPreferences = true;
             var requestContext = new RequestContext(requestContextSettings);
@@ -256,14 +261,11 @@ namespace SmModManager.Graphics
         private void LoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
         {
             if (e.IsLoading == false)
-            {
                 WebPageLoadFinished = true;
-            }
             else
-            {
                 WebPageLoadFinished = false;
-            }
         }
+
     }
 
 }

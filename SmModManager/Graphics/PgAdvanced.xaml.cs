@@ -223,6 +223,7 @@ namespace SmModManager.Graphics
                 item.Foreground = Brushes.White;
             }
         }
+
         public void MoveForward(object sender, RoutedEventArgs args)
         {
             if (Tutorial.CanGoForward)
@@ -248,23 +249,27 @@ namespace SmModManager.Graphics
 
         private void StartUp_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var number = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            var number = new[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
             if (XWidth.Text.Length > 0)
                 if (!number.Contains(XWidth.Text[^1]) || XWidth.Text.Length > 4)
                 {
-                    XWidth.Text = XWidth.Text[0..(XWidth.Text.Length - 1)];
+                    XWidth.Text = XWidth.Text[..(XWidth.Text.Length - 1)];
                     XWidth.CaretIndex = Math.Clamp(XWidth.Text.Length, 0, 4);
                 }
                 else
+                {
                     App.Settings.StartUpX = int.Parse(XWidth.Text);
+                }
             if (YHeight.Text.Length > 0)
                 if (!number.Contains(YHeight.Text[^1]) || YHeight.Text.Length > 4)
                 {
-                    YHeight.Text = YHeight.Text[0..(YHeight.Text.Length - 1)];
+                    YHeight.Text = YHeight.Text[..(YHeight.Text.Length - 1)];
                     YHeight.CaretIndex = Math.Clamp(YHeight.Text.Length, 0, 4);
                 }
                 else
+                {
                     App.Settings.StartUpY = int.Parse(YHeight.Text);
+                }
         }
 
         private void StartUpMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -283,6 +288,7 @@ namespace SmModManager.Graphics
             }
             App.Settings.Save();
         }
+
     }
 
 }

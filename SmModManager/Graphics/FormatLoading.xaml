@@ -16,7 +16,7 @@
         </Grid>
         <Grid x:Name="Status" Background="#1b2838" HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Current File Here" x:Name="TextBox" Margin="10,-50,10,10" FontSize="25" FontWeight="Bold" Background="#1b2838" Foreground="White"/>
-            <ProgressBar x:Name="Progress" VerticalAlignment="Center" HorizontalAlignment="Center" Width="700" Height="50" Margin="0,100,0,0"></ProgressBar>
+            <ProgressBar x:Name="Progress" VerticalAlignment="Center" HorizontalAlignment="Center" Width="700" Height="50" Margin="0,100,0,0"/>
             <Button FontSize="30" Width="700" Margin="0,168,0,-64" Click="Restart">Restart</Button>
         </Grid>
     </Grid>

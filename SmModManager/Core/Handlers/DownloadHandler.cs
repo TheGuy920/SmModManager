@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Threading;
 using CefSharp;
-using SmModManager.Graphics;
 
 namespace SmModManager.Core.Handlers
 {
@@ -20,14 +19,9 @@ namespace SmModManager.Core.Handlers
             OnBeforeDownloadFired?.Invoke(this, downloadItem);
             Debug.WriteLine("Download Triggered: " + downloadItem);
             if (App.Settings.NewFileName != null)
-            {
                 downloadItem.SuggestedFileName = App.Settings.NewFileName;
-            }
             else
-                Dispatcher.CurrentDispatcher.Invoke(() =>
-                {
-                    App.PageStore.PgDownloading();
-                });
+                Dispatcher.CurrentDispatcher.Invoke(() => { App.PageStore.PgDownloading(); });
             if (!callback.IsDisposed)
                 using (callback)
                 {
@@ -50,7 +44,6 @@ namespace SmModManager.Core.Handlers
                 App.Settings.NewFileName = null;
                 App.Settings.Save();
             }
-                
         }
 
         public event EventHandler<DownloadItem> OnBeforeDownloadFired;

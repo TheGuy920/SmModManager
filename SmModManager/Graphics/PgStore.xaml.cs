@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -22,7 +21,10 @@ namespace SmModManager.Graphics
             WorkShop.DownloadHandler = new DownloadHandler();
             SmModManager_1.DownloadHandler = new DownloadHandler();
             SmModManager_2.DownloadHandler = new DownloadHandler();
-            var requestContextSettings = new RequestContextSettings { CachePath = Path.Combine(Constants.CachePath, "UserDataCache") };
+            var requestContextSettings = new RequestContextSettings
+            {
+                CachePath = Path.Combine(Constants.CachePath, "UserDataCache")
+            };
             requestContextSettings.PersistSessionCookies = true;
             requestContextSettings.PersistUserPreferences = true;
             var requestContext = new RequestContext(requestContextSettings);
@@ -46,6 +48,7 @@ namespace SmModManager.Graphics
                 LoadingPage2.Visibility = Visibility.Visible;
             });
         }
+
         public void PgDownloadComplete()
         {
             Dispatcher.Invoke(() =>
@@ -117,7 +120,8 @@ namespace SmModManager.Graphics
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (App.WindowManager != null) { App.WindowManager.RunVoidList(null, null); }
+            if (App.WindowManager != null)
+                App.WindowManager.RunVoidList(null, null);
         }
 
     }

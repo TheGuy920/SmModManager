@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
@@ -88,7 +87,7 @@ namespace SmModManager
             {
                 Settings = Configuration.Load();
                 //_ = Configuration.Load();
-                if (Settings.StartUpX < 500 || Settings.StartUpY < 500) 
+                if (Settings.StartUpX < 500 || Settings.StartUpY < 500)
                 {
                     if (Settings.StartUpX <= 0 || Settings.StartUpY <= 0)
                     {
@@ -128,13 +127,9 @@ namespace SmModManager
                 WindowManager.Show();
                 WnManager.GetWnManager.ShowHomePage(null, null);
                 if (!Settings.HasFormattedMods)
-                {
                     ForceFormatAllMods();
-                }
                 else
-                {
                     Dispatcher.Invoke(() => { PgManage.GetPgManage.RefreshAll(); });
-                }
             }
             catch (Exception error)
             {
@@ -146,7 +141,7 @@ namespace SmModManager
                 {
                     // nothing
                 }
-                string[] Starterror = new string[] { error.Message, "============================================",error.StackTrace };
+                string[] Starterror = {error.Message, "============================================", error.StackTrace};
                 File.WriteAllLines("log.txt", Starterror);
                 var ErrorWindow = new WnStartupHandler();
                 ErrorWindow.Show();
@@ -222,13 +217,19 @@ namespace SmModManager
         #endregion
 
         #region TheGuyStuff
+
         public void ForceFormatAllMods()
         {
-            new Thread(FormatAllMods) { IsBackground = true, Priority = ThreadPriority.Highest }.Start();
+            new Thread(FormatAllMods)
+            {
+                IsBackground = true,
+                Priority = ThreadPriority.Highest
+            }.Start();
         }
 
-        readonly string[] folderlist = new string[] { "Survival", "ChallengeData", "Release", "Data" };
+        private readonly string[] folderlist = {"Survival", "ChallengeData", "Release", "Data"};
         public string FormatAllMods_StartDir = "";
+
         public void FormatAllMods()
         {
             var StartDir = FormatAllMods_StartDir;
@@ -248,18 +249,17 @@ namespace SmModManager
                 foreach (var SubDirectory in Directory.GetDirectories(StartDir))
                 {
                     var FormatFile = Path.Combine(SubDirectory, "format.smmm");
-                    if(File.Exists(FormatFile))
+                    if (File.Exists(FormatFile))
                         if (File.ReadAllText(FormatFile) != "ver-1")
                         {
-                            if(!Settings.DontAskMeToReValidate)
+                            if (!Settings.DontAskMeToReValidate)
                                 RevalidateMods = true;
                             throw new Exception("Need to Revalidate Mods!");
                         }
                     var NewFolder = FormatMod(SubDirectory);
                     var TopFolder = "Scrap Mechanic";
-                    bool HasCreatedNewFile = false;
-                    foreach (string item in folderlist)
-                    {
+                    var HasCreatedNewFile = false;
+                    foreach (var item in folderlist)
                         if (Directory.Exists(Path.Combine(NewFolder, item)))
                         {
                             if (!HasCreatedNewFile)
@@ -269,23 +269,26 @@ namespace SmModManager
                                 Directory.CreateDirectory(Path.Combine(SubDirectory, TopFolder));
                                 HasCreatedNewFile = true;
                             }
-                            int FailCount = 0;
-                        TryAgain:
+                            var FailCount = 0;
+                            TryAgain:
                             try
                             {
                                 Utilities.CopyDirectory(Path.Combine(NewFolder, item), Path.Combine(SubDirectory, TopFolder, item));
                             }
-                            catch { if (FailCount >= 20) { FailCount++; goto TryAgain; } }
+                            catch
+                            {
+                                if (FailCount >= 20)
+                                {
+                                    FailCount++;
+                                    goto TryAgain;
+                                }
+                            }
                         }
-                    }
                     File.WriteAllText(FormatFile, "ver-1");
                 }
                 Settings.HasFormattedMods = true;
                 Settings.Save();
-                Dispatcher.Invoke(() =>
-                {
-                    PgManage.GetPgManage.RefreshAll();
-                });
+                Dispatcher.Invoke(() => { PgManage.GetPgManage.RefreshAll(); });
                 HasFormattedAllMods = true;
                 Dispatcher.Invoke(() =>
                 {
@@ -294,7 +297,7 @@ namespace SmModManager
                     WnManager.GetWnManager.ShowHomePage(null, null);
                 });
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Settings.HasFormattedMods = false;
                 Debug.WriteLine(e);
@@ -376,10 +379,7 @@ namespace SmModManager
         {
             var randomInt = "0";
             var Address = "";
-            Dispatcher.Invoke(() =>
-            {
-                Address = currentBrowser.Address;
-            });
+            Dispatcher.Invoke(() => { Address = currentBrowser.Address; });
             foreach (var file in Directory.GetFiles(Constants.CachePath))
             {
                 var CanOpenFile = false;
@@ -426,9 +426,11 @@ namespace SmModManager
                     try
                     {
                         version = name.Split(") (" + nameNew + ")")[0];
-                        version = version[(version.LastIndexOf("(")+1)..version.Length];
+                        version = version[(version.LastIndexOf("(") + 1)..version.Length];
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                     Debug.WriteLine(version);
                     Debug.WriteLine(name);
                     name = name.Replace("(" + version + ") (" + nameNew + ")", "");
@@ -464,7 +466,9 @@ namespace SmModManager
                 });
             }
         }
+
         #endregion
+
     }
 
 }
