@@ -997,30 +997,4 @@ namespace SmModManager.Graphics
         }
 
     }
-
-    public class ModDataFormat
-    {
-
-        public uint publishedFileId { get; set; }
-        public object collectionId { get; set; }
-        public bool extract { get; set; }
-        public bool hidden { get; set; }
-        public bool direct { get; set; }
-
-    }
-
-    public class ModStatusDataFormat
-    {
-
-        public string uuids { get; set; }
-
-    }
-
-    public class ResponseFormat
-    {
-
-        public string key { get; set; }
-        public string value { get; set; }
-
-    }
 }

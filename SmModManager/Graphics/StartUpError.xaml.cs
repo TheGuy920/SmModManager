@@ -84,7 +84,7 @@ namespace SmModManager.Graphics
             foreach (var item in PossibleSolutions.Items)
             {
                 var binding = (ErrorDataBinding)item;
-                if (binding.Box.IsChecked == true)
+                if (binding.BoxIsChecked == true)
                 {
                     switch (binding.Function)
                     {
