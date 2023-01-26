@@ -1,4 +1,41 @@
-﻿===Version 7.97===
+﻿===Version 8.12===
+■ Fixed startup error, again
+■ Finished future language support
+
+===Version 8.08===
+■ Fixed startup error, again
+
+===Version 8.07===
+■ Fixed auto status update
+■ Fixed bug preventing further status update until app restart
+■ Fixed bug preventing injection of 3rd party mods
+■ Added startup window options
+■ Fixed startup error with "corrupt" archived mods
+■ (may have messed up multiplayer, lmk if i did)
+
+===Version 8.03===
+■ Fixed positioning issue when changing the window startup size
+■ Removed the ability to edit the text in the formatting mods warning
+
+===Version 8.02===
+■ Fixed small error when injecting mods
+■ Rearranged some GUI elements
+■ Fixed two stupid spelling errors (probably still more)
+
+===Version 8.00===
+■ Fixed many, many, many erros when using the app
+■ Updated home/launch menu
+■ Added start options for SM in the home/start menu
+■ Added customizable startup window size
+■ Updated the store UI when downloading mods
+■ Updated the mutliplayer UI when joining your friends
+■ Completed the multiplayer join function making it 99% reliable (minus scrap mechanic)
+■ Completely upgraded auto formatting making 20+ more mods compatible
+■ Updated mod download handling for external sites
+■ Optimized the app overall and reduced the number of background processes
+■ Started collections tab
+
+===Version 7.97===
 ■ Updated Changelog
 ■ Update Tutorial
 ■ Small bug fixes and reporting changes

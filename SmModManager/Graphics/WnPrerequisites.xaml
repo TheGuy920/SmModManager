@@ -8,26 +8,26 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Cancel" Margin="10,10,5,10" Click="Cancel"/>
-            <Button Grid.Column="1" Content="Continue" Margin="5,10,10,10" Click="Continue"/>
+            <Button Grid.Column="0" Content="{DynamicResource CancelText}" Margin="10,10,5,10" Click="Cancel"/>
+            <Button Grid.Column="1" Content="{DynamicResource ContinueText}" Margin="5,10,10,10" Click="Continue"/>
         </Grid>
         <StackPanel Margin="0,0,5,0">
             <StackPanel Margin="10,10,10,0">
-                <TextBlock Text="Game Data Path"/>
+                <TextBlock Text="{DynamicResource GameDataPathText}"/>
                 <DockPanel>
-                    <Button DockPanel.Dock="Right" Content="Browse" Margin="10,0,0,0" Width="75" Click="BrowseGameDataPath"/>
+                    <Button DockPanel.Dock="Right" Content="{DynamicResource BrowseText}" Margin="10,0,0,0" Width="75" Click="BrowseGameDataPath"/>
                     <TextBox x:Name="GameDataPathBox" IsReadOnly="True"/>
                 </DockPanel>
             </StackPanel>
             <StackPanel Margin="10,10,10,0">
-                <TextBlock Text="Workshop Path"/>
+                <TextBlock Text="{DynamicResource WorkshopPathText}"/>
                 <DockPanel>
-                    <Button DockPanel.Dock="Right" Content="Browse" Margin="10,0,0,0" Width="75" Click="BrowseWorkshopPath"/>
+                    <Button DockPanel.Dock="Right" Content="{DynamicResource BrowseText}" Margin="10,0,0,0" Width="75" Click="BrowseWorkshopPath"/>
                     <TextBox x:Name="WorkshopPathBox" IsReadOnly="True"/>
                 </DockPanel>
             </StackPanel>
             <StackPanel Margin="10,10,10,0">
-                <TextBlock Text="User Data Path"/>
+                <TextBlock Text="{DynamicResource UserDataPathText}"/>
                 <ComboBox x:Name="UserDataPathBox"/>
             </StackPanel>
         </StackPanel>

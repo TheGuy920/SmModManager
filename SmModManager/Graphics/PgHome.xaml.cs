@@ -1,24 +1,23 @@
-﻿using CefSharp;
-using CefSharp.Wpf;
-using SmModManager.Core;
-using System;
-using System.Collections;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows;
-using System.Windows.Media;
+using CefSharp;
+using SmModManager.Core;
+using SmModManager.Core.Handlers;
 
 namespace SmModManager.Graphics
 {
 
     public partial class PgHome
     {
-        public bool IsLogedIn = false;
+
         public static PgHome GetPgHome;
         public Thread CheckLoggedIn;
+        public bool IsLogedIn;
         public bool ThreadCanRun = true;
+
         public PgHome()
         {
             GetPgHome = this;
@@ -31,19 +30,35 @@ namespace SmModManager.Graphics
         }
         private void PlayGame(object sender, RoutedEventArgs args)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo
+            var startArgs = "";
+            if (App.Settings.VerMode)
+                startArgs += "";
+            if (App.Settings.DevMode)
+                startArgs += "-dev%20";
+            if (App.Settings.WindowMode)
+                startArgs += "-window%20";
+            var startInfo = new ProcessStartInfo
             {
                 FileName = Path.Combine(Utilities.GetSteamLocation(), "steam.exe"),
-                Arguments = @"steam://run/387990//"
+                Arguments = @"steam://run/387990//" + startArgs
             };
             Process.Start(startInfo);
             WnManager.GetWnManager.MinimizeWindow();
         }
+
         public void SetUp()
         {
             HomePageSite.Address = "https://steamcommunity.com/login/home/?goto=";
-            HomePageSite.MenuHandler = new CefSharp.Handlers.MenuHandler();
+            HomePageSite.MenuHandler = new MenuHandler();
             CheckLoggedIn.Start();
+            if (App.Settings.DevMode)
+                DevModeImage.Visibility = Visibility.Visible;
+            else
+                DevModeImage.Visibility = Visibility.Hidden;
+            if (App.Settings.WindowMode)
+                RunWindowedImage.Visibility = Visibility.Visible;
+            else
+                RunWindowedImage.Visibility = Visibility.Hidden;
         }
 
         public void CheckIfLoggedIn()
@@ -57,10 +72,10 @@ namespace SmModManager.Graphics
                     {
                         if (HomePageSite.Address != "https://steamcommunity.com/login/home/?goto=")
                         {
-                            using (WebClient client = new WebClient())
+                            using (var client = new WebClient())
                             {
-                                string htmlCode = client.DownloadString(HomePageSite.Address);
-                                string sub1 = htmlCode.Substring(htmlCode.IndexOf("steamid\":\""), 30);
+                                var htmlCode = client.DownloadString(HomePageSite.Address);
+                                var sub1 = htmlCode.Substring(htmlCode.IndexOf("steamid\":\""), 30);
                                 var SteamId = sub1[10..sub1.IndexOf("\",\"")];
                                 App.UserSteamId = SteamId;
                             }
@@ -69,38 +84,107 @@ namespace SmModManager.Graphics
                             PgMultiplayer.GetPgMultiplayer.GoHome(null, null);
                         }
                     });
-                    if (count < 60)
-                        count++;
-                    else if (count == 60)
-                        Dispatcher.Invoke(() =>
+                    if (count < 12)
+                        if (App.HasFormattedAllMods)
                         {
-                            WnManager.GetWnManager.Notification("Sign-in is NOT required\nbut it is recomended");
-                            count = 61;
-                        });
-                    Thread.Sleep(100);
+                            if (count == 0)
+                            {
+                                if (!App.Settings.HasTakenTutorial)
+                                {
+                                    Dispatcher.Invoke(() =>
+                                    {
+                                        WnManager.GetWnManager.Notification((string)System.Windows.Application.Current.FindResource("youlooknew"));
+                                    });
+                                }
+                            }
+                            count++;
+                        }
+                        else if (count == 12)
+                            Dispatcher.Invoke(() =>
+                            {
+                                WnManager.GetWnManager.Notification((string)System.Windows.Application.Current.FindResource("signinnotreq"));
+                                count = 13;
+                            });
+                    Thread.Sleep(500);
                 }
             }
             catch { }
         }
+
         public void MoveForward(object sender, RoutedEventArgs args)
         {
             if (HomePageSite.CanGoForward)
                 HomePageSite.Forward();
         }
+
         public void MoveBackward(object sender, RoutedEventArgs args)
         {
             if (HomePageSite.CanGoBack)
                 HomePageSite.Back();
         }
+
         public void GoHome(object sender, RoutedEventArgs args)
         {
             HomePageSite.Address = "https://steamcommunity.com/app/387990";
+        }
+        public bool isMenuShown = false;
+        public void ShowMenu(object sender, RoutedEventArgs args)
+        {
+            isMenuShown = !isMenuShown;
+            if (isMenuShown)
+            {
+                GridMenu.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                GridMenu.Visibility = Visibility.Hidden;
+            }
         }
 
         public void UpdateUrl()
         {
             if (CurrentUrl.Text != HomePageSite.Address)
                 CurrentUrl.Text = HomePageSite.Address;
+        }
+        public void VerifyFiles(object sender, RoutedEventArgs args)
+        {
+            if (MessageBox.Show((string)System.Windows.Application.Current.FindResource("confirmverifyfiles"), (string)System.Windows.Application.Current.FindResource("verifyfiles"), MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                return;
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = Path.Combine(Utilities.GetSteamLocation(), "steam.exe"),
+                Arguments = @"steam://validate/387990/"
+            };
+            Process.Start(startInfo);
+            ShowMenu(null, null);
+        }
+        public void ToggleVer(object sender, RoutedEventArgs args)
+        {
+            App.Settings.VerMode = !App.Settings.VerMode;
+        }
+        public void ToggleWindowMode(object sender, RoutedEventArgs args)
+        {
+            App.Settings.WindowMode = !App.Settings.WindowMode;
+            App.Settings.Save();
+            if (App.Settings.WindowMode)
+                RunWindowedImage.Visibility = Visibility.Visible;
+            else
+                RunWindowedImage.Visibility = Visibility.Hidden;
+        }
+        public void ToggleDevMode(object sender, RoutedEventArgs args)
+        {
+            App.Settings.DevMode = !App.Settings.DevMode;
+            App.Settings.Save();
+            if (App.Settings.DevMode)
+                DevModeImage.Visibility = Visibility.Visible;
+            else
+                DevModeImage.Visibility = Visibility.Hidden;
+        }
+        public string ModManagerGroupChat = "steam://friends/joinchat/103582791468534120";
+        private void JoinGroup(object sender, RoutedEventArgs args)
+        {
+            HomePageSite.Address = "https://s.team/chat/edHZfF8D";
+            ShowMenu(null, null);
         }
     }
 }

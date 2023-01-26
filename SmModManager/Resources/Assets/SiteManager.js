@@ -29,5 +29,6 @@ setTimeout(function () {
     }
 }, 500);
 
-
-
+if (window.location.href.includes("steamworkshopdownloader")) {
+    window.parent.postMessage(['steamdownloaderFrameLoaded', true], '*');
+}

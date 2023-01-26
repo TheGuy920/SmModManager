@@ -12,16 +12,12 @@
     <Product>Scrap Mechanic Mod Manager</Product>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Properties\AssemblyKey.snk</AssemblyOriginatorKeyFile>
-    <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
-    <Version>7.97</Version>
-    <Platforms>AnyCPU;x64</Platforms>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <ApplicationIcon>a1f1b067d6595d3ff0a0d0acc917cd7157b2a5dc.ico</ApplicationIcon>
+    <Version>8.12</Version>
+    <Platforms>x64</Platforms>
     <DelaySign>false</DelaySign>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <Prefer32Bit>false</Prefer32Bit>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <IsPackable>false</IsPackable>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -37,10 +33,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Graphics\JoinFriend.xaml.cs~RF1110177.TMP" />
-    <None Remove="Graphics\JoinFriend.xaml.cs~RF1c24605.TMP" />
-    <None Remove="Graphics\WnManager.xaml.cs~RFb290084.TMP" />
+    <None Remove="Resources\Assets\complete.png" />
+    <None Remove="Resources\Assets\empty.png" />
+    <None Remove="Resources\Assets\failed.png" />
     <None Remove="Resources\Assets\Icon.png" />
+    <None Remove="Resources\Assets\loading.png" />
     <None Remove="Resources\Documents\Changelog.txt" />
     <None Remove="Resources\Documents\Credits.txt" />
   </ItemGroup>
@@ -61,11 +58,24 @@
     <PackageReference Include="MvvmLight" Version="5.4.1.1" />
     <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
     <PackageReference Include="Nancy" Version="2.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Ookii.Dialogs.Wpf.NETCore" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\Assets\complete.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Assets\empty.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Assets\failed.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Resources\Assets\Icon.png" />
+    <Content Include="Resources\Assets\loading.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -93,23 +103,18 @@
     <None Update="Resources\Api\SteamCMD\steamcmd.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Assets\empty.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Assets\SiteManager.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Resources\Assets\PastebinGet.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Assets\PastebinShare.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\Assets\SiteManager.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
+  
   <ItemGroup>
-    <!-- TODO: These updates are currently required because CefSharp.Wpf specifies
-         <Private>false</Private>, which means these libraries will not be specified in
-         the .deps.json file, and so the CoreCLR wouldn't load these. -->
     <Reference Update="CefSharp">
       <Private>true</Private>
     </Reference>
@@ -120,8 +125,7 @@
       <Private>true</Private>
     </Reference>
   </ItemGroup>
-
-  <!-- Include CefSharp.BrowserSubprocess.Core so we can selfhost the BrowserSubProcess using our exe -->
+  
   <Choose>
     <When Condition="'$(PlatformTarget)' == 'x64'">
       <ItemGroup>
@@ -131,7 +135,7 @@
         </Reference>
       </ItemGroup>
     </When>
-    <!-- x86, Win32 and AnyCPU -->
+    
     <Otherwise>
       <ItemGroup>
         <Reference Include="CefSharp.BrowserSubprocess.Core">
@@ -141,4 +145,5 @@
       </ItemGroup>
     </Otherwise>
   </Choose>
+  
 </Project>

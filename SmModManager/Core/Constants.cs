@@ -18,6 +18,7 @@ namespace SmModManager.Core
         public static readonly string ModInstallBackupsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "unins");
         public static readonly string AppUserData = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data");
         public static readonly string Resources = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources");
+
     }
 
 }

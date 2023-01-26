@@ -1,2 +1,2 @@
-﻿TheGuy920: Ceator and Manager for the Mod Manager project, Senoir Executive and C# expert https://github.com/TheGuy920/
-dentolos19: Expirienced WPF programmer and senoir WFP project manager https://github.com/dentolos19/
+﻿TheGuy920: Creator and Manager for the Mod Manager project, senior Executive and C# expert: https://github.com/TheGuy920/
+dentolos19: Experienced C# & WPF programmer and senior WPF project manager: https://github.com/dentolos19/

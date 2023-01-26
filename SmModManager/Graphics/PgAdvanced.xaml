@@ -4,7 +4,7 @@
       xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf">
     <Grid Background="#366e93">
         <TabControl BorderThickness="0" Background="#1b2838" Margin="0,0,0,0" SelectionChanged="UpdateTabSelection">
-            <TabItem Header="Settings" Background="#366e93" Foreground="White" BorderThickness="0" Width="150" Margin="-7,-6,0,0" Height="30" FontSize="16">
+            <TabItem Header="{DynamicResource SettingsTabHeader}" Background="#366e93" Foreground="White" BorderThickness="0" Width="150" Margin="-7,-6,0,0" Height="30" FontSize="16">
                 <DockPanel Margin="-2,-4,-2,0" Background="White">
                     <DockPanel Margin="3" Background="#1b2838">
                         <DockPanel DockPanel.Dock="Bottom" Height="50">
@@ -14,59 +14,82 @@
                         </DockPanel>
                         <StackPanel Background="#1b2838">
                             <StackPanel Margin="10,10,10,0">
-                                <TextBlock Text="Game Data Path" Foreground="White"/>
+                                <TextBlock Text="{DynamicResource GameDataPathText}" Foreground="White"/>
                                 <DockPanel>
-                                    <Button DockPanel.Dock="Right" Content="Browse" Margin="10,0,0,0" Width="75" Click="BrowseGameDataPath" Background="Green" Foreground="White" BorderThickness="0" FontWeight="UltraBold" FontSize="18"/>
+                                    <Button DockPanel.Dock="Right" Content="{DynamicResource BrowseText}" Margin="10,0,0,0" Width="75" Click="BrowseGameDataPath" Background="Green" Foreground="White" BorderThickness="0" FontWeight="UltraBold" FontSize="18"/>
                                     <TextBox x:Name="GameDataPathBox" IsReadOnly="True"/>
                                 </DockPanel>
                             </StackPanel>
                             <StackPanel Margin="10,10,10,0">
-                                <TextBlock Text="Workshop Path" Foreground="White"/>
+                                <TextBlock Text="{DynamicResource WorkshopPathText}" Foreground="White"/>
                                 <DockPanel>
-                                    <Button DockPanel.Dock="Right" Content="Browse" Margin="10,0,0,0" Width="75" Click="BrowseWorkshopPath" Background="Green" Foreground="White" BorderThickness="0" FontWeight="UltraBold" FontSize="18"/>
+                                    <Button DockPanel.Dock="Right" Content="{DynamicResource BrowseText}" Margin="10,0,0,0" Width="75" Click="BrowseWorkshopPath" Background="Green" Foreground="White" BorderThickness="0" FontWeight="UltraBold" FontSize="18"/>
                                     <TextBox x:Name="WorkshopPathBox" IsReadOnly="True"/>
                                 </DockPanel>
                             </StackPanel>
                             <StackPanel Margin="10,10,10,0">
-                                <TextBlock Text="User Data Path" Foreground="White"/>
+                                <TextBlock Text="{DynamicResource UserDataPathText}" Foreground="White"/>
                                 <ComboBox x:Name="UserDataPathBox"/>
                             </StackPanel>
                             <StackPanel Margin="10,10,10,0">
-                                <TextBlock Text="Update Behavior" Foreground="White"/>
+                                <TextBlock Text="{DynamicResource UpdateBehaviorText}" Foreground="White"/>
                                 <ComboBox x:Name="UpdateBehaviorBox">
-                                    <ComboBoxItem Content="Always Auto-Update"/>
-                                    <ComboBoxItem Content="Remind For Updates"/>
-                                    <ComboBoxItem Content="Don't Check For Updates"/>
+                                    <ComboBoxItem Content="{DynamicResource UpdateOption1}"/>
+                                    <ComboBoxItem Content="{DynamicResource UpdateOption2}"/>
+                                    <ComboBoxItem Content="{DynamicResource UpdateOption3}"/>
                                 </ComboBox>
+                            </StackPanel>
+                            <StackPanel Margin="10,10,10,0">
+                                <TextBlock Text="{DynamicResource AppLanguageText}" Foreground="White"/>
+                                <ComboBox x:Name="AppLanguageBox">
+                                    <ComboBoxItem Content="English"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Margin="10,10,10,0">
+                                <TextBlock Text="{DynamicResource AppStartupSize}" Foreground="White"/>
+                                <StackPanel Margin="10,10,10,0" Orientation="Horizontal">
+                                    <TextBlock Foreground="White" Text="{DynamicResource XRes}"/>
+                                    <TextBox Width="100" Margin="10,0" InputScope="NumberFullWidth" x:Name="XWidth" TextChanged="StartUp_TextChanged"></TextBox>
+                                    <TextBlock Foreground="White" Text="{DynamicResource YRes}"/>
+                                    <TextBox Width="100" Margin="10,0" InputScope="NumberFullWidth" x:Name="YHeight" TextChanged="StartUp_TextChanged"></TextBox>
+                                    <TextBlock Foreground="White" Text="{DynamicResource StartUpMode}"/>
+                                    <ComboBox x:Name="StartUpMode" Width="180" Margin="10,0" SelectionChanged="StartUpMode_SelectionChanged">
+                                        <ComboBoxItem Content="Minimized"/>
+                                        <ComboBoxItem Content="Windowed"/>
+                                        <ComboBoxItem Content="Fullscreen Windowed"/>
+                                    </ComboBox>
+                                </StackPanel>
                             </StackPanel>
                         </StackPanel>
                     </DockPanel>
                 </DockPanel>
             </TabItem>
-            <TabItem Header="Changelog" Background="#366e93" Foreground="White" BorderThickness="0" Width="150" Margin="-7,-6,0,0" Height="30" FontSize="16">
+            <TabItem Header="{DynamicResource ChangelogTabHeader}" Background="#366e93" Foreground="White" BorderThickness="0" Width="150" Margin="-7,-6,0,0" Height="30" FontSize="16">
                 <DockPanel Margin="-2,-4,-2,0" Background="White">
                     <ScrollViewer Margin="3" Background="#1b2838">
                         <TextBlock x:Name="ChangelogText" Margin="30,20,0,20" TextWrapping="Wrap" Foreground="White" FontSize="20"/>
                     </ScrollViewer>
                 </DockPanel>
             </TabItem>
-            <TabItem Header="Credits" Background="#366e93" Foreground="White" BorderThickness="0" Width="150" Margin="-7,-6,0,0" Height="30" FontSize="16">
+            <TabItem Header="{DynamicResource CreditsTabHeader}" Background="#366e93" Foreground="White" BorderThickness="0" Width="150" Margin="-7,-6,0,0" Height="30" FontSize="16">
                 <DockPanel Margin="-2,-4,-2,0" Background="White">
                     <DockPanel Margin="3" Background="#1b2838">
                         <TextBlock x:Name="CreditsText" TextWrapping="Wrap" Margin="10,10,10,10" Foreground="White"/>
                     </DockPanel>
                 </DockPanel>
             </TabItem>
-            <TabItem Header="Tutorial" Background="#366e93" Foreground="White" BorderThickness="0" Width="150" Margin="-7,-6,0,0" Height="30" FontSize="16">
+            <TabItem Header="{DynamicResource TutorialTabHeader}" Background="#366e93" Foreground="White" BorderThickness="0" Width="150" Margin="-7,-6,0,0" Height="30" FontSize="16">
                 <DockPanel Margin="-2,-4,-2,0" Background="White">
-                    <Grid Margin="3">
-                        <wpf:ChromiumWebBrowser Margin="0,-60,0,0" x:Name="Tutorial" Address="http://smmodmanager.ml/"/>
-                        <DockPanel Margin="-5,-4,-5,0" Background="White" Height="5" VerticalAlignment="Top"/>
-                        <DockPanel Margin="0,-34,0,0" Background="#366e93" Height="30" VerticalAlignment="Top"/>
+                    <Grid Margin="3" Background="#1b2838">
+                        <Button Content="&lt;" Margin="2,4,2,0" Height="20" Click="MoveBackward" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
+                        <Button Content="&gt;" Margin="52,4,2,0" Height="20" Click="MoveForward" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
+                        <TextBlock x:Name="CurrentUrl" Margin="107,4,57,56" FontSize="13" FontWeight="Bold" Foreground="White"/>
+                        <Button Content="{DynamicResource HomeButtonText}" Margin="102,4,2,0" Height="20" Click="GoHome" Background="Green" Foreground="White" Width="50" HorizontalAlignment="Right" VerticalAlignment="Top" BorderThickness="0" FontWeight="UltraBold" FontSize="10"/>
+                        <wpf:ChromiumWebBrowser x:Name="Tutorial" Address="https://smmodmanager.com/tutorial/" AddressChanged="UpdateUrl" Margin="0,30,0,0"/>
                     </Grid>
                 </DockPanel>
             </TabItem>
-            <TabItem Header="Report Issue" Background="#366e93" Foreground="White" BorderThickness="0" Width="150" Margin="-7,-6,0,0" Height="30" FontSize="16">
+            <TabItem Header="{DynamicResource ReportIssueTabHeader}" Background="#366e93" Foreground="White" BorderThickness="0" Width="150" Margin="-7,-6,0,0" Height="30" FontSize="16">
                 <DockPanel Margin="-2,-4,-2,0" Background="White">
                     <DockPanel Margin="3" Background="#1b2838">
                         <StackPanel Background="#1b2838" Orientation="Vertical">

@@ -7,16 +7,20 @@ namespace SmModManager.Core.Models
 
     public class ModDescriptionModel
     {
-        [JsonProperty("version")] public string Version { get; private set; }
-        [JsonProperty("localId")] public string Id { get; private set; }
 
-        [JsonProperty("name")] public string Name { get; private set; }
+        [JsonProperty("version")] public string Version { get; set; }
 
-        [JsonProperty("description")] public string Description { get; private set; }
+        [JsonProperty("localId")] public string Id { get; set; }
 
-        [JsonProperty("location")] public string Location { get; private set; }
+        [JsonProperty("type")] public string Type { get; set; }
 
-        [JsonProperty("fileId")] public uint WorkshopId { get; private set; }
+        [JsonProperty("name")] public string Name { get; set; }
+
+        [JsonProperty("description")] public string Description { get; set; }
+
+        [JsonProperty("location")] public string Location { get; set; }
+
+        [JsonProperty("fileId")] public uint WorkshopId { get; set; }
 
         public static ModDescriptionModel Load(string path)
         {

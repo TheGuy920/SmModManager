@@ -1,0 +1,27 @@
+﻿<Window x:Class="SmModManager.Graphics.WnErrorHandler"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Error Handler" Width="500" SizeToContent="Height" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <DockPanel>
+        <Grid DockPanel.Dock="Bottom" Height="50">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="{StaticResource DontReportText}" Margin="10,10,0,10" Click="CloseButton"/>
+            <Button Grid.Column="1" Content="{StaticResource SendReportText}" Margin="10,10,10,10" Click="SendButton"/>
+        </Grid>
+        <StackPanel Margin="10,10,10,0">
+            <TextBlock Text="{StaticResource HandlerText1}" FontWeight="Bold"/>
+            <TextBlock Text="{StaticResource HandlerText2}"/>
+            <StackPanel Margin="0,10,0,0">
+                <TextBlock Text="{StaticResource HandlerText3}"/>
+                <TextBox x:Name="MessageText" IsReadOnly="True" Height="41" TextWrapping="Wrap"/>
+            </StackPanel>
+            <StackPanel Margin="0,10,0,0">
+                <TextBlock Text="{StaticResource HandlerText4}"/>
+                <TextBox x:Name="NotesText" InputScope="Default" Height="100" TextChanged="TextLimitCheck" Cursor="IBeam" TextWrapping="Wrap" Width="464" HorizontalAlignment="Left"/>
+            </StackPanel>
+        </StackPanel>
+    </DockPanel>
+</Window>
